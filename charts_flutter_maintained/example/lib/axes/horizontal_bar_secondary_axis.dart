@@ -43,7 +43,7 @@ class HorizontalBarChartWithSecondaryAxis extends StatelessWidget {
   HorizontalBarChartWithSecondaryAxis(this.seriesList, {this.animate = false});
 
   factory HorizontalBarChartWithSecondaryAxis.withSampleData() {
-    return new HorizontalBarChartWithSecondaryAxis(
+    return HorizontalBarChartWithSecondaryAxis(
       _createSampleData(),
       // Disable animations for image tests.
       animate: false,
@@ -55,35 +55,35 @@ class HorizontalBarChartWithSecondaryAxis extends StatelessWidget {
   // It is used for creating random series data to demonstrate animation in
   // the example app only.
   factory HorizontalBarChartWithSecondaryAxis.withRandomData() {
-    return new HorizontalBarChartWithSecondaryAxis(_createRandomData());
+    return HorizontalBarChartWithSecondaryAxis(_createRandomData());
   }
 
   /// Create random data.
   static List<charts.Series<OrdinalSales, String>> _createRandomData() {
-    final random = new Random();
+    final random = Random();
 
     final globalSalesData = [
-      new OrdinalSales('2014', random.nextInt(100) * 100),
-      new OrdinalSales('2015', random.nextInt(100) * 100),
-      new OrdinalSales('2016', random.nextInt(100) * 100),
-      new OrdinalSales('2017', random.nextInt(100) * 100),
+      OrdinalSales('2014', random.nextInt(100) * 100),
+      OrdinalSales('2015', random.nextInt(100) * 100),
+      OrdinalSales('2016', random.nextInt(100) * 100),
+      OrdinalSales('2017', random.nextInt(100) * 100),
     ];
 
     final losAngelesSalesData = [
-      new OrdinalSales('2014', random.nextInt(100)),
-      new OrdinalSales('2015', random.nextInt(100)),
-      new OrdinalSales('2016', random.nextInt(100)),
-      new OrdinalSales('2017', random.nextInt(100)),
+      OrdinalSales('2014', random.nextInt(100)),
+      OrdinalSales('2015', random.nextInt(100)),
+      OrdinalSales('2016', random.nextInt(100)),
+      OrdinalSales('2017', random.nextInt(100)),
     ];
 
     return [
-      new charts.Series<OrdinalSales, String>(
+      charts.Series<OrdinalSales, String>(
         id: 'Global Revenue',
         domainFn: (OrdinalSales sales, _) => sales.year,
         measureFn: (OrdinalSales sales, _) => sales.sales,
         data: globalSalesData,
       ),
-      new charts.Series<OrdinalSales, String>(
+      charts.Series<OrdinalSales, String>(
         id: 'Los Angeles Revenue',
         domainFn: (OrdinalSales sales, _) => sales.year,
         measureFn: (OrdinalSales sales, _) => sales.sales,
@@ -99,7 +99,7 @@ class HorizontalBarChartWithSecondaryAxis extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // For horizontal bar charts, set the [vertical] flag to false.
-    return new charts.BarChart(
+    return charts.BarChart(
       seriesList,
       animate: animate,
       barGroupingType: charts.BarGroupingType.grouped,
@@ -107,39 +107,39 @@ class HorizontalBarChartWithSecondaryAxis extends StatelessWidget {
       // It is important when using both primary and secondary axes to choose
       // the same number of ticks for both sides to get the gridlines to line
       // up.
-      primaryMeasureAxis: new charts.NumericAxisSpec(
+      primaryMeasureAxis: charts.NumericAxisSpec(
           tickProviderSpec:
-              new charts.BasicNumericTickProviderSpec(desiredTickCount: 3)),
-      secondaryMeasureAxis: new charts.NumericAxisSpec(
+              charts.BasicNumericTickProviderSpec(desiredTickCount: 3)),
+      secondaryMeasureAxis: charts.NumericAxisSpec(
           tickProviderSpec:
-              new charts.BasicNumericTickProviderSpec(desiredTickCount: 3)),
+              charts.BasicNumericTickProviderSpec(desiredTickCount: 3)),
     );
   }
 
   /// Create series list with multiple series
   static List<charts.Series<OrdinalSales, String>> _createSampleData() {
     final globalSalesData = [
-      new OrdinalSales('2014', 5000),
-      new OrdinalSales('2015', 25000),
-      new OrdinalSales('2016', 100000),
-      new OrdinalSales('2017', 750000),
+      OrdinalSales('2014', 5000),
+      OrdinalSales('2015', 25000),
+      OrdinalSales('2016', 100000),
+      OrdinalSales('2017', 750000),
     ];
 
     final losAngelesSalesData = [
-      new OrdinalSales('2014', 25),
-      new OrdinalSales('2015', 50),
-      new OrdinalSales('2016', 10),
-      new OrdinalSales('2017', 20),
+      OrdinalSales('2014', 25),
+      OrdinalSales('2015', 50),
+      OrdinalSales('2016', 10),
+      OrdinalSales('2017', 20),
     ];
 
     return [
-      new charts.Series<OrdinalSales, String>(
+      charts.Series<OrdinalSales, String>(
         id: 'Global Revenue',
         domainFn: (OrdinalSales sales, _) => sales.year,
         measureFn: (OrdinalSales sales, _) => sales.sales,
         data: globalSalesData,
       ),
-      new charts.Series<OrdinalSales, String>(
+      charts.Series<OrdinalSales, String>(
         id: 'Los Angeles Revenue',
         domainFn: (OrdinalSales sales, _) => sales.year,
         measureFn: (OrdinalSales sales, _) => sales.sales,
@@ -157,5 +157,5 @@ class OrdinalSales {
   final String year;
   final int sales;
 
-  OrdinalSales(this.year, this.sales);
+  const OrdinalSales(this.year, this.sales);
 }

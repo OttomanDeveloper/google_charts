@@ -35,7 +35,7 @@ import 'chart_behavior.dart' show ChartBehavior, GestureType;
 /// and expand selection out to the domain value.
 @immutable
 class LinePointHighlighter<D> extends ChartBehavior<D> {
-  final desiredGestures = new Set<GestureType>();
+  final desiredGestures = Set<GestureType>();
 
   final common.SelectionModelType? selectionModelType;
 
@@ -84,7 +84,7 @@ class LinePointHighlighter<D> extends ChartBehavior<D> {
 
   @override
   common.LinePointHighlighter<D> createCommonBehavior() =>
-      new common.LinePointHighlighter<D>(
+      common.LinePointHighlighter<D>(
         selectionModelType: selectionModelType,
         defaultRadiusPx: defaultRadiusPx,
         radiusPaddingPx: radiusPaddingPx,
@@ -109,7 +109,7 @@ class LinePointHighlighter<D> extends ChartBehavior<D> {
         showHorizontalFollowLine == o.showHorizontalFollowLine &&
         showVerticalFollowLine == o.showVerticalFollowLine &&
         selectionModelType == o.selectionModelType &&
-        new ListEquality().equals(dashPattern, o.dashPattern) &&
+        ListEquality().equals(dashPattern, o.dashPattern) &&
         drawFollowLinesAcrossChart == o.drawFollowLinesAcrossChart;
   }
 

@@ -78,22 +78,16 @@ class TreeMapRendererConfig<D> extends LayoutViewConfig
         symbolRenderer = symbolRenderer ?? RectSymbolRenderer();
 
   @override
-  BaseTreeMapRenderer<D> build() {
-    switch (tileType) {
-      case TreeMapTileType.dice:
-        return DiceTreeMapRenderer<D>(
-            config: this, rendererId: customRendererId);
-      case TreeMapTileType.slice:
-        return SliceTreeMapRenderer<D>(
-            config: this, rendererId: customRendererId);
-      case TreeMapTileType.sliceDice:
-        return SliceDiceTreeMapRenderer<D>(
-            config: this, rendererId: customRendererId);
-      default:
-        return SquarifiedTreeMapRenderer<D>(
-            config: this, rendererId: customRendererId);
-    }
-  }
+  BaseTreeMapRenderer<D> build() => switch (tileType) {
+        TreeMapTileType.dice => DiceTreeMapRenderer<D>(
+            config: this, rendererId: customRendererId),
+        TreeMapTileType.slice => SliceTreeMapRenderer<D>(
+            config: this, rendererId: customRendererId),
+        TreeMapTileType.sliceDice => SliceDiceTreeMapRenderer<D>(
+            config: this, rendererId: customRendererId),
+        _ => SquarifiedTreeMapRenderer<D>(
+            config: this, rendererId: customRendererId),
+      };
 }
 
 /// Tiling algorithm, which is the way to divide a region into subregions of

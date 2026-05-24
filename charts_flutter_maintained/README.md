@@ -1,20 +1,62 @@
-# Flutter Charting library
+# charts_flutter_maintained
 
-[![pub package](https://img.shields.io/pub/v/charts_flutter.svg)](https://pub.dev/packages/charts_flutter_maintained)
+[![pub package](https://img.shields.io/pub/v/charts_flutter_maintained.svg)](https://pub.dev/packages/charts_flutter_maintained)
 
-Material Design data visualization library written natively in Dart.
+Material Design charting library for Flutter. Community-maintained fork of [google/charts](https://github.com/google/charts).
 
-## Supported charts
+## Features
 
-See the [online gallery](https://google.github.io/charts/flutter/gallery.html).
+- Bar charts (grouped, stacked, horizontal, vertical, with labels)
+- Line charts (with area, stacked, segments, nulls, animation)
+- Pie / Donut charts (with labels, gauge)
+- Scatter plot charts (with shapes, comparison points, bucketing)
+- Time series charts (with annotations, confidence intervals)
+- Combo charts (line + bar, scatter + line)
+- Legend support (series and datum legends, custom layouts)
+- Interactive behaviors (selection, zoom/pan, sliders, tooltips)
+- Accessibility support
+- RTL layout support
 
-## Using the library
+## Getting Started
 
-The `/example/` folder inside `charts_flutter` in the [GitHub repo](https://github.com/google/charts)
-contains a full Flutter app with many demo examples.
+Add the dependency:
 
-## Development
+```yaml
+dependencies:
+  charts_flutter_maintained: ^1.0.0
+```
 
-This project is developed internally at Google and published for external
-consumption.
-Feel free to pitch in and contribute to this package! We welcome anyone who's interested.
+### Simple Bar Chart
+
+```dart
+import 'package:charts_flutter_maintained/charts_flutter_maintained.dart' as charts;
+
+charts.BarChart(
+  [
+    charts.Series<OrdinalSales, String>(
+      id: 'Sales',
+      domainFn: (sales, _) => sales.year,
+      measureFn: (sales, _) => sales.sales,
+      data: [
+        OrdinalSales('2021', 5),
+        OrdinalSales('2022', 25),
+        OrdinalSales('2023', 100),
+        OrdinalSales('2024', 75),
+      ],
+    ),
+  ],
+)
+```
+
+## Examples
+
+See the [example app](example) for a full gallery of chart types and configurations.
+
+## Requirements
+
+- Dart SDK >= 3.0.0
+- Flutter >= 3.10.0
+
+## License
+
+Apache 2.0 — see [LICENSE](LICENSE) for details.

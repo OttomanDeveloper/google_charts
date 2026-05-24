@@ -51,5 +51,5 @@ class GraphicsFactoryHelper {
   const GraphicsFactoryHelper();
 
   double getTextScaleFactorOf(BuildContext context) =>
-      MediaQuery.textScaleFactorOf(context);
+      MediaQuery.textScalerOf(context).textScaleFactor;
 }

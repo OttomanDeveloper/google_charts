@@ -100,6 +100,6 @@ class BarChart extends CartesianChart<String> {
   void addDefaultInteractions(List<ChartBehavior> behaviors) {
     super.addDefaultInteractions(behaviors);
 
-    behaviors.add(new DomainHighlighter<String>());
+    behaviors.add(DomainHighlighter<String>());
   }
 }

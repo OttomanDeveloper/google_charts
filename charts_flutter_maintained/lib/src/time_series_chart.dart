@@ -93,6 +93,6 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
   void addDefaultInteractions(List<ChartBehavior> behaviors) {
     super.addDefaultInteractions(behaviors);
 
-    behaviors.add(new LinePointHighlighter<DateTime>());
+    behaviors.add(LinePointHighlighter<DateTime>());
   }
 }

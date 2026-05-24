@@ -43,7 +43,7 @@ void main() {
   test('Text element gets assigned scale factor', () {
     final context = FakeBuildContext();
     final helper = FakeGraphicsFactoryHelper(3.0);
-    final graphicsFactory = new GraphicsFactory(context, helper: helper);
+    final graphicsFactory = GraphicsFactory(context, helper: helper);
 
     final textElement =
         graphicsFactory.createTextElement('test') as TextElement;

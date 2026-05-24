@@ -24,8 +24,8 @@ import 'package:charts_common_maintained/src/chart/common/series_renderer.dart';
 import '../../data/series.dart' show AttributeKey;
 import 'package:charts_common_maintained/src/common/math.dart'
     show NullablePoint;
-import 'package:charts_common_maintained/charts_common_maintained.dart'
-    show Color, LinkOrientation, Link;
+import '../../common/color.dart' show Color;
+import '../common/chart_canvas.dart' show Link, LinkOrientation;
 
 import 'link_renderer_config.dart';
 

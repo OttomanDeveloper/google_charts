@@ -77,7 +77,7 @@ class SelectNearest<D> extends ChartBehavior<D> {
       bool selectClosestSeries = true,
       common.SelectionTrigger eventTrigger = common.SelectionTrigger.tap,
       int? maximumDomainDistancePx}) {
-    return new SelectNearest._internal(
+    return SelectNearest._internal(
         selectionModelType: selectionModelType,
         selectionMode: selectionMode,
         selectAcrossAllDrawAreaComponents: selectAcrossAllDrawAreaComponents,
@@ -89,7 +89,7 @@ class SelectNearest<D> extends ChartBehavior<D> {
 
   static Set<GestureType> _getDesiredGestures(
       common.SelectionTrigger eventTrigger) {
-    final desiredGestures = new Set<GestureType>();
+    final desiredGestures = Set<GestureType>();
     switch (eventTrigger) {
       case common.SelectionTrigger.tap:
         desiredGestures..add(GestureType.onTap);
@@ -132,6 +132,7 @@ class SelectNearest<D> extends ChartBehavior<D> {
   @override
   String get role => 'SelectNearest-${selectionModelType.toString()}}';
 
+  @override
   bool operator ==(Object other) {
     if (other is SelectNearest) {
       return (selectionModelType == other.selectionModelType) &&
@@ -144,6 +145,7 @@ class SelectNearest<D> extends ChartBehavior<D> {
     }
   }
 
+  @override
   int get hashCode {
     int hashcode = selectionModelType.hashCode;
     hashcode = hashcode * 37 + eventTrigger.hashCode;

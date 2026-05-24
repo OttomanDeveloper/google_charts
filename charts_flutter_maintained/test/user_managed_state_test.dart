@@ -33,10 +33,10 @@ void main() {
       currentSelectionModel = model;
     }
 
-    final testChart = new TestChart(selectionChangedListener, onTapSelection);
+    final testChart = TestChart(selectionChangedListener, onTapSelection);
 
     await tester.pumpWidget(
-      new Directionality(
+      Directionality(
         textDirection: TextDirection.ltr,
         child: testChart,
       ),
@@ -67,7 +67,7 @@ class TestChart extends StatefulWidget {
 
   @override
   TestChartState createState() {
-    return new TestChartState(selectionChangedListener, onTapSelection);
+    return TestChartState(selectionChangedListener, onTapSelection);
   }
 }
 
@@ -76,17 +76,17 @@ class TestChartState extends State<TestChart> {
   final charts.UserManagedSelectionModel<String> onTapSelection;
 
   final seriesList = _createSampleData();
-  final myState = new charts.UserManagedState<String>();
+  final myState = charts.UserManagedState<String>();
 
   TestChartState(this.selectionChangedListener, this.onTapSelection);
 
   @override
   Widget build(BuildContext context) {
-    final chart = new charts.BarChart(
+    final chart = charts.BarChart(
       seriesList,
       userManagedState: myState,
       selectionModels: [
-        new charts.SelectionModelConfig(
+        charts.SelectionModelConfig(
             type: charts.SelectionModelType.info,
             changedListener: widget.selectionChangedListener)
       ],
@@ -95,9 +95,9 @@ class TestChartState extends State<TestChart> {
       defaultInteractions: false,
     );
 
-    return new Directionality(
+    return Directionality(
       textDirection: TextDirection.ltr,
-      child: new GestureDetector(child: chart, onTap: handleOnTap),
+      child: GestureDetector(child: chart, onTap: handleOnTap),
     );
   }
 
@@ -111,14 +111,14 @@ class TestChartState extends State<TestChart> {
 /// Create one series with sample hard coded data.
 List<charts.Series<OrdinalSales, String>> _createSampleData() {
   final data = [
-    new OrdinalSales('2014', 5),
-    new OrdinalSales('2015', 25),
-    new OrdinalSales('2016', 100),
-    new OrdinalSales('2017', 75),
+    OrdinalSales('2014', 5),
+    OrdinalSales('2015', 25),
+    OrdinalSales('2016', 100),
+    OrdinalSales('2017', 75),
   ];
 
   return [
-    new charts.Series<OrdinalSales, String>(
+    charts.Series<OrdinalSales, String>(
       id: 'Sales',
       colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
       domainFn: (OrdinalSales sales, _) => sales.year,

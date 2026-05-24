@@ -1287,7 +1287,7 @@ class RangeAnnotationTester<D> {
 }
 
 /// Base class for chart annotations.
-abstract class AnnotationSegment<D> {
+sealed class AnnotationSegment<D> {
   final RangeAnnotationAxisType axisType;
   final String? axisId;
   final Color? color;

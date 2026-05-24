@@ -188,24 +188,18 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
         if (calculatedLabelPosition == BarLabelPosition.inside) {
           final anchor = _resolveLabelAnchor(
               measure, labelAnchor ?? _defaultVerticalLabelAnchor);
-          switch (anchor) {
-            case BarLabelAnchor.end:
-              labelY = bounds.top + labelPadding + offsetHeight;
-              break;
-            case BarLabelAnchor.middle:
-              labelY = (bounds.bottom -
-                      bounds.height / 2 -
-                      totalLabelHeight / 2 +
-                      offsetHeight)
-                  .round();
-              break;
-            case BarLabelAnchor.start:
-              labelY = bounds.bottom -
-                  labelPadding -
-                  totalLabelHeight +
-                  offsetHeight;
-              break;
-          }
+          labelY = switch (anchor) {
+            BarLabelAnchor.end => bounds.top + labelPadding + offsetHeight,
+            BarLabelAnchor.middle => (bounds.bottom -
+                    bounds.height / 2 -
+                    totalLabelHeight / 2 +
+                    offsetHeight)
+                .round(),
+            BarLabelAnchor.start => bounds.bottom -
+                labelPadding -
+                totalLabelHeight +
+                offsetHeight,
+          };
         } else {
           // calculatedLabelPosition == LabelPosition.outside
           if (measure < 0 &&
@@ -308,7 +302,7 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
                   labelElement.measurement.horizontalSliceWidth >
                       labelElement.maxWidth!)) &&
           labelVerticalPosition != BarLabelVerticalPosition.top) {
-        return;
+        continue;
       }
 
       // Calculate the start position of label based on [labelAnchor].
@@ -366,7 +360,7 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
       }
 
       // Calculate label's y position based on BarLabelVerticalPosition.
-      final labelY;
+      final int labelY;
       if (labelVerticalPosition == BarLabelVerticalPosition.middle) {
         // Center the label inside the bar.
         labelY = (bounds.top +

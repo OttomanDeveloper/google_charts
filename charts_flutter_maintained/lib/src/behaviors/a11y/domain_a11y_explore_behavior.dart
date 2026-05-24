@@ -61,7 +61,7 @@ class DomainA11yExploreBehavior<D> extends ChartBehavior<D> {
     String? exploreModeEnabledAnnouncement,
     String? exploreModeDisabledAnnouncement,
   }) {
-    final desiredGestures = new Set<GestureType>();
+    final desiredGestures = Set<GestureType>();
     exploreModeTrigger ??= common.ExploreModeTrigger.pressHold;
 
     switch (exploreModeTrigger) {
@@ -73,7 +73,7 @@ class DomainA11yExploreBehavior<D> extends ChartBehavior<D> {
         break;
     }
 
-    return new DomainA11yExploreBehavior._internal(
+    return DomainA11yExploreBehavior._internal(
       vocalizationCallback: vocalizationCallback,
       desiredGestures: desiredGestures,
       exploreModeTrigger: exploreModeTrigger,

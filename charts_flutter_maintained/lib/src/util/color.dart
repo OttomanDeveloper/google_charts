@@ -22,6 +22,11 @@ class ColorUtil {
     return ui.Color.fromARGB(color.a, color.r, color.g, color.b);
   }
 
+  static ui.Color toDartColorWithOpacity(common.Color color, double opacity) {
+    return ui.Color.fromARGB(
+        (color.a * opacity).round(), color.r, color.g, color.b);
+  }
+
   static common.Color fromDartColor(ui.Color color) {
     return common.Color(
         r: color.red, g: color.green, b: color.blue, a: color.alpha);

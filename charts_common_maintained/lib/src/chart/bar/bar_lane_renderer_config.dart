@@ -97,12 +97,11 @@ class BarLaneRendererConfig extends BarRendererConfig<String> {
   }
 
   @override
-  int get hashCode {
-    var hash = super.hashCode;
-    hash = hash * 31 + backgroundBarColor.hashCode;
-    hash = hash * 31 + emptyLaneLabel.hashCode;
-    hash = hash * 31 + mergeEmptyLanes.hashCode;
-    hash = hash * 31 + renderNegativeLanes.hashCode;
-    return hash;
-  }
+  int get hashCode => Object.hash(
+        super.hashCode,
+        backgroundBarColor,
+        emptyLaneLabel,
+        mergeEmptyLanes,
+        renderNegativeLanes,
+      );
 }

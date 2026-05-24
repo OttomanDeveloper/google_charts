@@ -58,14 +58,14 @@ class WidgetLayoutDelegate extends MultiChildLayoutDelegate {
             isRTL ? common.BehaviorPosition.start : common.BehaviorPosition.end;
         final behaviorPosition = idAndBehavior[behaviorID]!.position;
 
-        behaviorSize = layoutChild(behaviorID, new BoxConstraints.loose(size));
+        behaviorSize = layoutChild(behaviorID, BoxConstraints.loose(size));
         if (behaviorPosition == common.BehaviorPosition.top) {
-          chartOffset = new Offset(0.0, behaviorSize.height);
+          chartOffset = Offset(0.0, behaviorSize.height);
           availableHeight -= behaviorSize.height;
         } else if (behaviorPosition == common.BehaviorPosition.bottom) {
           availableHeight -= behaviorSize.height;
         } else if (behaviorPosition == leftPosition) {
-          chartOffset = new Offset(behaviorSize.width, 0.0);
+          chartOffset = Offset(behaviorSize.width, 0.0);
           availableWidth -= behaviorSize.width;
         } else if (behaviorPosition == rightPosition) {
           availableWidth -= behaviorSize.width;
@@ -74,9 +74,9 @@ class WidgetLayoutDelegate extends MultiChildLayoutDelegate {
     }
 
     // Layout chart.
-    final chartSize = new Size(availableWidth, availableHeight);
+    final chartSize = Size(availableWidth, availableHeight);
     if (hasChild(chartID)) {
-      layoutChild(chartID, new BoxConstraints.tight(chartSize));
+      layoutChild(chartID, BoxConstraints.tight(chartSize));
       positionChild(chartID, chartOffset);
     }
 
@@ -119,24 +119,15 @@ class WidgetLayoutDelegate extends MultiChildLayoutDelegate {
       final horizontalJustification =
           getOutsideJustification(outsideJustification, isRTL);
 
-      switch (horizontalJustification) {
-        case _HorizontalJustification.leftDrawArea:
-          behaviorOffset = new Offset(
-              behavior.drawAreaBounds!.left.toDouble(), heightOffset);
-          break;
-        case _HorizontalJustification.left:
-          behaviorOffset = new Offset(0.0, heightOffset);
-          break;
-        case _HorizontalJustification.rightDrawArea:
-          behaviorOffset = new Offset(
-              behavior.drawAreaBounds!.right - behaviorSize.width,
-              heightOffset);
-          break;
-        case _HorizontalJustification.right:
-          behaviorOffset =
-              new Offset(chartSize.width - behaviorSize.width, heightOffset);
-          break;
-      }
+      behaviorOffset = switch (horizontalJustification) {
+        _HorizontalJustification.leftDrawArea =>
+          Offset(behavior.drawAreaBounds!.left.toDouble(), heightOffset),
+        _HorizontalJustification.left => Offset(0.0, heightOffset),
+        _HorizontalJustification.rightDrawArea => Offset(
+            behavior.drawAreaBounds!.right - behaviorSize.width, heightOffset),
+        _HorizontalJustification.right =>
+          Offset(chartSize.width - behaviorSize.width, heightOffset),
+      };
     } else if (behaviorPosition == common.BehaviorPosition.start ||
         behaviorPosition == common.BehaviorPosition.end) {
       final widthOffset =
@@ -145,72 +136,53 @@ class WidgetLayoutDelegate extends MultiChildLayoutDelegate {
               ? chartSize.width
               : 0.0;
 
-      switch (outsideJustification) {
-        case common.OutsideJustification.startDrawArea:
-        case common.OutsideJustification.middleDrawArea:
-          behaviorOffset =
-              new Offset(widthOffset, behavior.drawAreaBounds!.top.toDouble());
-          break;
-        case common.OutsideJustification.start:
-        case common.OutsideJustification.middle:
-          behaviorOffset = new Offset(widthOffset, 0.0);
-          break;
-        case common.OutsideJustification.endDrawArea:
-          behaviorOffset = new Offset(widthOffset,
-              behavior.drawAreaBounds!.bottom - behaviorSize.height);
-          break;
-        case common.OutsideJustification.end:
-          behaviorOffset =
-              new Offset(widthOffset, chartSize.height - behaviorSize.height);
-          break;
-      }
+      behaviorOffset = switch (outsideJustification) {
+        common.OutsideJustification.startDrawArea ||
+        common.OutsideJustification.middleDrawArea =>
+          Offset(widthOffset, behavior.drawAreaBounds!.top.toDouble()),
+        common.OutsideJustification.start ||
+        common.OutsideJustification.middle =>
+          Offset(widthOffset, 0.0),
+        common.OutsideJustification.endDrawArea => Offset(
+            widthOffset,
+            behavior.drawAreaBounds!.bottom - behaviorSize.height),
+        common.OutsideJustification.end =>
+          Offset(widthOffset, chartSize.height - behaviorSize.height),
+      };
     } else if (behaviorPosition == common.BehaviorPosition.inside) {
-      var rightOffset = new Offset(chartSize.width - behaviorSize.width, 0.0);
+      var rightOffset = Offset(chartSize.width - behaviorSize.width, 0.0);
 
-      switch (insideJustification) {
-        case common.InsideJustification.topStart:
-          behaviorOffset = isRTL ? rightOffset : Offset.zero;
-          break;
-        case common.InsideJustification.topEnd:
-          behaviorOffset = isRTL ? Offset.zero : rightOffset;
-          break;
-      }
+      behaviorOffset = switch (insideJustification) {
+        common.InsideJustification.topStart =>
+          isRTL ? rightOffset : Offset.zero,
+        common.InsideJustification.topEnd =>
+          isRTL ? Offset.zero : rightOffset,
+      };
     }
 
     return behaviorOffset;
   }
 
   _HorizontalJustification getOutsideJustification(
-      common.OutsideJustification justification, bool isRTL) {
-    _HorizontalJustification mappedJustification;
-
-    switch (justification) {
-      case common.OutsideJustification.startDrawArea:
-      case common.OutsideJustification.middleDrawArea:
-        mappedJustification = isRTL
-            ? _HorizontalJustification.rightDrawArea
-            : _HorizontalJustification.leftDrawArea;
-        break;
-      case common.OutsideJustification.start:
-      case common.OutsideJustification.middle:
-        mappedJustification = isRTL
-            ? _HorizontalJustification.right
-            : _HorizontalJustification.left;
-        break;
-      case common.OutsideJustification.endDrawArea:
-        mappedJustification = isRTL
+          common.OutsideJustification justification, bool isRTL) =>
+      switch (justification) {
+        common.OutsideJustification.startDrawArea ||
+        common.OutsideJustification.middleDrawArea =>
+          isRTL
+              ? _HorizontalJustification.rightDrawArea
+              : _HorizontalJustification.leftDrawArea,
+        common.OutsideJustification.start ||
+        common.OutsideJustification.middle =>
+          isRTL
+              ? _HorizontalJustification.right
+              : _HorizontalJustification.left,
+        common.OutsideJustification.endDrawArea => isRTL
             ? _HorizontalJustification.leftDrawArea
-            : _HorizontalJustification.rightDrawArea;
-        break;
-      case common.OutsideJustification.end:
-        mappedJustification = isRTL
+            : _HorizontalJustification.rightDrawArea,
+        common.OutsideJustification.end => isRTL
             ? _HorizontalJustification.left
-            : _HorizontalJustification.right;
-        break;
-    }
-
-    return mappedJustification;
-  }
+            : _HorizontalJustification.right,
+      };
 }
 
 enum _HorizontalJustification {

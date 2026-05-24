@@ -37,10 +37,10 @@ class SymbolRendererCanvas implements SymbolRendererBuilder {
       color = color.withOpacity(0.26);
     }
 
-    return new SizedBox.fromSize(
+    return SizedBox.fromSize(
         size: size,
-        child: new CustomPaint(
-            painter: new _SymbolCustomPaint(
+        child: CustomPaint(
+            painter: _SymbolCustomPaint(
                 context, commonSymbolRenderer, color, dashPattern)));
   }
 }
@@ -97,13 +97,13 @@ class _SymbolCustomPaint extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final bounds =
-        new Rectangle<num>(0, 0, size.width.toInt(), size.height.toInt());
+        Rectangle<num>(0, 0, size.width.toInt(), size.height.toInt());
     final commonColor = color == null
         ? null
-        : new common.Color(
+        : common.Color(
             r: color!.red, g: color!.green, b: color!.blue, a: color!.alpha);
     symbolRenderer.paint(
-        new ChartCanvas(canvas, GraphicsFactory(context)), bounds,
+        ChartCanvas(canvas, GraphicsFactory(context)), bounds,
         fillColor: commonColor,
         strokeColor: commonColor,
         dashPattern: dashPattern);

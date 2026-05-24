@@ -1,3 +1,26 @@
+# 1.0.0
+
+- **Breaking:** Minimum SDK constraint raised to Dart 3.0.0.
+- Added `analysis_options.yaml` with strict linting rules.
+- Updated all dependencies to latest compatible versions.
+- Removed unnecessary `new` keywords throughout codebase.
+- Added explicit type annotations replacing `var` usages.
+- Converted switch statements to Dart 3 switch expressions.
+- Replaced `.forEach()` with `for-in` loops per Dart style guide.
+- Fixed old-style typedef syntax to use modern `=` syntax.
+- Renamed SCREAMING_CASE constants to lowerCamelCase.
+- Fixed missing type annotations on parameters and return types.
+- Fixed redundant null checks on non-nullable types.
+- Fixed self-importing barrel file in axis and link renderer.
+- Removed commented-out dead code.
+- Optimized `ListEquality` instantiation in `operator ==`.
+- Updated CI to use modern GitHub Actions with proper directory references.
+- Updated README with correct links and badges.
+
+# 0.12.2
+
+- Updated README File.
+
 # 0.12.1
 
 - Dart 3 Support.
@@ -76,9 +99,6 @@
 # 0.3.0
 
 - Simplified API by removing the requirement for specifying the datum type when creating a chart.
-  For example, previously to construct a bar chart the syntax was 'new BarChart<MyDatumType>()'.
-  The syntax is now cleaned up to be 'new BarChart()'. Please refer to the
-  [online gallery](https://google.github.io/charts/flutter/gallery.html) for the correct syntax.
 - Added scatter plot charts
 - Added tap to hide for legends
 - Added support for rendering area skirts to line charts

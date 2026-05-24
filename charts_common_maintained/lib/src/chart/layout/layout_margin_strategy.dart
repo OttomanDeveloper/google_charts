@@ -74,7 +74,7 @@ abstract class VerticalMarginStrategy {
     final measuredWidths = _DesiredViewSizes();
     var remainingWidth = maxWidth;
 
-    views.forEach((LayoutView view) {
+    for (final LayoutView view in views) {
       final params = view.layoutConfig;
       final viewMargin = params.viewMargin;
 
@@ -97,7 +97,7 @@ abstract class VerticalMarginStrategy {
       }
 
       measuredWidths.add(size.preferredWidth, size.minWidth);
-    });
+    }
 
     measuredWidths.adjustedTo(maxWidth);
     return measuredWidths.preferredSizes;
@@ -115,7 +115,7 @@ class LeftMarginLayoutStrategy extends VerticalMarginStrategy {
     var prevBoundsRight = drawAreaBounds.left;
 
     var i = 0;
-    views.forEach((LayoutView view) {
+    for (final LayoutView view in views) {
       final params = view.layoutConfig;
 
       final width = measuredSizes[i];
@@ -133,7 +133,7 @@ class LeftMarginLayoutStrategy extends VerticalMarginStrategy {
       view.layout(Rectangle(left, top, width, height), drawAreaBounds);
 
       i++;
-    });
+    }
   }
 }
 
@@ -145,7 +145,7 @@ class RightMarginLayoutStrategy extends VerticalMarginStrategy {
     var prevBoundsLeft = drawAreaBounds.right;
 
     var i = 0;
-    views.forEach((view) {
+    for (final view in views) {
       final params = view.layoutConfig;
 
       final width = measuredSizes[i];
@@ -163,7 +163,7 @@ class RightMarginLayoutStrategy extends VerticalMarginStrategy {
       view.layout(Rectangle(left, top, width, height), drawAreaBounds);
 
       i++;
-    });
+    }
   }
 }
 
@@ -174,7 +174,7 @@ abstract class HorizontalMarginStrategy {
     final measuredHeights = _DesiredViewSizes();
     var remainingHeight = maxHeight;
 
-    views.forEach((LayoutView view) {
+    for (final LayoutView view in views) {
       final params = view.layoutConfig;
       final viewMargin = params.viewMargin;
 
@@ -197,7 +197,7 @@ abstract class HorizontalMarginStrategy {
       }
 
       measuredHeights.add(size.preferredHeight, size.minHeight);
-    });
+    }
 
     measuredHeights.adjustedTo(maxHeight);
     return measuredHeights.preferredSizes;
@@ -215,7 +215,7 @@ class TopMarginLayoutStrategy extends HorizontalMarginStrategy {
     var prevBoundsBottom = drawAreaBounds.top;
 
     var i = 0;
-    views.forEach((LayoutView view) {
+    for (final LayoutView view in views) {
       final params = view.layoutConfig;
 
       final height = measuredSizes[i];
@@ -234,7 +234,7 @@ class TopMarginLayoutStrategy extends HorizontalMarginStrategy {
       view.layout(Rectangle(left, top, width, height), drawAreaBounds);
 
       i++;
-    });
+    }
   }
 }
 
@@ -246,7 +246,7 @@ class BottomMarginLayoutStrategy extends HorizontalMarginStrategy {
     var prevBoundsTop = drawAreaBounds.bottom;
 
     var i = 0;
-    views.forEach((view) {
+    for (final view in views) {
       final params = view.layoutConfig;
 
       final height = measuredSizes[i];
@@ -265,6 +265,6 @@ class BottomMarginLayoutStrategy extends HorizontalMarginStrategy {
       view.layout(Rectangle(left, top, width, height), drawAreaBounds);
 
       i++;
-    });
+    }
   }
 }

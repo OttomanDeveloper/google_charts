@@ -9,3 +9,14 @@ build/
 **/ios/.generated/
 **/ios/Flutter/Generated.xcconfig
 **/ios/Runner/GeneratedPluginRegistrant.*
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# macOS
+.DS_Store
+
+# Coverage
+coverage/

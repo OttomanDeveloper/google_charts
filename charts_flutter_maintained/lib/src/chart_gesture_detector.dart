@@ -62,7 +62,7 @@ class ChartGestureDetector {
     // gestures.
     _listeningForLongPress = desiredGestures.contains(GestureType.onLongPress);
 
-    return new GestureDetector(
+    return GestureDetector(
       child: chartContainer,
       onTapDown: wantTapDown ? onTapDown : null,
       onTapUp: wantTap ? onTapUp : null,
@@ -75,12 +75,12 @@ class ChartGestureDetector {
   void onTapDown(TapDownDetails d) {
     final container = _containerResolver();
     final localPosition = container.globalToLocal(d.globalPosition);
-    _lastTapPoint = new Point(localPosition.dx, localPosition.dy);
+    _lastTapPoint = Point(localPosition.dx, localPosition.dy);
     container.gestureProxy.onTapTest(_lastTapPoint!);
 
     // Kick off a timer to see if this is a LongPress.
     if (_listeningForLongPress) {
-      _longPressTimer = new Timer(_kLongPressTimeout, () {
+      _longPressTimer = Timer(_kLongPressTimeout, () {
         onLongPress();
         _longPressTimer = null;
       });
@@ -92,7 +92,7 @@ class ChartGestureDetector {
 
     final container = _containerResolver();
     final localPosition = container.globalToLocal(d.globalPosition);
-    _lastTapPoint = new Point(localPosition.dx, localPosition.dy);
+    _lastTapPoint = Point(localPosition.dx, localPosition.dy);
     container.gestureProxy.onTap(_lastTapPoint!);
   }
 
@@ -106,7 +106,7 @@ class ChartGestureDetector {
 
     final container = _containerResolver();
     final localPosition = container.globalToLocal(d.focalPoint);
-    _lastTapPoint = new Point(localPosition.dx, localPosition.dy);
+    _lastTapPoint = Point(localPosition.dx, localPosition.dy);
 
     _isDragging = container.gestureProxy.onDragStart(_lastTapPoint!);
   }
@@ -118,7 +118,7 @@ class ChartGestureDetector {
 
     final container = _containerResolver();
     final localPosition = container.globalToLocal(d.focalPoint);
-    _lastTapPoint = new Point(localPosition.dx, localPosition.dy);
+    _lastTapPoint = Point(localPosition.dx, localPosition.dy);
     _lastScale = d.scale;
 
     container.gestureProxy.onDragUpdate(_lastTapPoint!, d.scale);
@@ -137,4 +137,4 @@ class ChartGestureDetector {
 }
 
 // Exposed for testing.
-typedef ChartContainerRenderObject _ContainerResolver();
+typedef _ContainerResolver = ChartContainerRenderObject Function();

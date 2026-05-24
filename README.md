@@ -1,28 +1,53 @@
-# Maintained
+# Google Charts (Maintained)
 
-Charts is a general charting library, currently enabled for the
-[Flutter mobile UI framework](https://flutter.io).
+A general-purpose charting library for Dart and Flutter, community-maintained fork of [google/charts](https://github.com/google/charts).
 
-See the [online gallery](https://google.github.io/charts/flutter/gallery.html) for supported chart
-types and examples of how to custom components of the chart.
+## Packages
 
-_Note_: This is not an official Google product.
-Feel free to pitch in and contribute to this package! We welcome anyone who's interested.
+### [charts_common_maintained](https://pub.dev/packages/charts_common_maintained)
 
-[![Travis CI Build Status](https://travis-ci.org/google/charts.svg?branch=master)](https://travis-ci.org/google/charts)
+[![pub package](https://img.shields.io/pub/v/charts_common_maintained.svg)](https://pub.dev/packages/charts_common_maintained)
 
-## charts_common
+Platform-agnostic charting library. Contains the core rendering logic, data models, and chart behaviors.
 
-[![charts_common pub package](https://img.shields.io/pub/v/charts_common.svg)](https://pub.dev/packages/charts_common_maintained)
+### [charts_flutter_maintained](https://pub.dev/packages/charts_flutter_maintained)
 
-A common library for charting packages.
+[![pub package](https://img.shields.io/pub/v/charts_flutter_maintained.svg)](https://pub.dev/packages/charts_flutter_maintained)
 
-## charts_flutter
+Material Design charting library for [Flutter](https://flutter.dev), supporting Android, iOS, Web, and Desktop.
 
-[![charts_flutter pub package](https://img.shields.io/pub/v/charts_flutter.svg)](https://pub.dev/packages/charts_flutter_maintained)
+## Supported Chart Types
 
-A charting package for [Flutter](https://flutter.io), supporting both Android
-and iOS.
+- Bar charts (grouped, stacked, horizontal, vertical)
+- Line charts (with area, stacked, segments)
+- Pie / Donut charts
+- Scatter plot charts
+- Time series charts
+- Combo charts (line + bar)
+- Sunburst charts
+- Treemap charts
+- Sankey charts
 
-All charts packages are licensed under the Apache 2 license, see the
-[LICENSE](LICENSE) and [AUTHORS](AUTHORS) files for details.
+## Getting Started
+
+Add the dependency to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  charts_flutter_maintained: ^1.0.0
+```
+
+See the [example app](charts_flutter_maintained/example) for usage of all chart types.
+
+## Requirements
+
+- Dart SDK >= 3.0.0
+- Flutter >= 3.10.0 (for charts_flutter_maintained)
+
+## Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request on [GitHub](https://github.com/OttomanDeveloper/google_charts).
+
+## License
+
+All packages are licensed under the Apache 2 license. See [LICENSE](LICENSE) and [AUTHORS](AUTHORS) for details.

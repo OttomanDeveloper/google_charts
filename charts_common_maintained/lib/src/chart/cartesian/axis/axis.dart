@@ -18,7 +18,6 @@ import 'dart:math' show Rectangle, min, max;
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:meta/meta.dart' show protected, visibleForTesting;
 
-import '../../../../charts_common_maintained.dart';
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/text_element.dart' show TextElement;
 import '../../../data/series.dart' show AttributeKey;
@@ -470,27 +469,13 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
       positionOrder: LayoutViewPositionOrder.axis);
 
   /// Get layout position from axis orientation.
-  LayoutPosition? get _layoutPosition {
-    LayoutPosition? position;
-    switch (axisOrientation) {
-      case AxisOrientation.top:
-        position = LayoutPosition.Top;
-        break;
-      case AxisOrientation.right:
-        position = LayoutPosition.Right;
-        break;
-      case AxisOrientation.bottom:
-        position = LayoutPosition.Bottom;
-        break;
-      case AxisOrientation.left:
-        position = LayoutPosition.Left;
-        break;
-      case null:
-        break;
-    }
-
-    return position;
-  }
+  LayoutPosition? get _layoutPosition => switch (axisOrientation) {
+        AxisOrientation.top => LayoutPosition.Top,
+        AxisOrientation.right => LayoutPosition.Right,
+        AxisOrientation.bottom => LayoutPosition.Bottom,
+        AxisOrientation.left => LayoutPosition.Left,
+        null => null,
+      };
 
   /// The axis is rendered vertically.
   bool get isVertical =>
@@ -661,11 +646,7 @@ class OrdinalViewport {
   }
 
   @override
-  int get hashCode {
-    var hashcode = startingDomain.hashCode;
-    hashcode = (hashcode * 37) + dataSize;
-    return hashcode;
-  }
+  int get hashCode => Object.hash(startingDomain, endDomain, dataSize);
 }
 
 @visibleForTesting

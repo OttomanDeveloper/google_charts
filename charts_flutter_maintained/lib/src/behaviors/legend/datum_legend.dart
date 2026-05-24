@@ -47,7 +47,7 @@ class DatumLegend<D> extends ChartBehavior<D> {
       common.OutsideJustification.startDrawArea;
   static const defaultInsideJustification = common.InsideJustification.topStart;
 
-  final desiredGestures = new Set<GestureType>();
+  final desiredGestures = Set<GestureType>();
 
   final common.SelectionModelType? selectionModelType;
 
@@ -153,14 +153,14 @@ class DatumLegend<D> extends ChartBehavior<D> {
         position == common.BehaviorPosition.bottom ||
         position == common.BehaviorPosition.inside);
     final layoutBuilder = horizontalFirst
-        ? new TabularLegendLayout.horizontalFirst(
+        ? TabularLegendLayout.horizontalFirst(
             desiredMaxColumns: desiredMaxColumns, cellPadding: cellPadding)
-        : new TabularLegendLayout.verticalFirst(
+        : TabularLegendLayout.verticalFirst(
             desiredMaxRows: desiredMaxRows, cellPadding: cellPadding);
 
-    return new DatumLegend._internal(
+    return DatumLegend._internal(
         contentBuilder:
-            new TabularLegendContentBuilder(legendLayout: layoutBuilder),
+            TabularLegendContentBuilder(legendLayout: layoutBuilder),
         selectionModelType: common.SelectionModelType.info,
         position: position,
         outsideJustification: outsideJustification,
@@ -216,7 +216,7 @@ class DatumLegend<D> extends ChartBehavior<D> {
     outsideJustification ??= defaultOutsideJustification;
     insideJustification ??= defaultInsideJustification;
 
-    return new DatumLegend._internal(
+    return DatumLegend._internal(
       contentBuilder: contentBuilder,
       selectionModelType: common.SelectionModelType.info,
       position: position,

@@ -74,14 +74,10 @@ class BarRendererConfig<D> extends BaseBarRendererConfig<D> {
   }
 
   @override
-  int get hashCode {
-    var hash = super.hashCode;
-    hash = hash * 31 + cornerStrategy.hashCode;
-    return hash;
-  }
+  int get hashCode => Object.hash(super.hashCode, cornerStrategy);
 }
 
-abstract class CornerStrategy {
+sealed class CornerStrategy {
   /// Returns the radius of the rounded corners in pixels.
   int getRadius(int barWidth);
 }
@@ -93,7 +89,7 @@ class ConstCornerStrategy implements CornerStrategy {
   const ConstCornerStrategy(this.radius);
 
   @override
-  int getRadius(_) => radius;
+  int getRadius(Object _) => radius;
 
   @override
   bool operator ==(Object other) {
@@ -112,7 +108,7 @@ class NoCornerStrategy extends ConstCornerStrategy {
   const NoCornerStrategy() : super(0);
 
   @override
-  bool operator ==(other) => other is NoCornerStrategy;
+  bool operator ==(Object other) => other is NoCornerStrategy;
 
   @override
   int get hashCode => 31;

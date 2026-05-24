@@ -61,22 +61,15 @@ class TimeTickFormatterImpl implements TimeTickFormatter {
   }
 
   /// Gets the calendar field for [dateTime].
-  int getCalendarField(DateTime dateTime, CalendarField field) {
-    switch (field) {
-      case CalendarField.year:
-        return dateTime.year;
-      case CalendarField.month:
-        return dateTime.month;
-      case CalendarField.date:
-        return dateTime.day;
-      case CalendarField.hourOfDay:
-        return dateTime.hour;
-      case CalendarField.minute:
-        return dateTime.minute;
-      case CalendarField.second:
-        return dateTime.second;
-    }
-  }
+  int getCalendarField(DateTime dateTime, CalendarField field) =>
+      switch (field) {
+        CalendarField.year => dateTime.year,
+        CalendarField.month => dateTime.month,
+        CalendarField.date => dateTime.day,
+        CalendarField.hourOfDay => dateTime.hour,
+        CalendarField.minute => dateTime.minute,
+        CalendarField.second => dateTime.second,
+      };
 }
 
 enum CalendarField {

@@ -120,6 +120,8 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
       groupingType == BarGroupingType.stacked ||
       groupingType == BarGroupingType.groupedStacked;
 
+  static const _listEquality = ListEquality<int>();
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
@@ -135,24 +137,22 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
         other.stackedBarPaddingPx == stackedBarPaddingPx &&
         other.strokeWidthPx == strokeWidthPx &&
         other.symbolRenderer == symbolRenderer &&
-        ListEquality<int>().equals(other.weightPattern, weightPattern);
+        _listEquality.equals(other.weightPattern, weightPattern);
   }
 
   @override
-  int get hashCode {
-    var hash = 1;
-    hash = hash * 31 + customRendererId.hashCode;
-    hash = hash * 31 + dashPattern.hashCode;
-    hash = hash * 31 + fillPattern.hashCode;
-    hash = hash * 31 + groupingType.hashCode;
-    hash = hash * 31 + minBarLengthPx.hashCode;
-    hash = hash * 31 + maxBarWidthPx.hashCode;
-    hash = hash * 31 + stackedBarPaddingPx.hashCode;
-    hash = hash * 31 + strokeWidthPx.hashCode;
-    hash = hash * 31 + symbolRenderer.hashCode;
-    hash = hash * 31 + weightPattern.hashCode;
-    return hash;
-  }
+  int get hashCode => Object.hash(
+        customRendererId,
+        dashPattern,
+        fillPattern,
+        groupingType,
+        minBarLengthPx,
+        maxBarWidthPx,
+        stackedBarPaddingPx,
+        strokeWidthPx,
+        symbolRenderer,
+        weightPattern,
+      );
 }
 
 /// Defines the way multiple series of bars are renderered per domain.

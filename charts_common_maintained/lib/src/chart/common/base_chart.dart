@@ -264,7 +264,7 @@ abstract class BaseChart<D> {
         selectAcrossAllDrawAreaComponents ? drawableLayoutAreaBounds : null;
 
     final details = <DatumDetails<D>>[];
-    _usingRenderers.forEach((String rendererId) {
+    for (final String rendererId in _usingRenderers) {
       details
           .addAll(getSeriesRenderer(rendererId).getNearestDatumDetailPerSeries(
         drawAreaPoint,
@@ -273,7 +273,7 @@ abstract class BaseChart<D> {
         selectOverlappingPoints: selectOverlappingPoints,
         selectExactEventLocation: selectExactEventLocation,
       ));
-    });
+    }
 
     details.sort((DatumDetails<D> a, DatumDetails<D> b) {
       // Sort so that the nearest one is first.
@@ -497,7 +497,9 @@ abstract class BaseChart<D> {
     // This can be used by listeners of selection to determine the order of
     // series, because the selection details are not returned in this order.
     var seriesIndex = 0;
-    processedSeriesList.forEach((series) => series.seriesIndex = seriesIndex++);
+    for (final series in processedSeriesList) {
+      series.seriesIndex = seriesIndex++;
+    }
 
     // Initially save a reference to processedSeriesList. After drawInternal
     // finishes, we expect _currentSeriesList to contain a new, possibly
@@ -572,16 +574,15 @@ abstract class BaseChart<D> {
     // Build map of rendererIds to SeriesLists. This map can't be re-used later
     // in the preprocessSeries call because some behaviors might alter the
     // seriesList.
-    seriesList.forEach((MutableSeries<D> series) {
+    for (final MutableSeries<D> series in seriesList) {
       final rendererId = series.getAttr(rendererIdKey);
       rendererToSeriesList.putIfAbsent(rendererId, () => []).add(series);
-    });
+    }
 
     // Have each renderer add missing color functions to their seriesLists.
-    rendererToSeriesList
-        .forEach((String? rendererId, List<MutableSeries<D>> seriesList) {
-      getSeriesRenderer(rendererId).configureSeries(seriesList);
-    });
+    for (final entry in rendererToSeriesList.entries) {
+      getSeriesRenderer(entry.key).configureSeries(entry.value);
+    }
   }
 
   /// Preprocess series to allow stacking and other mutations.
@@ -595,22 +596,23 @@ abstract class BaseChart<D> {
     _usingRenderers = <String>{};
 
     // Build map of rendererIds to SeriesLists.
-    seriesList.forEach((MutableSeries<D> series) {
+    for (final MutableSeries<D> series in seriesList) {
       final rendererId = series.getAttr(rendererIdKey)!;
       rendererToSeriesList.putIfAbsent(rendererId, () => []).add(series);
 
       _usingRenderers.add(rendererId);
       unusedRenderers.remove(rendererId);
-    });
+    }
 
     // Allow unused renderers to render out content.
-    unusedRenderers
-        .forEach((rendererId) => rendererToSeriesList[rendererId] = []);
+    for (final rendererId in unusedRenderers) {
+      rendererToSeriesList[rendererId] = [];
+    }
 
     // Have each renderer preprocess their seriesLists.
-    rendererToSeriesList.forEach((rendererId, seriesList) {
-      getSeriesRenderer(rendererId).preprocessSeries(seriesList);
-    });
+    for (final entry in rendererToSeriesList.entries) {
+      getSeriesRenderer(entry.key).preprocessSeries(entry.value);
+    }
 
     return rendererToSeriesList;
   }
@@ -621,10 +623,9 @@ abstract class BaseChart<D> {
 
   void onPostLayout(Map<String, List<MutableSeries<D>>> rendererToSeriesList) {
     // Update each renderer with
-    rendererToSeriesList
-        .forEach((String rendererId, List<MutableSeries<D>> seriesList) {
-      getSeriesRenderer(rendererId).update(seriesList, animatingThisDraw);
-    });
+    for (final entry in rendererToSeriesList.entries) {
+      getSeriesRenderer(entry.key).update(entry.value, animatingThisDraw);
+    }
 
     // Request animation
     if (animatingThisDraw) {
@@ -640,10 +641,10 @@ abstract class BaseChart<D> {
 
   void paint(ChartCanvas canvas) {
     canvas.drawingView = 'BaseView';
-    _layoutManager.paintOrderedViews.forEach((LayoutView view) {
+    for (final LayoutView view in _layoutManager.paintOrderedViews) {
       canvas.drawingView = view.runtimeType.toString();
       view.paint(canvas, animatingThisDraw ? animationPercent : 1.0);
-    });
+    }
 
     canvas.drawingView = 'PostRender';
     fireOnPostrender(canvas);
@@ -659,44 +660,44 @@ abstract class BaseChart<D> {
 
   @protected
   void fireOnDraw(List<MutableSeries<D>> seriesList) {
-    _lifecycleListeners.forEach((LifecycleListener<D> listener) {
+    for (final LifecycleListener<D> listener in _lifecycleListeners) {
       listener.onData?.call(seriesList);
-    });
+    }
   }
 
   @protected
   void fireOnPreprocess(List<MutableSeries<D>> seriesList) {
-    _lifecycleListeners.forEach((LifecycleListener<D> listener) {
+    for (final LifecycleListener<D> listener in _lifecycleListeners) {
       listener.onPreprocess?.call(seriesList);
-    });
+    }
   }
 
   @protected
   void fireOnPostprocess(List<MutableSeries<D>> seriesList) {
-    _lifecycleListeners.forEach((LifecycleListener<D> listener) {
+    for (final LifecycleListener<D> listener in _lifecycleListeners) {
       listener.onPostprocess?.call(seriesList);
-    });
+    }
   }
 
   @protected
   void fireOnAxisConfigured() {
-    _lifecycleListeners.forEach((LifecycleListener<D> listener) {
+    for (final LifecycleListener<D> listener in _lifecycleListeners) {
       listener.onAxisConfigured?.call();
-    });
+    }
   }
 
   @protected
   void fireOnPostrender(ChartCanvas canvas) {
-    _lifecycleListeners.forEach((LifecycleListener<D> listener) {
+    for (final LifecycleListener<D> listener in _lifecycleListeners) {
       listener.onPostrender?.call(canvas);
-    });
+    }
   }
 
   @protected
   void fireOnAnimationComplete() {
-    _lifecycleListeners.forEach((LifecycleListener<D> listener) {
+    for (final LifecycleListener<D> listener in _lifecycleListeners) {
       listener.onAnimationComplete?.call();
-    });
+    }
   }
 
   /// Called to free up any resources due to chart going away.
@@ -707,8 +708,9 @@ abstract class BaseChart<D> {
     }
     _behaviorStack.clear();
     _behaviorRoleMap.clear();
-    _selectionModels.values
-        .forEach((selectionModel) => selectionModel.clearAllListeners());
+    for (final selectionModel in _selectionModels.values) {
+      selectionModel.clearAllListeners();
+    }
   }
 }
 

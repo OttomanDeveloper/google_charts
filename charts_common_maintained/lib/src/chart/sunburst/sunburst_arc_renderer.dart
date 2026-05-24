@@ -74,7 +74,7 @@ class SunburstArcRenderer<D> extends BaseArcRenderer<D> {
   @override
   void preprocessSeries(List<MutableSeries<D>> seriesList) {
     _nodeToArcRenderElementMap.clear();
-    seriesList.forEach((MutableSeries<D> series) {
+    for (final MutableSeries<D> series in seriesList) {
       var elements = <SunburstArcRendererElement<D>>[];
 
       var domainFn = series.domainFn;
@@ -128,7 +128,7 @@ class SunburstArcRenderer<D> extends BaseArcRenderer<D> {
       }
 
       series.setAttr(arcElementsKey, elements);
-    });
+    }
   }
 
   // Create SunburstArcRendererElement for children of the node.
@@ -214,7 +214,7 @@ class SunburstArcRenderer<D> extends BaseArcRenderer<D> {
       }
     }
 
-    seriesList.forEach((ImmutableSeries<D> series) {
+    for (final ImmutableSeries<D> series in seriesList) {
       var colorFn = series.colorFn;
       var arcListKey = series.id;
       var elementsList =
@@ -362,10 +362,11 @@ class SunburstArcRenderer<D> extends BaseArcRenderer<D> {
           }
         }
       }
-    });
+    }
 
     // Animate out arcs that don't exist anymore.
-    _seriesArcMap.forEach((String key, List<AnimatedArcList<D>> arcLists) {
+    for (final entry in _seriesArcMap.entries) {
+      final arcLists = entry.value;
       for (var arcList in arcLists) {
         for (var arcIndex = 0; arcIndex < arcList.arcs.length; arcIndex++) {
           final arc = arcList.arcs[arcIndex];
@@ -392,7 +393,7 @@ class SunburstArcRenderer<D> extends BaseArcRenderer<D> {
           }
         }
       }
-    });
+    }
   }
 
   @override
@@ -401,7 +402,9 @@ class SunburstArcRenderer<D> extends BaseArcRenderer<D> {
     if (animationPercent == 1.0) {
       final keysToRemove = <String>[];
 
-      _seriesArcMap.forEach((String key, List<AnimatedArcList<D>> arcLists) {
+      for (final entry in _seriesArcMap.entries) {
+        final key = entry.key;
+        final arcLists = entry.value;
         final arcListToRemove = <AnimatedArcList<D>>[];
         for (var arcList in arcLists) {
           arcList.arcs.removeWhere((AnimatedArc<D> arc) => arc.animatingOut);
@@ -415,9 +418,11 @@ class SunburstArcRenderer<D> extends BaseArcRenderer<D> {
         if (arcLists.isEmpty) {
           keysToRemove.add(key);
         }
-      });
+      }
 
-      keysToRemove.forEach(_seriesArcMap.remove);
+      for (final key in keysToRemove) {
+        _seriesArcMap.remove(key);
+      }
     }
 
     super.paint(canvas, animationPercent);
@@ -455,7 +460,7 @@ class SunburstArcRenderer<D> extends BaseArcRenderer<D> {
   @override
   void assignMissingColors(Iterable<MutableSeries<D>> seriesList,
       {required bool emptyCategoryUsesSinglePalette}) {
-    seriesList.forEach((series) {
+    for (final series in seriesList) {
       if (series.colorFn == null) {
         final root = series.data.first as TreeNode<D>;
         final firstLevelChildren = (series.data.first as TreeNode<D>).children;
@@ -504,7 +509,7 @@ class SunburstArcRenderer<D> extends BaseArcRenderer<D> {
         series.colorFn ??=
             (index) => nodeToColorMap[series.data[index!]] ?? Color.black;
       }
-    });
+    }
   }
 
   /// Calculate the inner and outer radius of the current level based on config.

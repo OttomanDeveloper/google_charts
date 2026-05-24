@@ -119,21 +119,17 @@ class LinearScaleFunction {
 
   /// Calculates and stores the current rangeBand given the config and current
   /// step size.
-  double _calculateRangeBandSize(RangeBandConfig rangeBandConfig) {
-    switch (rangeBandConfig.type) {
-      case RangeBandType.fixedDomain:
-        return rangeBandConfig.size * scalingFactor;
-      case RangeBandType.fixedPixel:
-        return rangeBandConfig.size;
-      case RangeBandType.fixedPixelSpaceFromStep:
-        return stepSizePixels - rangeBandConfig.size;
-      case RangeBandType.styleAssignedPercentOfStep:
-      case RangeBandType.fixedPercentOfStep:
-        return stepSizePixels * rangeBandConfig.size;
-      case RangeBandType.none:
-        return 0.0;
-    }
-  }
+  double _calculateRangeBandSize(RangeBandConfig rangeBandConfig) =>
+      switch (rangeBandConfig.type) {
+        RangeBandType.fixedDomain => rangeBandConfig.size * scalingFactor,
+        RangeBandType.fixedPixel => rangeBandConfig.size,
+        RangeBandType.fixedPixelSpaceFromStep =>
+          stepSizePixels - rangeBandConfig.size,
+        RangeBandType.styleAssignedPercentOfStep ||
+        RangeBandType.fixedPercentOfStep =>
+          stepSizePixels * rangeBandConfig.size,
+        RangeBandType.none => 0.0,
+      };
 
   /// Calculates and Stores the current step size and scale factor together,
   /// given the viewport, domain, and config.

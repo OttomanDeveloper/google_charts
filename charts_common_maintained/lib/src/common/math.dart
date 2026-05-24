@@ -105,8 +105,6 @@ class NullablePoint {
   ///
   /// Throws if [x] or [y] is null.
   Point<double> toPoint() {
-    assert(x != null);
-    assert(y != null);
     return Point<double>(x!, y!);
   }
 }

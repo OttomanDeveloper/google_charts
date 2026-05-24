@@ -31,7 +31,7 @@ class ChartTitleLine extends StatelessWidget {
 
   /// Creates a [LineChart] with sample data and no transition.
   factory ChartTitleLine.withSampleData() {
-    return new ChartTitleLine(
+    return ChartTitleLine(
       _createSampleData(),
       // Disable animations for image tests.
       animate: false,
@@ -43,22 +43,22 @@ class ChartTitleLine extends StatelessWidget {
   // It is used for creating random series data to demonstrate animation in
   // the example app only.
   factory ChartTitleLine.withRandomData() {
-    return new ChartTitleLine(_createRandomData());
+    return ChartTitleLine(_createRandomData());
   }
 
   /// Create random data.
   static List<charts.Series<LinearSales, num>> _createRandomData() {
-    final random = new Random();
+    final random = Random();
 
     final data = [
-      new LinearSales(0, random.nextInt(100)),
-      new LinearSales(1, random.nextInt(100)),
-      new LinearSales(2, random.nextInt(100)),
-      new LinearSales(3, random.nextInt(100)),
+      LinearSales(0, random.nextInt(100)),
+      LinearSales(1, random.nextInt(100)),
+      LinearSales(2, random.nextInt(100)),
+      LinearSales(3, random.nextInt(100)),
     ];
 
     return [
-      new charts.Series<LinearSales, int>(
+      charts.Series<LinearSales, int>(
         id: 'Sales',
         domainFn: (LinearSales sales, _) => sales.year,
         measureFn: (LinearSales sales, _) => sales.sales,
@@ -70,7 +70,7 @@ class ChartTitleLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.LineChart(
+    return charts.LineChart(
       seriesList,
       animate: animate,
       // Configures four [ChartTitle] behaviors to render titles in each chart
@@ -78,7 +78,7 @@ class ChartTitleLine extends StatelessWidget {
       // of the chart. The other titles are aligned with the middle of the draw
       // area.
       behaviors: [
-        new charts.ChartTitle('Top title text',
+        charts.ChartTitle('Top title text',
             subTitle: 'Top sub-title text',
             behaviorPosition: charts.BehaviorPosition.top,
             titleOutsideJustification: charts.OutsideJustification.start,
@@ -87,15 +87,15 @@ class ChartTitleLine extends StatelessWidget {
             // The top tick label may extend upwards into the top margin region
             // if it is located at the top of the draw area.
             innerPadding: 18),
-        new charts.ChartTitle('Bottom title text',
+        charts.ChartTitle('Bottom title text',
             behaviorPosition: charts.BehaviorPosition.bottom,
             titleOutsideJustification:
                 charts.OutsideJustification.middleDrawArea),
-        new charts.ChartTitle('Start title',
+        charts.ChartTitle('Start title',
             behaviorPosition: charts.BehaviorPosition.start,
             titleOutsideJustification:
                 charts.OutsideJustification.middleDrawArea),
-        new charts.ChartTitle('End title',
+        charts.ChartTitle('End title',
             behaviorPosition: charts.BehaviorPosition.end,
             titleOutsideJustification:
                 charts.OutsideJustification.middleDrawArea),
@@ -106,14 +106,14 @@ class ChartTitleLine extends StatelessWidget {
   /// Create one series with sample hard coded data.
   static List<charts.Series<LinearSales, int>> _createSampleData() {
     final data = [
-      new LinearSales(0, 5),
-      new LinearSales(1, 25),
-      new LinearSales(2, 100),
-      new LinearSales(3, 75),
+      LinearSales(0, 5),
+      LinearSales(1, 25),
+      LinearSales(2, 100),
+      LinearSales(3, 75),
     ];
 
     return [
-      new charts.Series<LinearSales, int>(
+      charts.Series<LinearSales, int>(
         id: 'Sales',
         domainFn: (LinearSales sales, _) => sales.year,
         measureFn: (LinearSales sales, _) => sales.sales,
@@ -128,5 +128,5 @@ class LinearSales {
   final int year;
   final int sales;
 
-  LinearSales(this.year, this.sales);
+  const LinearSales(this.year, this.sales);
 }

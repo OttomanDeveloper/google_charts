@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:collection' show LinkedHashMap, HashSet;
+import 'dart:collection' show LinkedHashMap;
 import 'dart:math' show Point, Rectangle, max;
 
 import 'package:collection/collection.dart' show IterableExtension;
@@ -151,7 +151,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
 
     final orderedSeriesList = getOrderedSeriesList(seriesList);
 
-    orderedSeriesList.forEach((MutableSeries<D> series) {
+    for (final MutableSeries<D> series in orderedSeriesList) {
       var elements = <BaseBarRendererElement>[];
 
       var domainFn = series.domainFn;
@@ -264,7 +264,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
       if (config.grouped) {
         barGroupIndex++;
       }
-    });
+    }
 
     // Compute number of bar groups. This must be done after we have processed
     // all of the series once, so that we know how many categories we have.
@@ -282,7 +282,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
     // Compute bar group weights.
     final barWeights = _calculateBarWeights(numBarGroups);
 
-    seriesList.forEach((MutableSeries<D> series) {
+    for (final MutableSeries<D> series in seriesList) {
       series.setAttr(barGroupCountKey, numBarGroups);
 
       if (barWeights.isNotEmpty) {
@@ -305,7 +305,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
         series.setAttr(previousBarGroupWeightKey, previousBarWeight);
         series.setAttr(allBarGroupWeightsKey, barWeights);
       }
-    });
+    }
   }
 
   /// Calculates bar weights for a list of series from [config.weightPattern].
@@ -371,7 +371,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
 
     final orderedSeriesList = getOrderedSeriesList(seriesList);
 
-    orderedSeriesList.forEach((final ImmutableSeries<D> series) {
+    for (final ImmutableSeries<D> series in orderedSeriesList) {
       final domainAxis = series.getAttr(domainAxisKey) as ImmutableAxis<D>;
       final domainFn = series.domainFn;
       final measureAxis = series.getAttr(measureAxisKey) as ImmutableAxis<num>;
@@ -506,17 +506,18 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
 
         animatingBar.setNewTarget(barElement as R);
       }
-    });
+    }
 
     // Animate out bars that don't exist anymore.
-    _barStackMap.forEach((String key, List<B> barStackList) {
+    for (final entry in _barStackMap.entries) {
+      final barStackList = entry.value;
       for (var barIndex = 0; barIndex < barStackList.length; barIndex++) {
         final bar = barStackList[barIndex];
         if (_currentKeys.contains(bar.key) != true) {
           bar.animateOut();
         }
       }
-    });
+    }
   }
 
   /// Generates a [BaseAnimatedBar] to represent the previous and current state
@@ -577,16 +578,17 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
   void paint(ChartCanvas canvas, double animationPercent) {
     // Clean up the bars that no longer exist.
     if (animationPercent == 1.0) {
-      final keysToRemove = HashSet<String>();
+      final keysToRemove = <String>{};
 
-      _barStackMap.forEach((String key, List<B> barStackList) {
+      for (final entry in _barStackMap.entries) {
+        final barStackList = entry.value;
         barStackList.retainWhere(
             (B bar) => !bar.animatingOut && !bar.targetBar!.measureIsNull!);
 
         if (barStackList.isEmpty) {
-          keysToRemove.add(key);
+          keysToRemove.add(entry.key);
         }
-      });
+      }
 
       // When cleaning up the animation, also clean up the keys used to lookup
       // if a bar is selected.
@@ -594,23 +596,23 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
         _barStackMap.remove(key);
         _currentKeys.remove(key);
       }
-      _currentGroupsStackKeys.forEach((domain, keys) {
+      for (final keys in _currentGroupsStackKeys.values) {
         keys.removeWhere(keysToRemove.contains);
-      });
+      }
     }
 
-    _barStackMap.forEach((String stackKey, List<B> barStack) {
+    for (final entry in _barStackMap.entries) {
       // Turn this into a list so that the getCurrentBar isn't called more than
       // once for each animationPercent if the barElements are iterated more
       // than once.
-      final barElements = barStack
+      final barElements = entry.value
           .map((B animatingBar) => animatingBar.getCurrentBar(animationPercent))
           .toList();
 
       if (barElements.isNotEmpty) {
         paintBar(canvas, animationPercent, barElements);
       }
-    });
+    }
   }
 
   /// Paints a stack of bar elements on the canvas.
@@ -703,13 +705,15 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
         ? _currentGroupsStackKeys[domainValue]
         : _currentGroupsStackKeys.values
             .reduce((allKeys, keys) => allKeys..addAll(keys));
-    stackKeys?.forEach((String stackKey) {
-      if (where != null) {
-        matchingSegments.addAll(_barStackMap[stackKey]!.where(where));
-      } else {
-        matchingSegments.addAll(_barStackMap[stackKey]!);
+    if (stackKeys != null) {
+      for (final String stackKey in stackKeys) {
+        if (where != null) {
+          matchingSegments.addAll(_barStackMap[stackKey]!.where(where));
+        } else {
+          matchingSegments.addAll(_barStackMap[stackKey]!);
+        }
       }
-    });
+    }
 
     return matchingSegments;
   }
@@ -827,8 +831,9 @@ class _ReversedSeriesIterator<S extends ImmutableSeries<Object?>>
     }
 
     // Creates a visit that is categories in order, but the series is reversed.
-    categoryAndSeriesIndexMap
-        .forEach((_, indices) => _visitIndex.addAll(indices.reversed));
+    for (final indices in categoryAndSeriesIndexMap.values) {
+      _visitIndex.addAll(indices.reversed);
+    }
   }
 
   @override

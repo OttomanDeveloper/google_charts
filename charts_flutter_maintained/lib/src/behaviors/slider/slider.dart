@@ -124,10 +124,10 @@ class Slider<D> extends ChartBehavior<D> {
       common.SliderStyle? style,
       int layoutPaintOrder = common.LayoutViewPaintOrder.slider}) {
     eventTrigger ??= common.SelectionTrigger.tapAndDrag;
-    handleRenderer ??= new common.RectSymbolRenderer();
+    handleRenderer ??= common.RectSymbolRenderer();
     // Default the handle size large enough to tap on a mobile device.
-    style ??= new common.SliderStyle(handleSize: Rectangle<int>(0, 0, 20, 30));
-    return new Slider._internal(
+    style ??= common.SliderStyle(handleSize: Rectangle<int>(0, 0, 20, 30));
+    return Slider._internal(
         eventTrigger: eventTrigger,
         handleRenderer: handleRenderer,
         initialDomainValue: initialDomainValue,
@@ -141,7 +141,7 @@ class Slider<D> extends ChartBehavior<D> {
 
   static Set<GestureType> _getDesiredGestures(
       common.SelectionTrigger eventTrigger) {
-    final desiredGestures = new Set<GestureType>();
+    final desiredGestures = Set<GestureType>();
     switch (eventTrigger) {
       case common.SelectionTrigger.tapAndDrag:
         desiredGestures
@@ -156,7 +156,7 @@ class Slider<D> extends ChartBehavior<D> {
           ..add(GestureType.onDrag);
         break;
       default:
-        throw new ArgumentError(
+        throw ArgumentError(
             'Slider does not support the event trigger ' + '"$eventTrigger"');
     }
     return desiredGestures;

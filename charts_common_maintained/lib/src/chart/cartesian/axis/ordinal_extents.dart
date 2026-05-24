@@ -13,7 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:collection' show HashSet;
 import 'scale.dart' show Extents;
 
 /// A range of ordinals.
@@ -28,7 +27,7 @@ class OrdinalExtents extends Extents<String> {
   OrdinalExtents(List<String> range) : _range = range {
     // This asserts that all elements in [range] are unique.
     assert(() {
-      final uniqueValueCount = HashSet.of(_range).length;
+      final uniqueValueCount = Set.of(_range).length;
       return uniqueValueCount == range.length;
     }());
   }

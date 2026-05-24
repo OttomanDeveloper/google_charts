@@ -25,7 +25,7 @@ import '../../data/tree.dart' show TreeNode;
 
 /// Given the selected node and a list of currently expanded node, returns the
 /// new set of node to be expanded (shown beyond the initialDisplayLevel).
-typedef List<TreeNode<dynamic>> ExpandNodeCallback(
+typedef ExpandNodeCallback = List<TreeNode<dynamic>> Function(
     TreeNode<dynamic> node, List<TreeNode<dynamic>> expandedNode);
 
 /// Configuration for an [ArcRenderer].
@@ -77,8 +77,8 @@ class SunburstArcRendererConfig<D> extends BaseArcRendererConfig<D> {
       double startAngle = -pi / 2,
       double strokeWidthPx = 2.0,
       SymbolRenderer? symbolRenderer})
-      : this.maxDisplayLevel = maxDisplayLevel ?? _maxInt32Value,
-        this.initialDisplayLevel =
+      : maxDisplayLevel = maxDisplayLevel ?? _maxInt32Value,
+        initialDisplayLevel =
             initialDisplayLevel ?? maxDisplayLevel ?? _maxInt32Value,
         super(
             customRendererId: customRendererId,

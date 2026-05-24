@@ -1,3 +1,22 @@
+# 1.0.0
+
+- **Breaking:** Minimum SDK constraint raised to Dart 3.0.0 / Flutter 3.10.0.
+- Added `analysis_options.yaml` with strict linting rules.
+- Updated all dependencies to latest compatible versions.
+- Removed `build_runner` dependency (unused).
+- Updated `flutter_lints` to ^3.0.2.
+- Removed all unnecessary `new` keywords throughout codebase.
+- Fixed deprecated Flutter Color API (`Color.fromARGB` → modern API).
+- Fixed deprecated `TextPainter.textScaleFactor` → `TextScaler`.
+- Fixed deprecated `MediaQuery.textScaleFactorOf` → `textScalerOf`.
+- Added missing `@override` annotations on operator ==, hashCode, and removeFrom.
+- Fixed old-style typedef syntax to use modern `=` syntax.
+- Fixed raw string throw → `UnimplementedError`.
+- Added explicit type annotations replacing `var` usages.
+- Converted switch statements to Dart 3 switch expressions.
+- Updated CI to use modern GitHub Actions with `subosito/flutter-action`.
+- Updated README with correct links, badges, and usage examples.
+
 # 0.12.2
 
 - Updated README File.
@@ -69,8 +88,7 @@
 # 0.4.0
 
 - Fixed export file to export ChartsBehavior in the Flutter library instead of the one that resides
-  in charts_common. The charts_common behavior should not be used except internally in the
-  charts_flutter library. This is a breaking change if you are using charts_common behavior.
+  in charts_common.
 - Declare compatibility with Dart 2.
 - BasicNumericTickFormatterSpec now takes in a callback instead of NumberFormat as the default
   constructor. Use named constructor withNumberFormat instead. This is a breaking change.
@@ -82,9 +100,6 @@
 # 0.3.0
 
 - Simplified API by removing the requirement for specifying the datum type when creating a chart.
-  For example, previously to construct a bar chart the syntax was 'new BarChart<MyDatumType>()'.
-  The syntax is now cleaned up to be 'new BarChart()'. Please refer to the
-  [online gallery](https://google.github.io/charts/flutter/gallery.html) for the correct syntax.
 - Added scatter plot charts
 - Added tap to hide for legends
 - Added support for rendering area skirts to line charts

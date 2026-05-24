@@ -13,7 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//import 'dart:collection' show HashSet;
 import '../../../cartesian/axis/axis.dart' show Axis, measureAxisIdKey;
 import '../../../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
 import '../../datum_details.dart' show MeasureFormatter;

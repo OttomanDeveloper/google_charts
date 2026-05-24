@@ -29,7 +29,7 @@ class VerticalBarLabelChart extends StatelessWidget {
 
   /// Creates a [BarChart] with sample data and no transition.
   factory VerticalBarLabelChart.withSampleData() {
-    return new VerticalBarLabelChart(
+    return VerticalBarLabelChart(
       _createSampleData(),
       // Disable animations for image tests.
       animate: false,
@@ -41,22 +41,22 @@ class VerticalBarLabelChart extends StatelessWidget {
   // It is used for creating random series data to demonstrate animation in
   // the example app only.
   factory VerticalBarLabelChart.withRandomData() {
-    return new VerticalBarLabelChart(_createRandomData());
+    return VerticalBarLabelChart(_createRandomData());
   }
 
   /// Create random data.
   static List<charts.Series<OrdinalSales, String>> _createRandomData() {
-    final random = new Random();
+    final random = Random();
 
     final data = [
-      new OrdinalSales('2014', random.nextInt(100)),
-      new OrdinalSales('2015', random.nextInt(100)),
-      new OrdinalSales('2016', random.nextInt(100)),
-      new OrdinalSales('2017', random.nextInt(100)),
+      OrdinalSales('2014', random.nextInt(100)),
+      OrdinalSales('2015', random.nextInt(100)),
+      OrdinalSales('2016', random.nextInt(100)),
+      OrdinalSales('2017', random.nextInt(100)),
     ];
 
     return [
-      new charts.Series<OrdinalSales, String>(
+      charts.Series<OrdinalSales, String>(
           id: 'Sales',
           domainFn: (OrdinalSales sales, _) => sales.year,
           measureFn: (OrdinalSales sales, _) => sales.sales,
@@ -77,30 +77,30 @@ class VerticalBarLabelChart extends StatelessWidget {
   // [insideLabelStyleSpec] and [outsideLabelStyleSpec].
   @override
   Widget build(BuildContext context) {
-    return new charts.BarChart(
+    return charts.BarChart(
       seriesList,
       animate: animate,
       // Set a bar label decorator.
       // Example configuring different styles for inside/outside:
-      //       barRendererDecorator: new charts.BarLabelDecorator(
-      //          insideLabelStyleSpec: new charts.TextStyleSpec(...),
-      //          outsideLabelStyleSpec: new charts.TextStyleSpec(...)),
-      barRendererDecorator: new charts.BarLabelDecorator<String>(),
-      domainAxis: new charts.OrdinalAxisSpec(),
+      //       barRendererDecorator: charts.BarLabelDecorator(
+      //          insideLabelStyleSpec: charts.TextStyleSpec(...),
+      //          outsideLabelStyleSpec: charts.TextStyleSpec(...)),
+      barRendererDecorator: charts.BarLabelDecorator<String>(),
+      domainAxis: charts.OrdinalAxisSpec(),
     );
   }
 
   /// Create one series with sample hard coded data.
   static List<charts.Series<OrdinalSales, String>> _createSampleData() {
     final data = [
-      new OrdinalSales('2014', 5),
-      new OrdinalSales('2015', 25),
-      new OrdinalSales('2016', 100),
-      new OrdinalSales('2017', 75),
+      OrdinalSales('2014', 5),
+      OrdinalSales('2015', 25),
+      OrdinalSales('2016', 100),
+      OrdinalSales('2017', 75),
     ];
 
     return [
-      new charts.Series<OrdinalSales, String>(
+      charts.Series<OrdinalSales, String>(
           id: 'Sales',
           domainFn: (OrdinalSales sales, _) => sales.year,
           measureFn: (OrdinalSales sales, _) => sales.sales,
@@ -117,5 +117,5 @@ class OrdinalSales {
   final String year;
   final int sales;
 
-  OrdinalSales(this.year, this.sales);
+  const OrdinalSales(this.year, this.sales);
 }

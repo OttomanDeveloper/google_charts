@@ -86,6 +86,6 @@ class LineChart extends CartesianChart<num> {
   void addDefaultInteractions(List<ChartBehavior> behaviors) {
     super.addDefaultInteractions(behaviors);
 
-    behaviors.add(new LinePointHighlighter<num>());
+    behaviors.add(LinePointHighlighter<num>());
   }
 }

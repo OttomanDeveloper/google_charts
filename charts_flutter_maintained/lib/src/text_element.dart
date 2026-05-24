@@ -139,17 +139,17 @@ class TextElement implements common.TextElement {
     _opacity ??= 1.0;
     var color = (textStyle == null || textStyle!.color == null)
         ? null
-        : new Color.fromARGB(
+        : Color.fromARGB(
             (textStyle!.color!.a * _opacity!).round(),
             textStyle!.color!.r,
             textStyle!.color!.g,
             textStyle!.color!.b,
           );
 
-    _textPainter = new TextPainter(
-        text: new TextSpan(
+    _textPainter = TextPainter(
+        text: TextSpan(
             text: text,
-            style: new TextStyle(
+            style: TextStyle(
                 color: color,
                 fontSize: textStyle?.fontSize?.toDouble(),
                 fontFamily: textStyle?.fontFamily,
@@ -165,7 +165,7 @@ class TextElement implements common.TextElement {
           : null;
 
     if (textScaleFactor != null) {
-      _textPainter.textScaleFactor = textScaleFactor!;
+      _textPainter.textScaler = TextScaler.linear(textScaleFactor!);
     }
 
     _textPainter.layout(maxWidth: maxWidth?.toDouble() ?? double.infinity);
@@ -186,27 +186,16 @@ class TextElement implements common.TextElement {
     _painterReady = true;
   }
 
-  FontWeight transFontWeight(String? weight) {
-    switch (weight) {
-      case "100":
-        return FontWeight.w100;
-      case "200":
-        return FontWeight.w200;
-      case "300":
-        return FontWeight.w300;
-      case "400":
-        return FontWeight.w400;
-      case "500":
-        return FontWeight.w500;
-      case "600":
-        return FontWeight.w600;
-      case "700":
-        return FontWeight.w700;
-      case "800":
-        return FontWeight.w800;
-      case "900":
-        return FontWeight.w900;
-    }
-    return FontWeight.w400;
-  }
+  FontWeight transFontWeight(String? weight) => switch (weight) {
+        "100" => FontWeight.w100,
+        "200" => FontWeight.w200,
+        "300" => FontWeight.w300,
+        "400" => FontWeight.w400,
+        "500" => FontWeight.w500,
+        "600" => FontWeight.w600,
+        "700" => FontWeight.w700,
+        "800" => FontWeight.w800,
+        "900" => FontWeight.w900,
+        _ => FontWeight.w400,
+      };
 }

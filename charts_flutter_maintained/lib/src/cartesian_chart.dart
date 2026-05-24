@@ -108,7 +108,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   @protected
   LinkedHashMap<String, common.NumericAxis>? createDisjointMeasureAxes() {
     if (disjointMeasureAxes != null) {
-      final disjointAxes = new LinkedHashMap<String, common.NumericAxis>();
+      final disjointAxes = LinkedHashMap<String, common.NumericAxis>();
 
       disjointMeasureAxes!
           .forEach((String axisId, common.NumericAxisSpec axisSpec) {

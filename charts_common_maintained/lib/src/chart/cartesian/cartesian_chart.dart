@@ -180,10 +180,10 @@ abstract class CartesianChart<D> extends BaseChart<D> {
     _secondaryMeasureAxis.tickDrawStrategy = GridlineRendererSpec<num>()
         .createDrawStrategy(context, graphicsFactory);
 
-    _disjointMeasureAxes.forEach((String axisId, NumericAxis axis) {
+    for (final axis in _disjointMeasureAxes.values) {
       axis.context = context;
       axis.tickDrawStrategy = NoneDrawStrategy<num>(context, graphicsFactory);
-    });
+    }
   }
 
   @override
@@ -274,20 +274,24 @@ abstract class CartesianChart<D> extends BaseChart<D> {
     if (_disjointMeasureAxesSpec != _newDisjointMeasureAxesSpec) {
       markChartDirty();
       _disjointMeasureAxesSpec = _newDisjointMeasureAxesSpec;
-      _disjointMeasureAxes.forEach((String axisId, NumericAxis axis) {
+      for (final axis in _disjointMeasureAxes.values) {
         removeView(axis);
-      });
+      }
 
       // ignore: prefer_collection_literals, https://github.com/dart-lang/linter/issues/1649
       _disjointMeasureAxes = LinkedHashMap<String, NumericAxis>();
-      _disjointMeasureAxesSpec?.forEach((axisId, axisSpec) {
-        _disjointMeasureAxes[axisId] = axisSpec.createAxis();
-        _disjointMeasureAxes[axisId]!.tickDrawStrategy =
-            NoneDrawStrategy<num>(context, graphicsFactory!);
-        axisSpec.configure(
-            _disjointMeasureAxes[axisId]!, context, graphicsFactory!);
-        addView(_disjointMeasureAxes[axisId]!);
-      });
+      if (_disjointMeasureAxesSpec != null) {
+        for (final entry in _disjointMeasureAxesSpec!.entries) {
+          final axisId = entry.key;
+          final axisSpec = entry.value;
+          _disjointMeasureAxes[axisId] = axisSpec.createAxis();
+          _disjointMeasureAxes[axisId]!.tickDrawStrategy =
+              NoneDrawStrategy<num>(context, graphicsFactory!);
+          axisSpec.configure(
+              _disjointMeasureAxes[axisId]!, context, graphicsFactory!);
+          addView(_disjointMeasureAxes[axisId]!);
+        }
+      }
     }
   }
 
@@ -392,9 +396,9 @@ abstract class CartesianChart<D> extends BaseChart<D> {
     }
 
     // Add all disjoint axis views so that their range will be configured.
-    _disjointMeasureAxes.forEach((String axisId, NumericAxis axis) {
+    for (final axis in _disjointMeasureAxes.values) {
       addView(axis);
-    });
+    }
 
     final domainAxis = this.domainAxis!;
 
@@ -403,9 +407,9 @@ abstract class CartesianChart<D> extends BaseChart<D> {
     _primaryMeasureAxis.resetDomains();
     _secondaryMeasureAxis.resetDomains();
 
-    _disjointMeasureAxes.forEach((String axisId, NumericAxis axis) {
+    for (final axis in _disjointMeasureAxes.values) {
       axis.resetDomains();
-    });
+    }
 
     final reverseAxisDirection = context != null && context.isRtl;
 
@@ -426,13 +430,13 @@ abstract class CartesianChart<D> extends BaseChart<D> {
             : AxisOrientation.right)
         ..reverseOutputRange = flipVerticalAxisOutput;
 
-      _disjointMeasureAxes.forEach((String axisId, NumericAxis axis) {
+      for (final axis in _disjointMeasureAxes.values) {
         axis
           ..axisOrientation = (reverseAxisDirection
               ? AxisOrientation.left
               : AxisOrientation.right)
           ..reverseOutputRange = flipVerticalAxisOutput;
-      });
+      }
     } else {
       domainAxis
         ..axisOrientation = (reverseAxisDirection
@@ -448,20 +452,19 @@ abstract class CartesianChart<D> extends BaseChart<D> {
         ..axisOrientation = AxisOrientation.top
         ..reverseOutputRange = reverseAxisDirection;
 
-      _disjointMeasureAxes.forEach((String axisId, NumericAxis axis) {
+      for (final axis in _disjointMeasureAxes.values) {
         axis
           ..axisOrientation = AxisOrientation.top
           ..reverseOutputRange = reverseAxisDirection;
-      });
+      }
     }
 
     // Have each renderer configure the axes with their domain and measure
     // values.
-    rendererToSeriesList
-        .forEach((String rendererId, List<MutableSeries<D>> seriesList) {
-      getSeriesRenderer(rendererId).configureDomainAxes(seriesList);
-      getSeriesRenderer(rendererId).configureMeasureAxes(seriesList);
-    });
+    for (final entry in rendererToSeriesList.entries) {
+      getSeriesRenderer(entry.key).configureDomainAxes(entry.value);
+      getSeriesRenderer(entry.key).configureMeasureAxes(entry.value);
+    }
 
     return rendererToSeriesList;
   }
@@ -479,9 +482,9 @@ abstract class CartesianChart<D> extends BaseChart<D> {
       _secondaryMeasureAxis.updateTicks();
     }
 
-    _disjointMeasureAxes.forEach((String axisId, NumericAxis axis) {
+    for (final axis in _disjointMeasureAxes.values) {
       axis.updateTicks();
-    });
+    }
 
     super.onSkipLayout();
   }
@@ -498,7 +501,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   List<DatumDetails<D>> getDatumDetails(SelectionModelType type) {
     final entries = <DatumDetails<D>>[];
 
-    getSelectionModel(type).selectedDatum.forEach((seriesDatum) {
+    for (final seriesDatum in getSelectionModel(type).selectedDatum) {
       final series = seriesDatum.series;
       final Object? datum = seriesDatum.datum;
       final datumIndex = seriesDatum.index;
@@ -528,7 +531,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
           seriesDatum);
 
       entries.add(datumDetails);
-    });
+    }
 
     return entries;
   }
