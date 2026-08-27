@@ -34,7 +34,7 @@ Add the dependency to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  charts_flutter_maintained: ^2.0.0
+  charts_flutter_maintained: ^2.1.0
 ```
 
 See the [example app](charts_flutter_maintained/example) for usage of all chart types.

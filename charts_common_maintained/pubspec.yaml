@@ -1,5 +1,5 @@
 name: charts_common_maintained
-version: 2.0.0
+version: 2.1.0
 description: A common library for charting packages.
 homepage: https://github.com/OttomanDeveloper/google_charts
 repository: https://github.com/OttomanDeveloper/google_charts

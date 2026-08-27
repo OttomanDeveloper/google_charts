@@ -1,3 +1,8 @@
+# 2.1.0
+
+- Maintenance release following the Dart 3 and current Flutter modernization.
+- Refreshes package metadata and compatibility documentation.
+
 # 2.0.0
 
 - **Breaking:** Requires Dart SDK `>=3.9.0 <4.0.0`.
