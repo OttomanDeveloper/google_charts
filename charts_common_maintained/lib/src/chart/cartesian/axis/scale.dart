@@ -231,35 +231,33 @@ class RangeBandConfig {
   final double size;
 
   /// Creates a rangeBand definition of zero, no rangeBand.
-  const RangeBandConfig.none()
-      : type = RangeBandType.none,
-        size = 0.0;
+  const RangeBandConfig.none() : type = RangeBandType.none, size = 0.0;
 
   /// Creates a fixed rangeBand definition in pixel width.
   ///
   /// Used to determine a bar width or a step width in the line renderer.
   const RangeBandConfig.fixedPixel(double pixels)
-      : type = RangeBandType.fixedPixel,
-        size = pixels;
+    : type = RangeBandType.fixedPixel,
+      size = pixels;
 
   /// Creates a fixed rangeBand definition in domain unit width.
   ///
   /// Used to determine a bar width or a step width in the line renderer.
   const RangeBandConfig.fixedDomain(double domainSize)
-      : type = RangeBandType.fixedDomain,
-        size = domainSize;
+    : type = RangeBandType.fixedDomain,
+      size = domainSize;
 
   /// Creates a config that defines the rangeBand as equal to the stepSize.
   const RangeBandConfig.stepChartBand()
-      : type = RangeBandType.fixedPercentOfStep,
-        size = 1.0;
+    : type = RangeBandType.fixedPercentOfStep,
+      size = 1.0;
 
   /// Creates a config that defines the rangeBand as percentage of the stepSize.
   ///
   /// [percentOfStepWidth] is the percentage of the step from 0.0 - 1.0.
   RangeBandConfig.percentOfStep(double percentOfStepWidth)
-      : type = RangeBandType.fixedPercentOfStep,
-        size = percentOfStepWidth {
+    : type = RangeBandType.fixedPercentOfStep,
+      size = percentOfStepWidth {
     assert(percentOfStepWidth >= 0 && percentOfStepWidth <= 1.0);
   }
 
@@ -268,16 +266,16 @@ class RangeBandConfig {
   /// <p>Note: renderers can detect this setting and update the percent based on
   /// the number of series in their preprocess.
   RangeBandConfig.styleAssignedPercent([int seriesCount = 1])
-      : type = RangeBandType.styleAssignedPercentOfStep,
-        size = StyleFactory.style.rangeBandSize;
+    : type = RangeBandType.styleAssignedPercentOfStep,
+      size = StyleFactory.style.rangeBandSize;
 
   /// Creates a config that defines the rangeBand as the stepSize - pixels.
   ///
   /// Where fixedPixels() gave you a constant rangBand in pixels, this will give
   /// you a constant space between rangeBands in pixels.
   const RangeBandConfig.fixedPixelSpaceBetweenStep(double pixels)
-      : type = RangeBandType.fixedPixelSpaceFromStep,
-        size = pixels;
+    : type = RangeBandType.fixedPixelSpaceFromStep,
+      size = pixels;
 }
 
 /// Type of step size calculation to use.
@@ -297,19 +295,17 @@ class StepSizeConfig {
   /// The stepSize is determined is calculated by detecting the smallest
   /// distance between two adjacent data points.  This may not be suitable if
   /// you have irregular data or just a single data point.
-  const StepSizeConfig.auto()
-      : type = StepSizeType.autoDetect,
-        size = 0.0;
+  const StepSizeConfig.auto() : type = StepSizeType.autoDetect, size = 0.0;
 
   /// Creates a StepSizeConfig specifying the exact step size in pixel units.
   const StepSizeConfig.fixedPixels(double pixels)
-      : type = StepSizeType.fixedPixels,
-        size = pixels;
+    : type = StepSizeType.fixedPixels,
+      size = pixels;
 
   /// Creates a StepSizeConfig specifying the exact step size in domain units.
   const StepSizeConfig.fixedDomain(double domainSize)
-      : type = StepSizeType.fixedDomain,
-        size = domainSize;
+    : type = StepSizeType.fixedDomain,
+      size = domainSize;
 }
 
 // TODO: make other extent subclasses plural.

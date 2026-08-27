@@ -30,11 +30,26 @@ import 'package:charts_common_maintained/src/common/graphics_factory.dart';
 import 'package:charts_common_maintained/src/common/line_style.dart';
 import 'package:charts_common_maintained/src/common/text_style.dart';
 import 'package:charts_common_maintained/src/common/text_element.dart';
-import 'package:meta/meta.dart' show required;
+
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-class MockNumericScale extends Mock implements NumericScale {}
+class MockNumericScale extends Mock implements NumericScale {
+  NumericExtents viewportDomainValue = NumericExtents(0, 1);
+  int rangeWidthValue = 0;
+  final locations = <num, double?>{};
+
+  @override
+  NumericExtents get viewportDomain => viewportDomainValue;
+
+  @override
+  int get rangeWidth => rangeWidthValue;
+
+  @override
+  double? operator [](num domain) => locations[domain];
+}
+
+class MockContext extends Mock implements ChartContext {}
 
 /// A fake draw strategy that reports collision and alternate ticks
 ///
@@ -48,28 +63,33 @@ class FakeDrawStrategy extends BaseTickDrawStrategy<num> {
   final int alternateRenderingAfterTickCount;
 
   FakeDrawStrategy(
-      this.collidesAfterTickCount, this.alternateRenderingAfterTickCount)
-      : super(null, FakeGraphicsFactory());
+    this.collidesAfterTickCount,
+    this.alternateRenderingAfterTickCount,
+  ) : super(MockContext(), FakeGraphicsFactory());
 
   @override
-  CollisionReport<num> collides(List<Tick<num>> ticks, _) {
-    final ticksCollide = ticks.length >= collidesAfterTickCount;
-    final alternateTicksUsed = ticks.length >= alternateRenderingAfterTickCount;
+  CollisionReport<num> collides(List<Tick<num>>? ticks, _) {
+    final ticksCollide = ticks!.length >= collidesAfterTickCount;
+    final alternateRendering = ticks.length >= alternateRenderingAfterTickCount;
 
     return CollisionReport(
-        ticksCollide: ticksCollide,
-        ticks: ticks,
-        alternateTicksUsed: alternateTicksUsed);
+      ticksCollide: ticksCollide,
+      ticks: ticks,
+      alternateTicksUsed: alternateRendering,
+    );
   }
 
   @override
-  void draw(ChartCanvas canvas, Tick<num> tick,
-      {@required AxisOrientation orientation,
-      @required Rectangle<int> axisBounds,
-      @required Rectangle<int> drawAreaBounds,
-      @required bool isFirst,
-      @required bool isLast,
-      bool collision = false}) {}
+  void draw(
+    ChartCanvas canvas,
+    Tick<num> tick, {
+    required AxisOrientation orientation,
+    required Rectangle<int> axisBounds,
+    required Rectangle<int> drawAreaBounds,
+    required bool isFirst,
+    required bool isLast,
+    bool collision = false,
+  }) {}
 }
 
 /// A fake [GraphicsFactory] that returns [MockTextStyle] and [MockTextElement].
@@ -109,11 +129,11 @@ class CelsiusToFahrenheitConverter implements UnitConverter<num, num> {
 }
 
 void main() {
-  FakeGraphicsFactory graphicsFactory;
-  MockNumericScale scale;
-  BucketingNumericTickProvider tickProvider;
-  TickFormatter<num> formatter;
-  ChartContext context;
+  late FakeGraphicsFactory graphicsFactory;
+  late MockNumericScale scale;
+  late BucketingNumericTickProvider tickProvider;
+  late TickFormatter<num> formatter;
+  late ChartContext context;
 
   setUp(() {
     graphicsFactory = FakeGraphicsFactory();
@@ -132,19 +152,21 @@ void main() {
         ..setFixedTickCount(21)
         ..allowedSteps = [1.0, 2.5, 5.0];
       final drawStrategy = FakeDrawStrategy(10, 10);
-      when(scale.viewportDomain).thenReturn(NumericExtents(0.1, 0.7));
-      when(scale.rangeWidth).thenReturn(1000);
-      when(scale[0.1]).thenReturn(90.0);
-      when(scale[0]).thenReturn(100.0);
+      scale.viewportDomainValue = NumericExtents(0.1, 0.7);
+      scale.rangeWidthValue = 1000;
+      scale.locations
+        ..[0.1] = 90.0
+        ..[0] = 100.0;
 
       final ticks = tickProvider.getTicks(
-          context: context,
-          graphicsFactory: graphicsFactory,
-          scale: scale,
-          formatter: formatter,
-          formatterValueCache: <num, String>{},
-          tickDrawStrategy: drawStrategy,
-          orientation: null);
+        context: context,
+        graphicsFactory: graphicsFactory,
+        scale: scale,
+        formatter: formatter,
+        formatterValueCache: <num, String>{},
+        tickDrawStrategy: drawStrategy,
+        orientation: null,
+      );
 
       // Verify.
       // We expect to have 20 ticks, because the expected tick at 0.05 should be
@@ -155,13 +177,13 @@ void main() {
       expect(ticks[0].labelOffsetPx, isNull);
       expect(ticks[0].locationPx, equals(100.0));
       expect(ticks[0].value, equals(0.0));
-      expect(ticks[0].textElement.text, equals(''));
+      expect(ticks[0].textElement!.text, equals(''));
 
       // Verify that we have a threshold tick.
       expect(ticks[1].labelOffsetPx, equals(5.0));
       expect(ticks[1].locationPx, equals(90.0));
       expect(ticks[1].value, equals(0.10));
-      expect(ticks[1].textElement.text, equals('< 0.1'));
+      expect(ticks[1].textElement!.text, equals('< 0.1'));
 
       // Verify that the rest of the ticks are all above the threshold in value
       // and have normal labels.
@@ -170,8 +192,11 @@ void main() {
       expect(aboveThresholdTicks, hasLength(18));
 
       aboveThresholdTicks = ticks.sublist(2);
-      aboveThresholdTicks.retainWhere((tick) =>
-          tick.textElement.text != '' && !tick.textElement.text.contains('<'));
+      aboveThresholdTicks.retainWhere(
+        (tick) =>
+            tick.textElement!.text != '' &&
+            !tick.textElement!.text.contains('<'),
+      );
       expect(aboveThresholdTicks, hasLength(18));
 
       aboveThresholdTicks = ticks.sublist(2);

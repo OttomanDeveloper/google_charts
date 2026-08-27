@@ -103,18 +103,22 @@ class TimeRangeTickProviderImpl extends TimeRangeTickProvider {
       }
 
       // Create ticks
-      currentTicks = createTicks(tickValues,
-          context: context,
-          graphicsFactory: graphicsFactory,
-          scale: scale,
-          formatter: formatter,
-          formatterValueCache: formatterValueCache,
-          tickDrawStrategy: tickDrawStrategy,
-          stepSize: timeStepper.typicalStepSizeMs * tickIncrement);
+      currentTicks = createTicks(
+        tickValues,
+        context: context,
+        graphicsFactory: graphicsFactory,
+        scale: scale,
+        formatter: formatter,
+        formatterValueCache: formatterValueCache,
+        tickDrawStrategy: tickDrawStrategy,
+        stepSize: timeStepper.typicalStepSizeMs * tickIncrement,
+      );
 
       // Request collision check from draw strategy.
-      final collisionReport =
-          tickDrawStrategy.collides(currentTicks, orientation);
+      final collisionReport = tickDrawStrategy.collides(
+        currentTicks,
+        orientation,
+      );
 
       if (!collisionReport.ticksCollide) {
         // Return the first non colliding ticks.

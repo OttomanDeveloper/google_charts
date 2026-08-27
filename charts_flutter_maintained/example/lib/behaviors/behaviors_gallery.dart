@@ -48,8 +48,7 @@ List<GalleryScaffold> buildGallery() {
       listTileIcon: Icon(Icons.flag),
       title: 'Selection Line Highlight Custom Shape',
       subtitle: 'Line chart with tap and drag activation and a custom shape',
-      childBuilder: () =>
-          SelectionLineHighlightCustomShape.withRandomData(),
+      childBuilder: () => SelectionLineHighlightCustomShape.withRandomData(),
     ),
     GalleryScaffold(
       listTileIcon: Icon(Icons.flag),
@@ -91,8 +90,8 @@ List<GalleryScaffold> buildGallery() {
     GalleryScaffold(
       listTileIcon: Icon(Icons.insert_chart),
       title: 'Percent of Domain',
-      subtitle: 'Stacked bar chart with measures calculated as percent of ' +
-          'domain',
+      subtitle:
+          'Stacked bar chart with measures calculated as percent of ' 'domain',
       childBuilder: () => PercentOfDomainBarChart.withRandomData(),
     ),
     GalleryScaffold(
@@ -100,14 +99,13 @@ List<GalleryScaffold> buildGallery() {
       title: 'Percent of Domain by Category',
       subtitle: 'Grouped stacked bar chart with measures calculated as '
           'percent of domain and series category',
-      childBuilder: () =>
-          PercentOfDomainByCategoryBarChart.withRandomData(),
+      childBuilder: () => PercentOfDomainByCategoryBarChart.withRandomData(),
     ),
     GalleryScaffold(
       listTileIcon: Icon(Icons.insert_chart),
       title: 'Percent of Series',
-      subtitle: 'Grouped bar chart with measures calculated as percent of ' +
-          'series',
+      subtitle:
+          'Grouped bar chart with measures calculated as percent of ' 'series',
       childBuilder: () => PercentOfSeriesBarChart.withRandomData(),
     ),
     GalleryScaffold(

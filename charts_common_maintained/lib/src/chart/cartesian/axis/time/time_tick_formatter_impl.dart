@@ -35,8 +35,8 @@ class TimeTickFormatterImpl implements TimeTickFormatter {
     required String? simpleFormat,
     required String? transitionFormat,
     this.transitionField,
-  })  : _simpleFormat = dateTimeFactory.createDateFormat(simpleFormat),
-        _transitionFormat = dateTimeFactory.createDateFormat(transitionFormat);
+  }) : _simpleFormat = dateTimeFactory.createDateFormat(simpleFormat),
+       _transitionFormat = dateTimeFactory.createDateFormat(transitionFormat);
 
   @override
   String formatFirstTick(DateTime date) => _transitionFormat.format(date);
@@ -54,8 +54,10 @@ class TimeTickFormatterImpl implements TimeTickFormatter {
     if (transitionField == null) {
       return false;
     }
-    final prevTransitionFieldValue =
-        getCalendarField(prevTickValue, transitionField);
+    final prevTransitionFieldValue = getCalendarField(
+      prevTickValue,
+      transitionField,
+    );
     final transitionFieldValue = getCalendarField(tickValue, transitionField);
     return prevTransitionFieldValue != transitionFieldValue;
   }
@@ -72,11 +74,4 @@ class TimeTickFormatterImpl implements TimeTickFormatter {
       };
 }
 
-enum CalendarField {
-  year,
-  month,
-  date,
-  hourOfDay,
-  minute,
-  second,
-}
+enum CalendarField { year, month, date, hourOfDay, minute, second }

@@ -50,8 +50,10 @@ class LockSelection<D> implements ChartBehavior<D> {
         _listener = GestureListener(onTapTest: _onTapTest, onTap: _onSelect);
         break;
       default:
-        throw ArgumentError('LockSelection does not support the event '
-            'trigger "$eventTrigger"');
+        throw ArgumentError(
+          'LockSelection does not support the event '
+          'trigger "$eventTrigger"',
+        );
     }
   }
 

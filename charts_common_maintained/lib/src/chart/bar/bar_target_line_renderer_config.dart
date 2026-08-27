@@ -38,30 +38,20 @@ class BarTargetLineRendererConfig<D> extends BaseBarRendererConfig<D> {
   /// Whether target lines should have round end caps, or square if false.
   final bool roundEndCaps;
 
-  BarTargetLineRendererConfig(
-      {int barGroupInnerPaddingPx = 2,
-      String? customRendererId,
-      List<int>? dashPattern,
-      BarGroupingType groupingType = BarGroupingType.grouped,
-      int layoutPaintOrder = LayoutViewPaintOrder.barTargetLine,
-      int minBarLengthPx = 0,
-      this.overDrawOuterPx,
-      this.overDrawPx = 0,
-      this.roundEndCaps = true,
-      double strokeWidthPx = 3.0,
-      SymbolRenderer? symbolRenderer,
-      List<int>? weightPattern})
-      : super(
-          barGroupInnerPaddingPx: barGroupInnerPaddingPx,
-          customRendererId: customRendererId,
-          dashPattern: dashPattern,
-          groupingType: groupingType,
-          layoutPaintOrder: layoutPaintOrder,
-          minBarLengthPx: minBarLengthPx,
-          strokeWidthPx: strokeWidthPx,
-          symbolRenderer: symbolRenderer ?? LineSymbolRenderer(),
-          weightPattern: weightPattern,
-        );
+  BarTargetLineRendererConfig({
+    super.barGroupInnerPaddingPx,
+    super.customRendererId,
+    super.dashPattern,
+    super.groupingType,
+    int super.layoutPaintOrder = LayoutViewPaintOrder.barTargetLine,
+    super.minBarLengthPx,
+    this.overDrawOuterPx,
+    this.overDrawPx = 0,
+    this.roundEndCaps = true,
+    super.strokeWidthPx = 3.0,
+    SymbolRenderer? symbolRenderer,
+    super.weightPattern,
+  }) : super(symbolRenderer: symbolRenderer ?? LineSymbolRenderer());
 
   @override
   BarTargetLineRenderer<D> build() {

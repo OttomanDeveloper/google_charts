@@ -14,6 +14,8 @@
 // limitations under the License.
 
 /// Bar chart example
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -25,7 +27,7 @@ class CustomRoundedBars extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  CustomRoundedBars(this.seriesList, {this.animate = false});
+  const CustomRoundedBars(this.seriesList, {super.key, this.animate = false});
 
   /// Creates a [BarChart] with custom rounded bars.
   factory CustomRoundedBars.withSampleData() {

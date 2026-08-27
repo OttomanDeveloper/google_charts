@@ -14,13 +14,19 @@
 // limitations under the License.
 
 import 'package:charts_common_maintained/charts_common_maintained.dart'
-    as common show Color, TextStyle;
+    as common
+    show Color, TextStyle;
 
 class TextStyle implements common.TextStyle {
+  @override
   int? fontSize;
+  @override
   String? fontFamily;
+  @override
   common.Color? color;
+  @override
   double? lineHeight;
+  @override
   String? fontWeight;
 
   @override

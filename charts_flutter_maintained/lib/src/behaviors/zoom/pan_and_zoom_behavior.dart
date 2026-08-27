@@ -14,7 +14,8 @@
 // limitations under the License.
 
 import 'package:charts_common_maintained/charts_common_maintained.dart'
-    as common show ChartBehavior, PanAndZoomBehavior, PanningCompletedCallback;
+    as common
+    show ChartBehavior, PanAndZoomBehavior, PanningCompletedCallback;
 import 'package:meta/meta.dart' show immutable;
 
 import '../chart_behavior.dart' show ChartBehavior, GestureType;
@@ -22,10 +23,9 @@ import 'pan_behavior.dart' show FlutterPanBehaviorMixin;
 
 @immutable
 class PanAndZoomBehavior<D> extends ChartBehavior<D> {
-  final _desiredGestures = Set<GestureType>.from([
-    GestureType.onDrag,
-  ]);
+  final _desiredGestures = <GestureType>{GestureType.onDrag};
 
+  @override
   Set<GestureType> get desiredGestures => _desiredGestures;
 
   /// Optional callback that is called when pan / zoom is completed.

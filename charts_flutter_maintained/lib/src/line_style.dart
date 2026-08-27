@@ -14,7 +14,8 @@
 // limitations under the License.
 
 import 'package:charts_common_maintained/charts_common_maintained.dart'
-    as common show Color, LineStyle;
+    as common
+    show Color, LineStyle;
 
 class LineStyle implements common.LineStyle {
   @override

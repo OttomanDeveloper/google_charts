@@ -25,13 +25,15 @@ import 'package:test/test.dart';
 
 class MockBehavior extends Mock implements ChartBehavior<String> {}
 
+class FakeRenderer extends Mock implements SeriesRenderer<String> {}
+
 class ParentBehavior implements ChartBehavior<String> {
   final ChartBehavior<String> child;
 
   ParentBehavior(this.child);
 
   @override
-  String get role => null;
+  String get role => 'parent';
 
   @override
   void attachTo(BaseChart chart) {
@@ -46,16 +48,17 @@ class ParentBehavior implements ChartBehavior<String> {
 
 class ConcreteChart extends BaseChart<String> {
   @override
-  SeriesRenderer<String> makeDefaultRenderer() => null;
+  SeriesRenderer<String> makeDefaultRenderer() => FakeRenderer();
 
   @override
-  List<DatumDetails<String>> getDatumDetails(SelectionModelType _) => null;
+  List<DatumDetails<String>> getDatumDetails(SelectionModelType _) =>
+      <DatumDetails<String>>[];
 }
 
 void main() {
-  ConcreteChart chart;
-  MockBehavior namedBehavior;
-  MockBehavior unnamedBehavior;
+  late ConcreteChart chart;
+  late MockBehavior namedBehavior;
+  late MockBehavior unnamedBehavior;
 
   setUp(() {
     chart = ConcreteChart();

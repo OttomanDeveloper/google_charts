@@ -33,18 +33,21 @@ class SankeyRenderer<D> extends BaseSeriesRenderer<D> {
   /// Sankey Renderer Config
   final SankeyRendererConfig<D> config;
 
-  factory SankeyRenderer(
-      {String? rendererId, SankeyRendererConfig<D>? config}) {
+  factory SankeyRenderer({
+    String? rendererId,
+    SankeyRendererConfig<D>? config,
+  }) {
     return SankeyRenderer._internal(
-        rendererId: rendererId ?? defaultRendererID,
-        config: config ?? SankeyRendererConfig());
+      rendererId: rendererId ?? defaultRendererID,
+      config: config ?? SankeyRendererConfig(),
+    );
   }
 
-  SankeyRenderer._internal({required String rendererId, required this.config})
-      : super(
-            rendererId: rendererId,
-            layoutPaintOrder: config.layoutPaintOrder,
-            symbolRenderer: config.symbolRenderer);
+  SankeyRenderer._internal({required super.rendererId, required this.config})
+    : super(
+        layoutPaintOrder: config.layoutPaintOrder,
+        symbolRenderer: config.symbolRenderer,
+      );
 
   @override
   void preprocessSeries(List<MutableSeries<D>> seriesList) {
@@ -63,10 +66,14 @@ class SankeyRenderer<D> extends BaseSeriesRenderer<D> {
 
   @override
   DatumDetails<D> addPositionToDetailsForSeriesDatum(
-      DatumDetails<D> details, SeriesDatum<D> seriesDatum) {
+    DatumDetails<D> details,
+    SeriesDatum<D> seriesDatum,
+  ) {
     final chartPosition = Point<double>(0, 0);
-    return DatumDetails.from(details,
-        chartPosition: NullablePoint.from(chartPosition));
+    return DatumDetails.from(
+      details,
+      chartPosition: NullablePoint.from(chartPosition),
+    );
   }
 
   /// Datum details of nearest links or nodes in the sankey chart.

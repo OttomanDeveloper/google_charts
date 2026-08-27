@@ -14,6 +14,8 @@
 // limitations under the License.
 
 /// Line chart with line annotations example.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -25,7 +27,8 @@ class LineLineAnnotationChart extends StatelessWidget {
   final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  LineLineAnnotationChart(this.seriesList, {this.animate = false});
+  const LineLineAnnotationChart(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [LineChart] with sample data and line annotations.
   ///
@@ -76,19 +79,15 @@ class LineLineAnnotationChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return charts.LineChart(seriesList, animate: animate, behaviors: [
       charts.RangeAnnotation([
-        charts.LineAnnotationSegment(
-            1.0, charts.RangeAnnotationAxisType.domain,
+        charts.LineAnnotationSegment(1.0, charts.RangeAnnotationAxisType.domain,
             startLabel: 'Domain 1'),
-        charts.LineAnnotationSegment(
-            4, charts.RangeAnnotationAxisType.domain,
+        charts.LineAnnotationSegment(4, charts.RangeAnnotationAxisType.domain,
             endLabel: 'Domain 2', color: charts.MaterialPalette.gray.shade200),
-        charts.LineAnnotationSegment(
-            20, charts.RangeAnnotationAxisType.measure,
+        charts.LineAnnotationSegment(20, charts.RangeAnnotationAxisType.measure,
             startLabel: 'Measure 1 Start',
             endLabel: 'Measure 1 End',
             color: charts.MaterialPalette.gray.shade300),
-        charts.LineAnnotationSegment(
-            65, charts.RangeAnnotationAxisType.measure,
+        charts.LineAnnotationSegment(65, charts.RangeAnnotationAxisType.measure,
             startLabel: 'Measure 2 Start',
             endLabel: 'Measure 2 End',
             color: charts.MaterialPalette.gray.shade400),

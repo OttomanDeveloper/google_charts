@@ -58,7 +58,10 @@ class AxisSpec<D> {
   }
 
   void configure(
-      Axis<D> axis, ChartContext context, GraphicsFactory graphicsFactory) {
+    Axis<D> axis,
+    ChartContext context,
+    GraphicsFactory graphicsFactory,
+  ) {
     axis.resetDefaultConfiguration();
 
     if (showAxisLine != null) {
@@ -66,8 +69,10 @@ class AxisSpec<D> {
     }
 
     if (renderSpec != null) {
-      axis.tickDrawStrategy =
-          renderSpec!.createDrawStrategy(context, graphicsFactory);
+      axis.tickDrawStrategy = renderSpec!.createDrawStrategy(
+        context,
+        graphicsFactory,
+      );
     }
 
     if (tickProviderSpec != null) {
@@ -127,7 +132,9 @@ abstract class RenderSpec<D> {
   const RenderSpec();
 
   TickDrawStrategy<D> createDrawStrategy(
-      ChartContext context, GraphicsFactory graphicFactory);
+    ChartContext context,
+    GraphicsFactory graphicFactory,
+  );
 }
 
 @immutable
@@ -138,12 +145,13 @@ class TextStyleSpec {
   final Color? color;
   final String? fontWeight;
 
-  const TextStyleSpec(
-      {this.fontFamily,
-      this.fontSize,
-      this.lineHeight,
-      this.color,
-      this.fontWeight});
+  const TextStyleSpec({
+    this.fontFamily,
+    this.fontSize,
+    this.lineHeight,
+    this.color,
+    this.fontWeight,
+  });
 
   @override
   bool operator ==(Object other) {
@@ -204,7 +212,4 @@ enum TickLabelAnchor {
   inside,
 }
 
-enum TickLabelJustification {
-  inside,
-  outside,
-}
+enum TickLabelJustification { inside, outside }

@@ -1,0 +1,21 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    unnecessary_underscores: false
+    no_leading_underscores_for_local_identifiers: false
+    avoid_renaming_method_parameters: false
+    constant_identifier_names: false
+    library_private_types_in_public_api: false
+
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
+  language:
+    strict-casts: true

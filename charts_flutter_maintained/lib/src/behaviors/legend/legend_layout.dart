@@ -27,18 +27,19 @@ class TabularLegendLayout implements LegendLayout {
   static const _noLimit = -1;
 
   /// Default EdgeInsets for padding rows to the max column count
-  static const defaultCellPadding = const EdgeInsets.all(8.0);
+  static const defaultCellPadding = EdgeInsets.all(8.0);
 
   final bool isHorizontalFirst;
   final int desiredMaxRows;
   final int desiredMaxColumns;
   final EdgeInsets? cellPadding;
 
-  TabularLegendLayout._internal(
-      {required this.isHorizontalFirst,
-      required this.desiredMaxRows,
-      required this.desiredMaxColumns,
-      this.cellPadding});
+  TabularLegendLayout._internal({
+    required this.isHorizontalFirst,
+    required this.desiredMaxRows,
+    required this.desiredMaxColumns,
+    this.cellPadding,
+  });
 
   /// Layout horizontally until columns exceed [desiredMaxColumns].
   ///
@@ -83,8 +84,8 @@ class TabularLegendLayout implements LegendLayout {
     final paddedLegendEntries = ((cellPadding == null)
         ? legendEntries
         : legendEntries
-            .map((entry) => Padding(padding: cellPadding!, child: entry))
-            .toList());
+              .map((entry) => Padding(padding: cellPadding!, child: entry))
+              .toList());
 
     return isHorizontalFirst
         ? _buildHorizontalFirst(paddedLegendEntries)
@@ -101,11 +102,11 @@ class TabularLegendLayout implements LegendLayout {
 
   @override
   int get hashCode => Object.hash(
-        desiredMaxRows,
-        desiredMaxColumns,
-        isHorizontalFirst,
-        cellPadding,
-      );
+    desiredMaxRows,
+    desiredMaxColumns,
+    isHorizontalFirst,
+    cellPadding,
+  );
 
   Widget _buildHorizontalFirst(List<Widget> legendEntries) {
     final maxColumns = (desiredMaxColumns == _noLimit)
@@ -114,10 +115,13 @@ class TabularLegendLayout implements LegendLayout {
 
     final rows = <TableRow>[];
     for (var i = 0; i < legendEntries.length; i += maxColumns) {
-      rows.add(TableRow(
+      rows.add(
+        TableRow(
           children: legendEntries
               .sublist(i, min(i + maxColumns, legendEntries.length))
-              .toList()));
+              .toList(),
+        ),
+      );
     }
 
     return _buildTableFromRows(rows);
@@ -128,8 +132,7 @@ class TabularLegendLayout implements LegendLayout {
         ? legendEntries.length
         : min(legendEntries.length, desiredMaxRows);
 
-    final rows =
-        List.generate(maxRows, (_) => TableRow(children: <Widget>[]));
+    final rows = List.generate(maxRows, (_) => TableRow(children: <Widget>[]));
     for (var i = 0; i < legendEntries.length; i++) {
       rows[i % maxRows].children.add(legendEntries[i]);
     }
@@ -150,8 +153,9 @@ class TabularLegendLayout implements LegendLayout {
       final rowChildren = rows[i].children;
       final padCount = columnCount - rowChildren.length;
       if (padCount > 0) {
-        rowChildren
-            .addAll(Iterable<Padding>.generate(padCount, (_) => padWidget));
+        rowChildren.addAll(
+          Iterable<Padding>.generate(padCount, (_) => padWidget),
+        );
       }
     }
 
@@ -159,7 +163,6 @@ class TabularLegendLayout implements LegendLayout {
     // Sizing the column width using [IntrinsicColumnWidth] is expensive per
     // Flutter's documentation, but has to be used if the table is desired to
     // have a width that is tight on each column.
-    return Table(
-        children: rows, defaultColumnWidth: IntrinsicColumnWidth());
+    return Table(children: rows, defaultColumnWidth: IntrinsicColumnWidth());
   }
 }

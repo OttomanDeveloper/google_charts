@@ -49,18 +49,13 @@ class NumericAxisSpec extends AxisSpec<num> {
   ///     formatted.
   /// [showAxisLine] override to force the axis to draw the axis line.
   const NumericAxisSpec({
-    RenderSpec<num>? renderSpec,
-    NumericTickProviderSpec? tickProviderSpec,
-    NumericTickFormatterSpec? tickFormatterSpec,
-    bool? showAxisLine,
-    ScaleSpec<num>? scaleSpec,
+    super.renderSpec,
+    NumericTickProviderSpec? super.tickProviderSpec,
+    NumericTickFormatterSpec? super.tickFormatterSpec,
+    super.showAxisLine,
+    super.scaleSpec,
     this.viewport,
-  }) : super(
-            renderSpec: renderSpec,
-            tickProviderSpec: tickProviderSpec,
-            tickFormatterSpec: tickFormatterSpec,
-            showAxisLine: showAxisLine,
-            scaleSpec: scaleSpec);
+  });
 
   factory NumericAxisSpec.from(
     NumericAxisSpec other, {
@@ -73,10 +68,12 @@ class NumericAxisSpec extends AxisSpec<num> {
   }) {
     return NumericAxisSpec(
       renderSpec: renderSpec ?? other.renderSpec,
-      tickProviderSpec: (tickProviderSpec ?? other.tickProviderSpec)
-          as NumericTickProviderSpec?,
-      tickFormatterSpec: (tickFormatterSpec ?? other.tickFormatterSpec)
-          as NumericTickFormatterSpec?,
+      tickProviderSpec:
+          (tickProviderSpec ?? other.tickProviderSpec)
+              as NumericTickProviderSpec?,
+      tickFormatterSpec:
+          (tickFormatterSpec ?? other.tickFormatterSpec)
+              as NumericTickFormatterSpec?,
       showAxisLine: showAxisLine ?? other.showAxisLine,
       scaleSpec: scaleSpec ?? other.scaleSpec,
       viewport: viewport ?? other.viewport,
@@ -85,7 +82,10 @@ class NumericAxisSpec extends AxisSpec<num> {
 
   @override
   void configure(
-      Axis<num> axis, ChartContext context, GraphicsFactory graphicsFactory) {
+    Axis<num> axis,
+    ChartContext context,
+    GraphicsFactory graphicsFactory,
+  ) {
     super.configure(axis, context, graphicsFactory);
 
     if (axis is NumericAxis && viewport != null) {
@@ -135,12 +135,13 @@ class BasicNumericTickProviderSpec implements NumericTickProviderSpec {
   /// [desiredMaxTickCount] automatically choose the best tick
   ///     count to produce the 'nicest' ticks but make sure we don't have more
   ///     than this many.
-  const BasicNumericTickProviderSpec(
-      {this.zeroBound,
-      this.dataIsInWholeNumbers,
-      this.desiredTickCount,
-      this.desiredMinTickCount,
-      this.desiredMaxTickCount});
+  const BasicNumericTickProviderSpec({
+    this.zeroBound,
+    this.dataIsInWholeNumbers,
+    this.desiredTickCount,
+    this.desiredMinTickCount,
+    this.desiredMaxTickCount,
+  });
 
   @override
   NumericTickProvider createTickProvider(ChartContext context) {
@@ -155,8 +156,10 @@ class BasicNumericTickProviderSpec implements NumericTickProviderSpec {
     if (desiredMinTickCount != null ||
         desiredMaxTickCount != null ||
         desiredTickCount != null) {
-      provider.setTickCount(desiredMaxTickCount ?? desiredTickCount ?? 10,
-          desiredMinTickCount ?? desiredTickCount ?? 2);
+      provider.setTickCount(
+        desiredMaxTickCount ?? desiredTickCount ?? 10,
+        desiredMinTickCount ?? desiredTickCount ?? 2,
+      );
     }
     return provider;
   }
@@ -229,7 +232,7 @@ class BasicNumericTickFormatterSpec implements NumericTickFormatterSpec {
   const BasicNumericTickFormatterSpec(this.formatter) : numberFormat = null;
 
   const BasicNumericTickFormatterSpec.fromNumberFormat(this.numberFormat)
-      : formatter = null;
+    : formatter = null;
 
   /// A formatter will be created with the number format if it is not null.
   /// Otherwise, it will create one with the [MeasureFormatter] callback.

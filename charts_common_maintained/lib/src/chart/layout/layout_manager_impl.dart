@@ -86,8 +86,10 @@ class LayoutManagerImpl implements LayoutManager {
     if (_viewsNeedPaintSort) {
       _paintOrderedViews = List.of(_views);
 
-      _paintOrderedViews.sort((LayoutView v1, LayoutView v2) =>
-          v1.layoutConfig.paintOrder!.compareTo(v2.layoutConfig.paintOrder!));
+      _paintOrderedViews.sort(
+        (LayoutView v1, LayoutView v2) =>
+            v1.layoutConfig.paintOrder!.compareTo(v2.layoutConfig.paintOrder!),
+      );
 
       _viewsNeedPaintSort = false;
     }
@@ -100,9 +102,10 @@ class LayoutManagerImpl implements LayoutManager {
     if (_viewsNeedPositionSort) {
       _positionOrderedViews = List.of(_views);
 
-      _positionOrderedViews.sort((LayoutView v1, LayoutView v2) => v1
-          .layoutConfig.positionOrder!
-          .compareTo(v2.layoutConfig.positionOrder!));
+      _positionOrderedViews.sort(
+        (LayoutView v1, LayoutView v2) => v1.layoutConfig.positionOrder!
+            .compareTo(v2.layoutConfig.positionOrder!),
+      );
 
       _viewsNeedPositionSort = false;
     }
@@ -119,8 +122,9 @@ class LayoutManagerImpl implements LayoutManager {
   Rectangle<int> get drawableLayoutAreaBounds {
     assert(_drawAreaBoundsOutdated == false);
 
-    final drawableViews =
-        _views.where((LayoutView view) => view.isSeriesRenderer);
+    final drawableViews = _views.where(
+      (LayoutView view) => view.isSeriesRenderer,
+    );
 
     var componentBounds = drawableViews.first.componentBounds;
 
@@ -171,47 +175,64 @@ class LayoutManagerImpl implements LayoutManager {
   /// Measure and layout with given [width] and [height].
   @override
   void measure(int width, int height) {
-    var topViews =
-        _viewsForPositions(LayoutPosition.Top, LayoutPosition.FullTop);
-    var rightViews =
-        _viewsForPositions(LayoutPosition.Right, LayoutPosition.FullRight);
-    var bottomViews =
-        _viewsForPositions(LayoutPosition.Bottom, LayoutPosition.FullBottom);
-    var leftViews =
-        _viewsForPositions(LayoutPosition.Left, LayoutPosition.FullLeft);
+    var topViews = _viewsForPositions(
+      LayoutPosition.Top,
+      LayoutPosition.FullTop,
+    );
+    var rightViews = _viewsForPositions(
+      LayoutPosition.Right,
+      LayoutPosition.FullRight,
+    );
+    var bottomViews = _viewsForPositions(
+      LayoutPosition.Bottom,
+      LayoutPosition.FullBottom,
+    );
+    var leftViews = _viewsForPositions(
+      LayoutPosition.Left,
+      LayoutPosition.FullLeft,
+    );
 
     // Assume the full width and height of the chart is available when measuring
     // for the first time but adjust the maximum if margin spec is set.
-    var measurements = _measure(width, height,
-        topViews: topViews,
-        rightViews: rightViews,
-        bottomViews: bottomViews,
-        leftViews: leftViews,
-        useMax: true);
+    var measurements = _measure(
+      width,
+      height,
+      topViews: topViews,
+      rightViews: rightViews,
+      bottomViews: bottomViews,
+      leftViews: leftViews,
+      useMax: true,
+    );
 
     // Measure a second time but pass in the preferred width and height from
     // the first measure cycle.
     // Allow views to report a different size than the previously measured max.
-    final secondMeasurements = _measure(width, height,
-        topViews: topViews,
-        rightViews: rightViews,
-        bottomViews: bottomViews,
-        leftViews: leftViews,
-        previousMeasurements: measurements,
-        useMax: true);
+    final secondMeasurements = _measure(
+      width,
+      height,
+      topViews: topViews,
+      rightViews: rightViews,
+      bottomViews: bottomViews,
+      leftViews: leftViews,
+      previousMeasurements: measurements,
+      useMax: true,
+    );
 
     // If views need more space with the 2nd pass, perform a third pass.
     if (measurements.leftWidth != secondMeasurements.leftWidth ||
         measurements.rightWidth != secondMeasurements.rightWidth ||
         measurements.topHeight != secondMeasurements.topHeight ||
         measurements.bottomHeight != secondMeasurements.bottomHeight) {
-      final thirdMeasurements = _measure(width, height,
-          topViews: topViews,
-          rightViews: rightViews,
-          bottomViews: bottomViews,
-          leftViews: leftViews,
-          previousMeasurements: secondMeasurements,
-          useMax: false);
+      final thirdMeasurements = _measure(
+        width,
+        height,
+        topViews: topViews,
+        rightViews: rightViews,
+        bottomViews: bottomViews,
+        leftViews: leftViews,
+        previousMeasurements: secondMeasurements,
+        useMax: false,
+      );
 
       measurements = thirdMeasurements;
     } else {
@@ -233,45 +254,78 @@ class LayoutManagerImpl implements LayoutManager {
     );
 
     // Bounds for the draw area.
-    _drawAreaBounds = Rectangle(measurements.leftWidth, measurements.topHeight,
-        drawAreaWidth, drawAreaHeight);
+    _drawAreaBounds = Rectangle(
+      measurements.leftWidth,
+      measurements.topHeight,
+      drawAreaWidth,
+      drawAreaHeight,
+    );
     _drawAreaBoundsOutdated = false;
   }
 
   @override
   void layout(int width, int height) {
-    var topViews =
-        _viewsForPositions(LayoutPosition.Top, LayoutPosition.FullTop);
-    var rightViews =
-        _viewsForPositions(LayoutPosition.Right, LayoutPosition.FullRight);
-    var bottomViews =
-        _viewsForPositions(LayoutPosition.Bottom, LayoutPosition.FullBottom);
-    var leftViews =
-        _viewsForPositions(LayoutPosition.Left, LayoutPosition.FullLeft);
+    var topViews = _viewsForPositions(
+      LayoutPosition.Top,
+      LayoutPosition.FullTop,
+    );
+    var rightViews = _viewsForPositions(
+      LayoutPosition.Right,
+      LayoutPosition.FullRight,
+    );
+    var bottomViews = _viewsForPositions(
+      LayoutPosition.Bottom,
+      LayoutPosition.FullBottom,
+    );
+    var leftViews = _viewsForPositions(
+      LayoutPosition.Left,
+      LayoutPosition.FullLeft,
+    );
     var drawAreaViews = _viewsForPositions(LayoutPosition.DrawArea);
 
     final fullBounds = Rectangle(0, 0, width, height);
 
     // Layout the margins.
-    LeftMarginLayoutStrategy()
-        .layout(leftViews, _measurements.leftSizes, fullBounds, drawAreaBounds);
+    LeftMarginLayoutStrategy().layout(
+      leftViews,
+      _measurements.leftSizes,
+      fullBounds,
+      drawAreaBounds,
+    );
     RightMarginLayoutStrategy().layout(
-        rightViews, _measurements.rightSizes, fullBounds, drawAreaBounds);
+      rightViews,
+      _measurements.rightSizes,
+      fullBounds,
+      drawAreaBounds,
+    );
     BottomMarginLayoutStrategy().layout(
-        bottomViews, _measurements.bottomSizes, fullBounds, drawAreaBounds);
-    TopMarginLayoutStrategy()
-        .layout(topViews, _measurements.topSizes, fullBounds, drawAreaBounds);
+      bottomViews,
+      _measurements.bottomSizes,
+      fullBounds,
+      drawAreaBounds,
+    );
+    TopMarginLayoutStrategy().layout(
+      topViews,
+      _measurements.topSizes,
+      fullBounds,
+      drawAreaBounds,
+    );
 
     // Layout the drawArea.
     drawAreaViews.forEach(
-        (LayoutView view) => view.layout(_drawAreaBounds, _drawAreaBounds));
+      (LayoutView view) => view.layout(_drawAreaBounds, _drawAreaBounds),
+    );
   }
 
-  Iterable<LayoutView> _viewsForPositions(LayoutPosition p1,
-      [LayoutPosition? p2]) {
-    return positionOrderedViews.where((LayoutView view) =>
-        view.layoutConfig.position == p1 ||
-        (p2 != null && view.layoutConfig.position == p2));
+  Iterable<LayoutView> _viewsForPositions(
+    LayoutPosition p1, [
+    LayoutPosition? p2,
+  ]) {
+    return positionOrderedViews.where(
+      (LayoutView view) =>
+          view.layoutConfig.position == p1 ||
+          (p2 != null && view.layoutConfig.position == p2),
+    );
   }
 
   /// Measure and return size measurements.
@@ -304,43 +358,54 @@ class LayoutManagerImpl implements LayoutManager {
         ? height - bottomHeight - topHeight
         : height;
 
-    var leftSizes = LeftMarginLayoutStrategy().measure(leftViews,
-        maxWidth: useMax ? maxLeftWidth : leftWidth,
-        height: adjustedHeight,
-        fullHeight: height);
+    var leftSizes = LeftMarginLayoutStrategy().measure(
+      leftViews,
+      maxWidth: useMax ? maxLeftWidth : leftWidth,
+      height: adjustedHeight,
+      fullHeight: height,
+    );
 
     leftWidth = max(leftSizes.total, config.leftSpec.getMinPixels(width));
 
-    var rightSizes = RightMarginLayoutStrategy().measure(rightViews,
-        maxWidth: useMax ? maxRightWidth : rightWidth,
-        height: adjustedHeight,
-        fullHeight: height);
+    var rightSizes = RightMarginLayoutStrategy().measure(
+      rightViews,
+      maxWidth: useMax ? maxRightWidth : rightWidth,
+      height: adjustedHeight,
+      fullHeight: height,
+    );
     rightWidth = max(rightSizes.total, config.rightSpec.getMinPixels(width));
 
     final adjustedWidth = width - leftWidth - rightWidth;
 
-    var bottomSizes = BottomMarginLayoutStrategy().measure(bottomViews,
-        maxHeight: useMax ? maxBottomHeight : bottomHeight,
-        width: adjustedWidth,
-        fullWidth: width);
-    bottomHeight =
-        max(bottomSizes.total, config.bottomSpec.getMinPixels(height));
+    var bottomSizes = BottomMarginLayoutStrategy().measure(
+      bottomViews,
+      maxHeight: useMax ? maxBottomHeight : bottomHeight,
+      width: adjustedWidth,
+      fullWidth: width,
+    );
+    bottomHeight = max(
+      bottomSizes.total,
+      config.bottomSpec.getMinPixels(height),
+    );
 
-    var topSizes = TopMarginLayoutStrategy().measure(topViews,
-        maxHeight: useMax ? maxTopHeight : topHeight,
-        width: adjustedWidth,
-        fullWidth: width);
+    var topSizes = TopMarginLayoutStrategy().measure(
+      topViews,
+      maxHeight: useMax ? maxTopHeight : topHeight,
+      width: adjustedWidth,
+      fullWidth: width,
+    );
     topHeight = max(topSizes.total, config.topSpec.getMinPixels(height));
 
     return _MeasuredSizes(
-        leftWidth: leftWidth,
-        leftSizes: leftSizes,
-        rightWidth: rightWidth,
-        rightSizes: rightSizes,
-        topHeight: topHeight,
-        topSizes: topSizes,
-        bottomHeight: bottomHeight,
-        bottomSizes: bottomSizes);
+      leftWidth: leftWidth,
+      leftSizes: leftSizes,
+      rightWidth: rightWidth,
+      rightSizes: rightSizes,
+      topHeight: topHeight,
+      topSizes: topSizes,
+      bottomHeight: bottomHeight,
+      bottomSizes: bottomSizes,
+    );
   }
 
   @override

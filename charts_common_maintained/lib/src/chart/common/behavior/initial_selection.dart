@@ -40,11 +40,12 @@ class InitialSelection<D> implements ChartBehavior<D> {
 
   // TODO : When the series changes, if the user does not also
   // change the index the wrong item could be highlighted.
-  InitialSelection(
-      {this.selectionModelType = SelectionModelType.info,
-      this.selectedDataConfig,
-      this.selectedSeriesConfig,
-      this.shouldPreserveSelectionOnDraw = false}) {
+  InitialSelection({
+    this.selectionModelType = SelectionModelType.info,
+    this.selectedDataConfig,
+    this.selectedSeriesConfig,
+    this.shouldPreserveSelectionOnDraw = false,
+  }) {
     _lifecycleListener = LifecycleListener<D>(onData: _setInitialSelection);
   }
 
@@ -55,11 +56,18 @@ class InitialSelection<D> implements ChartBehavior<D> {
     _firstDraw = false;
 
     final immutableModel = SelectionModel<D>.fromConfig(
-        selectedDataConfig, selectedSeriesConfig, seriesList);
+      selectedDataConfig,
+      selectedSeriesConfig,
+      seriesList,
+    );
 
-    _chart!.getSelectionModel(selectionModelType).updateSelection(
-        immutableModel.selectedDatum, immutableModel.selectedSeries,
-        notifyListeners: false);
+    _chart!
+        .getSelectionModel(selectionModelType)
+        .updateSelection(
+          immutableModel.selectedDatum,
+          immutableModel.selectedSeries,
+          notifyListeners: false,
+        );
   }
 
   @override

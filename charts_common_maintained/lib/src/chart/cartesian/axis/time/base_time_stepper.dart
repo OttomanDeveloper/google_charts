@@ -90,15 +90,20 @@ class _TimeStepIteratorImpl implements TimeStepIterator {
   int _tickIncrement = 1;
 
   _TimeStepIteratorImpl(
-      this.extentStartTime, this.extentEndTime, this.stepper) {
+    this.extentStartTime,
+    this.extentEndTime,
+    this.stepper,
+  ) {
     reset(_tickIncrement);
   }
 
   @override
   bool moveNext() {
     if (_current == null) {
-      _current =
-          stepper.getStepTimeAfterInclusive(extentStartTime, _tickIncrement);
+      _current = stepper.getStepTimeAfterInclusive(
+        extentStartTime,
+        _tickIncrement,
+      );
     } else {
       _current = stepper.getNextStepTime(_current!, _tickIncrement);
     }
@@ -123,15 +128,20 @@ class _TimeStepIteratorFactoryImpl extends TimeStepIteratorFactory {
   final _TimeStepIteratorImpl _timeStepIterator;
 
   _TimeStepIteratorFactoryImpl._internal(
-      _TimeStepIteratorImpl timeStepIterator, this.timeExtent)
-      : _timeStepIterator = timeStepIterator;
+    _TimeStepIteratorImpl timeStepIterator,
+    this.timeExtent,
+  ) : _timeStepIterator = timeStepIterator;
 
   factory _TimeStepIteratorFactoryImpl(
-      DateTimeExtents timeExtent, BaseTimeStepper stepper) {
+    DateTimeExtents timeExtent,
+    BaseTimeStepper stepper,
+  ) {
     final startTime = timeExtent.start;
     final endTime = timeExtent.end;
     return _TimeStepIteratorFactoryImpl._internal(
-        _TimeStepIteratorImpl(startTime, endTime, stepper), timeExtent);
+      _TimeStepIteratorImpl(startTime, endTime, stepper),
+      timeExtent,
+    );
   }
 
   @override

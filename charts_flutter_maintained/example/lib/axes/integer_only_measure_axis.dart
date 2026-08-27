@@ -19,6 +19,8 @@
 ///
 /// This is done by customizing the measure axis and setting
 /// [dataIsInWholeNumbers] on the tick provider.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -30,7 +32,8 @@ class IntegerOnlyMeasureAxis extends StatelessWidget {
   final List<charts.Series<dynamic, DateTime>> seriesList;
   final bool animate;
 
-  IntegerOnlyMeasureAxis(this.seriesList, {this.animate = false});
+  const IntegerOnlyMeasureAxis(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [TimeSeriesChart] with sample data and no transition.
   factory IntegerOnlyMeasureAxis.withSampleData() {

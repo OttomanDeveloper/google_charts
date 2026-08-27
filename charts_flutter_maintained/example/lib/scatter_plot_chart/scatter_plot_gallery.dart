@@ -50,7 +50,7 @@ List<GalleryScaffold> buildGallery() {
     GalleryScaffold(
       listTileIcon: Icon(Icons.scatter_plot),
       title: 'Bucketing Axis Scatter Plot Chart',
-      subtitle: 'Scatter plot with a measure axis that buckets values less ' +
+      subtitle: 'Scatter plot with a measure axis that buckets values less '
           'than 10% into a single region below the draw area',
       childBuilder: () => BucketingAxisScatterPlotChart.withRandomData(),
     ),

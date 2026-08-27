@@ -15,6 +15,8 @@
 
 /// Example of a combo scatter plot chart with a second series rendered as a
 /// line.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -26,7 +28,8 @@ class ScatterPlotComboLineChart extends StatelessWidget {
   final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  ScatterPlotComboLineChart(this.seriesList, {this.animate = false});
+  const ScatterPlotComboLineChart(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [ScatterPlotChart] with sample data and no transition.
   factory ScatterPlotComboLineChart.withSampleData() {
@@ -49,7 +52,7 @@ class ScatterPlotComboLineChart extends StatelessWidget {
   static List<charts.Series<LinearSales, num>> _createRandomData() {
     final random = Random();
 
-    final makeRadius = (int value) => (random.nextInt(value) + 2).toDouble();
+    double makeRadius(int value) => (random.nextInt(value) + 2).toDouble();
 
     final desktopSalesData = [
       LinearSales(random.nextInt(100), random.nextInt(100), makeRadius(6)),

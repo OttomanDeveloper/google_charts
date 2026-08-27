@@ -24,26 +24,29 @@ import 'chart_behavior.dart' show ChartBehavior, GestureType;
 /// Chart behavior that sets the initial selection for a [selectionModelType].
 @immutable
 class InitialSelection<D> extends ChartBehavior<D> {
-  final desiredGestures = Set<GestureType>();
+  @override
+  final desiredGestures = <GestureType>{};
 
   final common.SelectionModelType selectionModelType;
   final List<String>? selectedSeriesConfig;
   final List<common.SeriesDatumConfig<D>>? selectedDataConfig;
   final bool shouldPreserveSelectionOnDraw;
 
-  InitialSelection(
-      {this.selectionModelType = common.SelectionModelType.info,
-      this.selectedSeriesConfig,
-      this.selectedDataConfig,
-      this.shouldPreserveSelectionOnDraw = false});
+  InitialSelection({
+    this.selectionModelType = common.SelectionModelType.info,
+    this.selectedSeriesConfig,
+    this.selectedDataConfig,
+    this.shouldPreserveSelectionOnDraw = false,
+  });
 
   @override
   common.InitialSelection<D> createCommonBehavior() =>
       common.InitialSelection<D>(
-          selectionModelType: selectionModelType,
-          selectedDataConfig: selectedDataConfig,
-          selectedSeriesConfig: selectedSeriesConfig,
-          shouldPreserveSelectionOnDraw: shouldPreserveSelectionOnDraw);
+        selectionModelType: selectionModelType,
+        selectedDataConfig: selectedDataConfig,
+        selectedSeriesConfig: selectedSeriesConfig,
+        shouldPreserveSelectionOnDraw: shouldPreserveSelectionOnDraw,
+      );
 
   @override
   void updateCommonBehavior(common.ChartBehavior commonBehavior) {}
@@ -55,8 +58,7 @@ class InitialSelection<D> extends ChartBehavior<D> {
   bool operator ==(Object o) {
     return o is InitialSelection &&
         selectionModelType == o.selectionModelType &&
-        ListEquality()
-            .equals(selectedSeriesConfig, o.selectedSeriesConfig) &&
+        ListEquality().equals(selectedSeriesConfig, o.selectedSeriesConfig) &&
         ListEquality().equals(selectedDataConfig, o.selectedDataConfig);
   }
 

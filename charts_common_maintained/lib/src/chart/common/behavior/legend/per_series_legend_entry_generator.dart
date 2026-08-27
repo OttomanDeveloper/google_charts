@@ -47,13 +47,15 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
   List<LegendEntry<D>> getLegendEntries(List<MutableSeries<D>> seriesList) {
     final legendEntries = seriesList
         .where((series) => showOverlaySeries || !series.overlaySeries)
-        .map((series) => LegendEntry<D>(
-              series,
-              series.displayName!,
-              // TODO: Should this use series.colorFn if seriesColor is null?
-              color: series.seriesColor!,
-              textStyle: entryTextStyle,
-            ))
+        .map(
+          (series) => LegendEntry<D>(
+            series,
+            series.displayName!,
+            // TODO: Should this use series.colorFn if seriesColor is null?
+            color: series.seriesColor!,
+            textStyle: entryTextStyle,
+          ),
+        )
         .toList();
 
     // Update with measures only if showing measure on no selection.
@@ -65,8 +67,11 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
   }
 
   @override
-  void updateLegendEntries(List<LegendEntry<D>> legendEntries,
-      SelectionModel<D> selectionModel, List<MutableSeries<D>> seriesList) {
+  void updateLegendEntries(
+    List<LegendEntry<D>> legendEntries,
+    SelectionModel<D> selectionModel,
+    List<MutableSeries<D>> seriesList,
+  ) {
     if (selectionModel.hasAnySelection) {
       _updateFromSelection(legendEntries, selectionModel);
     } else {
@@ -81,7 +86,9 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
 
   /// Update legend entries with measures of the selected datum
   void _updateFromSelection(
-      List<LegendEntry<D>> legendEntries, SelectionModel<D> selectionModel) {
+    List<LegendEntry<D>> legendEntries,
+    SelectionModel<D> selectionModel,
+  ) {
     // Map of series ID to the total selected measure value for that series.
     final seriesAndMeasure = <String, num>{};
 
@@ -109,12 +116,14 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
 
       entry.value = measureValue;
       entry.formattedValue = formattedValue;
-      entry.isSelected = selectionModel.selectedSeries
-          .any((selectedSeries) => entry.series.id == selectedSeries.id);
+      entry.isSelected = selectionModel.selectedSeries.any(
+        (selectedSeries) => entry.series.id == selectedSeries.id,
+      );
 
       // Set the current selected model index for legend entry.
-      entry.selectedDataIndexes =
-          selectionModel.selectedDatum.map((datum) => datum.index).toList();
+      entry.selectedDataIndexes = selectionModel.selectedDatum
+          .map((datum) => datum.index)
+          .toList();
     }
   }
 
@@ -132,7 +141,9 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
   /// selection. The type of calculation is based on the [legendDefaultMeasure]
   /// value.
   void _updateFromSeriesList(
-      List<LegendEntry<D>> legendEntries, List<MutableSeries<D>> seriesList) {
+    List<LegendEntry<D>> legendEntries,
+    List<MutableSeries<D>> seriesList,
+  ) {
     // Helper function to sum up the measure values
     num getMeasureTotal(MutableSeries<D> series) {
       var measureTotal = 0.0;
@@ -173,8 +184,8 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
       seriesAndMeasure[seriesId] = calculatedMeasure?.toDouble();
       seriesAndFormattedMeasure[seriesId] =
           (series.getAttr(measureAxisIdKey) == Axis.secondaryMeasureAxisId)
-              ? secondaryMeasureFormatter!(calculatedMeasure)
-              : measureFormatter!(calculatedMeasure);
+          ? secondaryMeasureFormatter!(calculatedMeasure)
+          : measureFormatter!(calculatedMeasure);
     }
 
     for (var entry in legendEntries) {

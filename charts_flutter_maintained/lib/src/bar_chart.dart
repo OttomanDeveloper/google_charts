@@ -13,28 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:collection' show LinkedHashMap;
-
 import 'package:charts_common_maintained/charts_common_maintained.dart'
     as common
-    show
-        AxisSpec,
-        BarChart,
-        BarGroupingType,
-        BarRendererConfig,
-        BarRendererDecorator,
-        NumericAxisSpec,
-        RTLSpec,
-        Series,
-        SeriesRendererConfig;
+    show BarChart, BarGroupingType, BarRendererConfig, BarRendererDecorator;
 import 'behaviors/domain_highlighter.dart' show DomainHighlighter;
 import 'behaviors/chart_behavior.dart' show ChartBehavior;
 import 'package:meta/meta.dart' show immutable;
-import 'base_chart.dart' show LayoutConfig;
 import 'base_chart_state.dart' show BaseChartState;
 import 'cartesian_chart.dart' show CartesianChart;
-import 'selection_model_config.dart' show SelectionModelConfig;
-import 'user_managed_state.dart' show UserManagedState;
 
 @immutable
 class BarChart extends CartesianChart<String> {
@@ -42,58 +28,47 @@ class BarChart extends CartesianChart<String> {
   final common.BarRendererDecorator<String>? barRendererDecorator;
 
   BarChart(
-    List<common.Series<dynamic, String>> seriesList, {
-    bool? animate,
-    Duration? animationDuration,
-    common.AxisSpec? domainAxis,
-    common.NumericAxisSpec? primaryMeasureAxis,
-    common.NumericAxisSpec? secondaryMeasureAxis,
-    LinkedHashMap<String, common.NumericAxisSpec>? disjointMeasureAxes,
+    super.seriesList, {
+    super.key,
+    super.animate,
+    super.animationDuration,
+    super.domainAxis,
+    super.primaryMeasureAxis,
+    super.secondaryMeasureAxis,
+    super.disjointMeasureAxes,
     common.BarGroupingType? barGroupingType,
     common.BarRendererConfig<String>? defaultRenderer,
-    List<common.SeriesRendererConfig<String>>? customSeriesRenderers,
-    List<ChartBehavior<String>>? behaviors,
-    List<SelectionModelConfig<String>>? selectionModels,
-    common.RTLSpec? rtlSpec,
+    super.customSeriesRenderers,
+    super.behaviors,
+    super.selectionModels,
+    super.rtlSpec,
     this.vertical = true,
-    bool defaultInteractions = true,
-    LayoutConfig? layoutConfig,
-    UserManagedState<String>? userManagedState,
+    super.defaultInteractions,
+    super.layoutConfig,
+    super.userManagedState,
     this.barRendererDecorator,
-    bool? flipVerticalAxis,
+    super.flipVerticalAxis,
   }) : super(
-          seriesList,
-          animate: animate,
-          animationDuration: animationDuration,
-          domainAxis: domainAxis,
-          primaryMeasureAxis: primaryMeasureAxis,
-          secondaryMeasureAxis: secondaryMeasureAxis,
-          disjointMeasureAxes: disjointMeasureAxes,
-          defaultRenderer: defaultRenderer ??
-              new common.BarRendererConfig<String>(
-                  groupingType: barGroupingType,
-                  barRendererDecorator: barRendererDecorator),
-          customSeriesRenderers: customSeriesRenderers,
-          behaviors: behaviors,
-          selectionModels: selectionModels,
-          rtlSpec: rtlSpec,
-          defaultInteractions: defaultInteractions,
-          layoutConfig: layoutConfig,
-          userManagedState: userManagedState,
-          flipVerticalAxis: flipVerticalAxis,
-        );
+         defaultRenderer:
+             defaultRenderer ??
+             common.BarRendererConfig<String>(
+               groupingType: barGroupingType,
+               barRendererDecorator: barRendererDecorator,
+             ),
+       );
 
   @override
   common.BarChart createCommonChart(BaseChartState chartState) {
     // Optionally create primary and secondary measure axes if the chart was
     // configured with them. If no axes were configured, then the chart will
     // use its default types (usually a numeric axis).
-    return new common.BarChart(
-        vertical: vertical,
-        layoutConfig: layoutConfig?.commonLayoutConfig,
-        primaryMeasureAxis: primaryMeasureAxis?.createAxis(),
-        secondaryMeasureAxis: secondaryMeasureAxis?.createAxis(),
-        disjointMeasureAxes: createDisjointMeasureAxes());
+    return common.BarChart(
+      vertical: vertical,
+      layoutConfig: layoutConfig?.commonLayoutConfig,
+      primaryMeasureAxis: primaryMeasureAxis?.createAxis(),
+      secondaryMeasureAxis: secondaryMeasureAxis?.createAxis(),
+      disjointMeasureAxes: createDisjointMeasureAxes(),
+    );
   }
 
   @override

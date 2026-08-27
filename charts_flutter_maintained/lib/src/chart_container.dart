@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:ui' show FlutterView;
+
 import 'package:charts_common_maintained/charts_common_maintained.dart'
     as common
     show
@@ -48,14 +50,16 @@ class ChartContainer<D> extends CustomPaint {
   final common.RTLSpec? rtlSpec;
   final UserManagedState<D>? userManagedState;
 
-  ChartContainer(
-      {this.oldChartWidget,
-      required this.chartWidget,
-      required this.chartState,
-      required this.animationValue,
-      required this.rtl,
-      this.rtlSpec,
-      this.userManagedState});
+  const ChartContainer({
+    super.key,
+    this.oldChartWidget,
+    required this.chartWidget,
+    required this.chartState,
+    required this.animationValue,
+    required this.rtl,
+    this.rtlSpec,
+    this.userManagedState,
+  });
 
   @override
   RenderCustomPaint createRenderObject(BuildContext context) {
@@ -64,7 +68,9 @@ class ChartContainer<D> extends CustomPaint {
 
   @override
   void updateRenderObject(
-      BuildContext context, ChartContainerRenderObject renderObject) {
+    BuildContext context,
+    ChartContainerRenderObject renderObject,
+  ) {
     renderObject.reconfigure(this, context);
   }
 }
@@ -76,18 +82,20 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
   List<common.Series<dynamic, D>>? _seriesList;
   late BaseChartState<D> _chartState;
   bool _chartContainerIsRtl = false;
+  FlutterView? _flutterView;
   common.RTLSpec? _rtlSpec;
   common.DateTimeFactory? _dateTimeFactory;
   bool _exploreMode = false;
   List<common.A11yNode>? _a11yNodes;
 
   void reconfigure(ChartContainer<D> config, BuildContext context) {
+    _flutterView = View.of(context);
     _chartState = config.chartState;
 
     _dateTimeFactory = (config.chartWidget is TimeSeriesChart)
         ? (config.chartWidget as TimeSeriesChart).dateTimeFactory
         : null;
-    _dateTimeFactory ??= new common.LocalDateTimeFactory();
+    _dateTimeFactory ??= common.LocalDateTimeFactory();
 
     if (_chart == null) {
       common.Performance.time('chartsCreate');
@@ -96,8 +104,11 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
       common.Performance.timeEnd('chartsCreate');
     }
     common.Performance.time('chartsConfig');
-    config.chartWidget
-        .updateCommonChart(_chart!, config.oldChartWidget, _chartState);
+    config.chartWidget.updateCommonChart(
+      _chart!,
+      config.oldChartWidget,
+      _chartState,
+    );
 
     _rtlSpec = config.rtlSpec;
     _chartContainerIsRtl = config.rtl;
@@ -144,7 +155,7 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
 
   /// If user managed state is set, check each setting to see if it is different
   /// than internal chart state and only update if different.
-  _updateUserManagedState(UserManagedState<D>? newState) {
+  void _updateUserManagedState(UserManagedState<D>? newState) {
     if (newState == null) {
       return;
     }
@@ -154,12 +165,15 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
     for (common.SelectionModelType type in newState.selectionModels.keys) {
       final model = _chart!.getSelectionModel(type);
 
-      final userModel =
-          newState.selectionModels[type]!.getModel(_chart!.currentSeriesList);
+      final userModel = newState.selectionModels[type]!.getModel(
+        _chart!.currentSeriesList,
+      );
 
       if (model != userModel) {
         model.updateSelection(
-            userModel.selectedDatum, userModel.selectedSeries);
+          userModel.selectedDatum,
+          userModel.selectedSeries,
+        );
       }
     }
   }
@@ -167,8 +181,10 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
   @override
   void performLayout() {
     common.Performance.time('chartsLayout');
-    _chart!
-        .measure(constraints.maxWidth.toInt(), constraints.maxHeight.toInt());
+    _chart!.measure(
+      constraints.maxWidth.toInt(),
+      constraints.maxHeight.toInt(),
+    );
     _chart!.layout(constraints.maxWidth.toInt(), constraints.maxHeight.toInt());
     common.Performance.timeEnd('chartsLayout');
     size = constraints.biggest;
@@ -176,9 +192,9 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
     // Check if the gestures registered in gesture registry matches what the
     // common chart is listening to.
     // TODO: Still need a test for this for sanity sake.
-//    assert(_desiredGestures
-//        .difference(_chart!.gestureProxy.listenedGestures)
-//        .isEmpty);
+    //    assert(_desiredGestures
+    //        .difference(_chart!.gestureProxy.listenedGestures)
+    //        .isEmpty);
   }
 
   @override
@@ -271,14 +287,20 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
       _chartContainerIsRtl ? TextDirection.rtl : TextDirection.ltr;
 
   @override
-  void enableA11yExploreMode(List<common.A11yNode> nodes,
-      {String? announcement}) {
+  void enableA11yExploreMode(
+    List<common.A11yNode> nodes, {
+    String? announcement,
+  }) {
     _a11yNodes = nodes;
     _exploreMode = true;
     _setNewPainter();
     requestRebuild();
     if (announcement != null) {
-      SemanticsService.announce(announcement, textDirection);
+      SemanticsService.sendAnnouncement(
+        _flutterView!,
+        announcement,
+        textDirection,
+      );
     }
   }
 
@@ -289,17 +311,22 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
     _setNewPainter();
     requestRebuild();
     if (announcement != null) {
-      SemanticsService.announce(announcement, textDirection);
+      SemanticsService.sendAnnouncement(
+        _flutterView!,
+        announcement,
+        textDirection,
+      );
     }
   }
 
   void _setNewPainter() {
     painter = ChartContainerCustomPaint(
-        oldPainter: painter as ChartContainerCustomPaint?,
-        chart: _chart!,
-        exploreMode: _exploreMode,
-        a11yNodes: _a11yNodes ?? [],
-        textDirection: textDirection);
+      oldPainter: painter as ChartContainerCustomPaint?,
+      chart: _chart!,
+      exploreMode: _exploreMode,
+      a11yNodes: _a11yNodes ?? [],
+      textDirection: textDirection,
+    );
   }
 }
 
@@ -309,12 +336,13 @@ class ChartContainerCustomPaint extends CustomPainter {
   final List<common.A11yNode> a11yNodes;
   final TextDirection textDirection;
 
-  factory ChartContainerCustomPaint(
-      {ChartContainerCustomPaint? oldPainter,
-      required common.BaseChart chart,
-      bool exploreMode = false,
-      List<common.A11yNode> a11yNodes = const [],
-      TextDirection textDirection = TextDirection.ltr}) {
+  factory ChartContainerCustomPaint({
+    ChartContainerCustomPaint? oldPainter,
+    required common.BaseChart chart,
+    bool exploreMode = false,
+    List<common.A11yNode> a11yNodes = const [],
+    TextDirection textDirection = TextDirection.ltr,
+  }) {
     if (oldPainter != null &&
         oldPainter.exploreMode == exploreMode &&
         oldPainter.a11yNodes == a11yNodes &&
@@ -322,18 +350,20 @@ class ChartContainerCustomPaint extends CustomPainter {
       return oldPainter;
     } else {
       return ChartContainerCustomPaint._internal(
-          chart: chart,
-          exploreMode: exploreMode,
-          a11yNodes: a11yNodes,
-          textDirection: textDirection);
+        chart: chart,
+        exploreMode: exploreMode,
+        a11yNodes: a11yNodes,
+        textDirection: textDirection,
+      );
     }
   }
 
-  ChartContainerCustomPaint._internal(
-      {required this.chart,
-      required this.exploreMode,
-      required this.a11yNodes,
-      required this.textDirection});
+  ChartContainerCustomPaint._internal({
+    required this.chart,
+    required this.exploreMode,
+    required this.a11yNodes,
+    required this.textDirection,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -352,7 +382,7 @@ class ChartContainerCustomPaint extends CustomPainter {
   bool shouldRebuildSemantics(ChartContainerCustomPaint oldDelegate) {
     return exploreMode != oldDelegate.exploreMode ||
         a11yNodes != oldDelegate.a11yNodes ||
-        textDirection != textDirection;
+        textDirection != oldDelegate.textDirection;
   }
 
   @override
@@ -363,16 +393,21 @@ class ChartContainerCustomPaint extends CustomPainter {
 
     for (common.A11yNode node in a11yNodes) {
       final rect = Rect.fromLTWH(
-          node.boundingBox.left.toDouble(),
-          node.boundingBox.top.toDouble(),
-          node.boundingBox.width.toDouble(),
-          node.boundingBox.height.toDouble());
-      nodes.add(CustomPainterSemantics(
+        node.boundingBox.left.toDouble(),
+        node.boundingBox.top.toDouble(),
+        node.boundingBox.width.toDouble(),
+        node.boundingBox.height.toDouble(),
+      );
+      nodes.add(
+        CustomPainterSemantics(
           rect: rect,
           properties: SemanticsProperties(
-              value: node.label,
-              textDirection: textDirection,
-              onDidGainAccessibilityFocus: node.onFocus)));
+            value: node.label,
+            textDirection: textDirection,
+            onDidGainAccessibilityFocus: node.onFocus,
+          ),
+        ),
+      );
     }
 
     return nodes;

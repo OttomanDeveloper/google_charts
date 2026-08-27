@@ -46,37 +46,25 @@ class BarLaneRendererConfig extends BarRendererConfig<String> {
   final bool renderNegativeLanes;
 
   BarLaneRendererConfig({
-    String? customRendererId,
-    CornerStrategy? cornerStrategy,
+    super.customRendererId,
+    super.cornerStrategy,
     this.emptyLaneLabel = 'No data',
-    FillPatternType? fillPattern,
+    super.fillPattern,
     BarGroupingType? groupingType,
-    int layoutPaintOrder = LayoutViewPaintOrder.bar,
+    super.layoutPaintOrder,
     this.mergeEmptyLanes = false,
-    int minBarLengthPx = 0,
+    super.minBarLengthPx,
     bool renderNegativeLanes = false,
-    int stackedBarPaddingPx = 1,
-    double strokeWidthPx = 0.0,
-    BarRendererDecorator<String>? barRendererDecorator,
-    SymbolRenderer? symbolRenderer,
+    super.stackedBarPaddingPx,
+    super.strokeWidthPx,
+    super.barRendererDecorator,
+    super.symbolRenderer,
     Color? backgroundBarColor,
-    List<int>? weightPattern,
-  })  : backgroundBarColor =
-            backgroundBarColor ?? StyleFactory.style.noDataColor,
-        renderNegativeLanes = renderNegativeLanes,
-        super(
-          barRendererDecorator: barRendererDecorator,
-          cornerStrategy: cornerStrategy,
-          customRendererId: customRendererId,
-          groupingType: groupingType ?? BarGroupingType.grouped,
-          layoutPaintOrder: layoutPaintOrder,
-          minBarLengthPx: minBarLengthPx,
-          fillPattern: fillPattern,
-          stackedBarPaddingPx: stackedBarPaddingPx,
-          strokeWidthPx: strokeWidthPx,
-          symbolRenderer: symbolRenderer,
-          weightPattern: weightPattern,
-        );
+    super.weightPattern,
+  }) : backgroundBarColor =
+           backgroundBarColor ?? StyleFactory.style.noDataColor,
+       renderNegativeLanes = renderNegativeLanes,
+       super(groupingType: groupingType ?? BarGroupingType.grouped);
 
   @override
   BarLaneRenderer<String> build() {
@@ -98,10 +86,10 @@ class BarLaneRendererConfig extends BarRendererConfig<String> {
 
   @override
   int get hashCode => Object.hash(
-        super.hashCode,
-        backgroundBarColor,
-        emptyLaneLabel,
-        mergeEmptyLanes,
-        renderNegativeLanes,
-      );
+    super.hashCode,
+    backgroundBarColor,
+    emptyLaneLabel,
+    mergeEmptyLanes,
+    renderNegativeLanes,
+  );
 }

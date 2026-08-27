@@ -34,11 +34,11 @@ class LinkRendererConfig<D> extends LayoutViewConfig
   /// The order to paint this renderer on the canvas.
   final int layoutPaintOrder;
 
-  LinkRendererConfig(
-      {this.customRendererId,
-      this.layoutPaintOrder = LayoutViewPaintOrder.bar,
-      SymbolRenderer? symbolRenderer})
-      : symbolRenderer = symbolRenderer ?? RectSymbolRenderer();
+  LinkRendererConfig({
+    this.customRendererId,
+    this.layoutPaintOrder = LayoutViewPaintOrder.bar,
+    SymbolRenderer? symbolRenderer,
+  }) : symbolRenderer = symbolRenderer ?? RectSymbolRenderer();
 
   @override
   LinkRenderer<D> build() {

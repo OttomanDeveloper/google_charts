@@ -17,6 +17,8 @@
 ///
 /// Each bar stack shows the percentage of each measure out of the total measure
 /// value of the stack.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -28,7 +30,8 @@ class PercentOfDomainBarChart extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  PercentOfDomainBarChart(this.seriesList, {this.animate = false});
+  const PercentOfDomainBarChart(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a stacked [BarChart] with sample data and no transition.
   factory PercentOfDomainBarChart.withSampleData() {

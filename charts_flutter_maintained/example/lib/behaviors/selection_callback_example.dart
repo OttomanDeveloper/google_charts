@@ -26,6 +26,8 @@
 ///
 /// See [SelectNearest] behavior on setting the different ways of triggering
 /// [SelectionModel] updates from hover & click events.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -37,7 +39,8 @@ class SelectionCallbackExample extends StatefulWidget {
   final List<charts.Series<dynamic, DateTime>> seriesList;
   final bool animate;
 
-  SelectionCallbackExample(this.seriesList, {this.animate = false});
+  const SelectionCallbackExample(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [charts.TimeSeriesChart] with sample data and no transition.
   factory SelectionCallbackExample.withSampleData() {
@@ -60,14 +63,14 @@ class SelectionCallbackExample extends StatefulWidget {
   static List<charts.Series<TimeSeriesSales, DateTime>> _createRandomData() {
     final random = Random();
 
-    final us_data = [
+    final usData = [
       TimeSeriesSales(DateTime(2017, 9, 19), random.nextInt(100)),
       TimeSeriesSales(DateTime(2017, 9, 26), random.nextInt(100)),
       TimeSeriesSales(DateTime(2017, 10, 3), random.nextInt(100)),
       TimeSeriesSales(DateTime(2017, 10, 10), random.nextInt(100)),
     ];
 
-    final uk_data = [
+    final ukData = [
       TimeSeriesSales(DateTime(2017, 9, 19), random.nextInt(100)),
       TimeSeriesSales(DateTime(2017, 9, 26), random.nextInt(100)),
       TimeSeriesSales(DateTime(2017, 10, 3), random.nextInt(100)),
@@ -79,13 +82,13 @@ class SelectionCallbackExample extends StatefulWidget {
         id: 'US Sales',
         domainFn: (TimeSeriesSales sales, _) => sales.time,
         measureFn: (TimeSeriesSales sales, _) => sales.sales,
-        data: us_data,
+        data: usData,
       ),
       charts.Series<TimeSeriesSales, DateTime>(
         id: 'UK Sales',
         domainFn: (TimeSeriesSales sales, _) => sales.time,
         measureFn: (TimeSeriesSales sales, _) => sales.sales,
-        data: uk_data,
+        data: ukData,
       )
     ];
   }
@@ -98,14 +101,14 @@ class SelectionCallbackExample extends StatefulWidget {
 
   /// Create one series with sample hard coded data.
   static List<charts.Series<TimeSeriesSales, DateTime>> _createSampleData() {
-    final us_data = [
+    final usData = [
       TimeSeriesSales(DateTime(2017, 9, 19), 5),
       TimeSeriesSales(DateTime(2017, 9, 26), 25),
       TimeSeriesSales(DateTime(2017, 10, 3), 78),
       TimeSeriesSales(DateTime(2017, 10, 10), 54),
     ];
 
-    final uk_data = [
+    final ukData = [
       TimeSeriesSales(DateTime(2017, 9, 19), 15),
       TimeSeriesSales(DateTime(2017, 9, 26), 33),
       TimeSeriesSales(DateTime(2017, 10, 3), 68),
@@ -117,13 +120,13 @@ class SelectionCallbackExample extends StatefulWidget {
         id: 'US Sales',
         domainFn: (TimeSeriesSales sales, _) => sales.time,
         measureFn: (TimeSeriesSales sales, _) => sales.sales,
-        data: us_data,
+        data: usData,
       ),
       charts.Series<TimeSeriesSales, DateTime>(
         id: 'UK Sales',
         domainFn: (TimeSeriesSales sales, _) => sales.time,
         measureFn: (TimeSeriesSales sales, _) => sales.sales,
-        data: uk_data,
+        data: ukData,
       )
     ];
   }
@@ -136,7 +139,7 @@ class _SelectionCallbackState extends State<SelectionCallbackExample> {
   // Listens to the underlying selection changes, and updates the information
   // relevant to building the primitive legend like information under the
   // chart.
-  _onSelectionChanged(charts.SelectionModel model) {
+  void _onSelectionChanged(charts.SelectionModel model) {
     final selectedDatum = model.selectedDatum;
 
     DateTime? time;
@@ -148,10 +151,12 @@ class _SelectionCallbackState extends State<SelectionCallbackExample> {
     // Walk the selection updating the measures map, storing off the sales and
     // series name for each selection point.
     if (selectedDatum.isNotEmpty) {
-      time = selectedDatum.first.datum.time;
-      selectedDatum.forEach((charts.SeriesDatum datumPair) {
-        measures[datumPair.series.displayName!] = datumPair.datum.sales;
-      });
+      final firstDatum = selectedDatum.first.datum as TimeSeriesSales;
+      time = firstDatum.time;
+      for (final datumPair in selectedDatum) {
+        final datum = datumPair.datum as TimeSeriesSales;
+        measures[datumPair.series.displayName!] = datum.sales;
+      }
     }
 
     // Request a build.
@@ -182,8 +187,7 @@ class _SelectionCallbackState extends State<SelectionCallbackExample> {
     // If there is a selection, then include the details.
     if (_time != null) {
       children.add(Padding(
-          padding: EdgeInsets.only(top: 5.0),
-          child: Text(_time.toString())));
+          padding: EdgeInsets.only(top: 5.0), child: Text(_time.toString())));
     }
     _measures.forEach((String series, num value) {
       children.add(Text('$series: $value'));

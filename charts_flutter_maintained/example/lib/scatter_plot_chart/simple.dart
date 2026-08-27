@@ -14,6 +14,8 @@
 // limitations under the License.
 
 /// Scatter plot chart example
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -25,7 +27,8 @@ class SimpleScatterPlotChart extends StatelessWidget {
   final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  SimpleScatterPlotChart(this.seriesList, {this.animate = false});
+  const SimpleScatterPlotChart(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [ScatterPlotChart] with sample data and no transition.
   factory SimpleScatterPlotChart.withSampleData() {
@@ -48,7 +51,7 @@ class SimpleScatterPlotChart extends StatelessWidget {
   static List<charts.Series<LinearSales, num>> _createRandomData() {
     final random = Random();
 
-    final makeRadius = (int value) => (random.nextInt(value) + 2).toDouble();
+    double makeRadius(int value) => (random.nextInt(value) + 2).toDouble();
 
     final data = [
       LinearSales(random.nextInt(100), random.nextInt(100), makeRadius(6)),

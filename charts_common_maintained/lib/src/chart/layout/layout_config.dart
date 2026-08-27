@@ -26,10 +26,10 @@ class LayoutConfig {
     MarginSpec? rightSpec,
     MarginSpec? topSpec,
     MarginSpec? bottomSpec,
-  })  : leftSpec = leftSpec ?? MarginSpec.defaultSpec,
-        rightSpec = rightSpec ?? MarginSpec.defaultSpec,
-        topSpec = topSpec ?? MarginSpec.defaultSpec,
-        bottomSpec = bottomSpec ?? MarginSpec.defaultSpec;
+  }) : leftSpec = leftSpec ?? MarginSpec.defaultSpec,
+       rightSpec = rightSpec ?? MarginSpec.defaultSpec,
+       topSpec = topSpec ?? MarginSpec.defaultSpec,
+       bottomSpec = bottomSpec ?? MarginSpec.defaultSpec;
 }
 
 /// Specs that applies to one margin.
@@ -43,11 +43,14 @@ class MarginSpec {
   final int? _maxPercent;
 
   const MarginSpec._internal(
-      int? minPixel, int? maxPixel, int? minPercent, int? maxPercent)
-      : _minPixel = minPixel,
-        _maxPixel = maxPixel,
-        _minPercent = minPercent,
-        _maxPercent = maxPercent;
+    int? minPixel,
+    int? maxPixel,
+    int? minPercent,
+    int? maxPercent,
+  ) : _minPixel = minPixel,
+      _maxPixel = maxPixel,
+      _minPercent = minPercent,
+      _maxPercent = maxPercent;
 
   /// Create [MarginSpec] that specifies min/max pixels.
   ///

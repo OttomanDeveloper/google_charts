@@ -24,8 +24,7 @@ import '../../data/tree.dart' show TreeNode;
 import 'sunburst_arc_renderer.dart' show SunburstArcRenderer;
 
 class SunburstChart<D> extends BaseChart<D> {
-  SunburstChart({LayoutConfig? layoutConfig})
-      : super(layoutConfig: layoutConfig);
+  SunburstChart({super.layoutConfig});
 
   @override
   SeriesRenderer<D> makeDefaultRenderer() {

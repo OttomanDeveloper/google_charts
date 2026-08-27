@@ -21,7 +21,7 @@ import 'package:charts_common_maintained/src/chart/cartesian/axis/scale.dart'
 
 import 'package:test/test.dart';
 
-const EPSILON = 0.001;
+const epsilon = 0.001;
 
 void main() {
   group('Stacking bars', () {
@@ -33,24 +33,24 @@ void main() {
       scale.addDomain(170.0);
       scale.range = ScaleOutputExtent(2000, 1000);
 
-      expect(scale.range.start, equals(2000));
-      expect(scale.range.end, equals(1000));
-      expect(scale.range.diff, equals(-1000));
+      expect(scale.range!.start, equals(2000));
+      expect(scale.range!.end, equals(1000));
+      expect(scale.range!.diff, equals(-1000));
 
       expect(scale.dataExtent.min, equals(100.0));
       expect(scale.dataExtent.max, equals(200.0));
 
-      expect(scale[100.0], closeTo(2000, EPSILON));
-      expect(scale[200.0], closeTo(1000, EPSILON));
-      expect(scale[166.0], closeTo(1340, EPSILON));
-      expect(scale[0.0], closeTo(3000, EPSILON));
-      expect(scale[300.0], closeTo(0, EPSILON));
+      expect(scale[100.0], closeTo(2000, epsilon));
+      expect(scale[200.0], closeTo(1000, epsilon));
+      expect(scale[166.0], closeTo(1340, epsilon));
+      expect(scale[0.0], closeTo(3000, epsilon));
+      expect(scale[300.0], closeTo(0, epsilon));
 
       // test copy
       LinearScale other = scale.copy();
-      expect(other[166.0], closeTo(1340, EPSILON));
-      expect(other.range.start, equals(2000));
-      expect(other.range.end, equals(1000));
+      expect(other[166.0], closeTo(1340, epsilon));
+      expect(other.range!.start, equals(2000));
+      expect(other.range!.end, equals(1000));
 
       // test reset
       other.resetDomain();
@@ -62,9 +62,9 @@ void main() {
       expect(other.viewportDomain.min, equals(10.0));
       expect(other.viewportDomain.max, equals(20.0));
 
-      expect(other[15.0], closeTo(1500, EPSILON));
+      expect(other[15.0], closeTo(1500, epsilon));
       // original scale shouldn't have been touched.
-      expect(scale[166.0], closeTo(1340, EPSILON));
+      expect(scale[166.0], closeTo(1340, epsilon));
 
       // should always return true.
       expect(scale.canTranslate(3.14), isTrue);
@@ -77,10 +77,10 @@ void main() {
       scale.viewportDomain = NumericExtents(100.0, 200.0);
       scale.range = ScaleOutputExtent(0, 200);
 
-      expect(scale[200.0], closeTo(200, EPSILON));
-      expect(scale[100.0], closeTo(0, EPSILON));
-      expect(scale[50.0], closeTo(-100, EPSILON));
-      expect(scale[150.0], closeTo(100, EPSILON));
+      expect(scale[200.0], closeTo(200, epsilon));
+      expect(scale[100.0], closeTo(0, epsilon));
+      expect(scale[50.0], closeTo(-100, epsilon));
+      expect(scale[150.0], closeTo(100, epsilon));
 
       scale.resetDomain();
       scale.resetViewportSettings();
@@ -89,10 +89,10 @@ void main() {
       scale.viewportDomain = NumericExtents(0.0, 100.0);
       scale.range = ScaleOutputExtent(0, 200);
 
-      expect(scale[0.0], closeTo(0, EPSILON));
-      expect(scale[100.0], closeTo(200, EPSILON));
-      expect(scale[50.0], closeTo(100, EPSILON));
-      expect(scale[200.0], closeTo(400, EPSILON));
+      expect(scale[0.0], closeTo(0, epsilon));
+      expect(scale[100.0], closeTo(200, epsilon));
+      expect(scale[50.0], closeTo(100, epsilon));
+      expect(scale[200.0], closeTo(400, epsilon));
     });
 
     test('comparing domain and range to viewport handles extent edges', () {
@@ -103,9 +103,9 @@ void main() {
 
       expect(scale.viewportDomain, equals(NumericExtents(200.0, 300.0)));
 
-      expect(scale[210.0], closeTo(1040, EPSILON));
-      expect(scale[400.0], closeTo(1800, EPSILON));
-      expect(scale[100.0], closeTo(600, EPSILON));
+      expect(scale[210.0], closeTo(1040, epsilon));
+      expect(scale[400.0], closeTo(1800, epsilon));
+      expect(scale[100.0], closeTo(600, epsilon));
 
       expect(scale.compareDomainValueToViewport(199.0), equals(-1));
       expect(scale.compareDomainValueToViewport(200.0), equals(0));
@@ -125,9 +125,9 @@ void main() {
       scale.domainOverride = NumericExtents(100.0, 300.0);
       scale.viewportDomain = NumericExtents(200.0, 300.0);
 
-      expect(scale.reverse(1040.0), closeTo(210.0, EPSILON));
-      expect(scale.reverse(1800.0), closeTo(400.0, EPSILON));
-      expect(scale.reverse(600.0), closeTo(100.0, EPSILON));
+      expect(scale.reverse(1040.0), closeTo(210.0, epsilon));
+      expect(scale.reverse(1800.0), closeTo(400.0, epsilon));
+      expect(scale.reverse(600.0), closeTo(100.0, epsilon));
     });
 
     test('scale works with a range from larger to smaller', () {
@@ -136,9 +136,9 @@ void main() {
       scale.domainOverride = NumericExtents(100.0, 300.0);
       scale.viewportDomain = NumericExtents(200.0, 300.0);
 
-      expect(scale[200.0], closeTo(1400.0, EPSILON));
-      expect(scale[250.0], closeTo(1200.0, EPSILON));
-      expect(scale[300.0], closeTo(1000.0, EPSILON));
+      expect(scale[200.0], closeTo(1400.0, epsilon));
+      expect(scale[250.0], closeTo(1200.0, epsilon));
+      expect(scale[300.0], closeTo(1000.0, epsilon));
     });
 
     test('scaleFactor and translate applies to scale', () {
@@ -147,11 +147,11 @@ void main() {
       scale.domainOverride = NumericExtents(100.0, 200.0);
       scale.setViewportSettings(4.0, -50.0);
 
-      expect(scale[100.0], closeTo(950.0, EPSILON));
-      expect(scale[200.0], closeTo(1750.0, EPSILON));
-      expect(scale[150.0], closeTo(1350.0, EPSILON));
-      expect(scale[106.25], closeTo(1000.0, EPSILON));
-      expect(scale[131.25], closeTo(1200.0, EPSILON));
+      expect(scale[100.0], closeTo(950.0, epsilon));
+      expect(scale[200.0], closeTo(1750.0, epsilon));
+      expect(scale[150.0], closeTo(1350.0, epsilon));
+      expect(scale[106.25], closeTo(1000.0, epsilon));
+      expect(scale[131.25], closeTo(1200.0, epsilon));
 
       expect(scale.compareDomainValueToViewport(106.0), equals(-1));
       expect(scale.compareDomainValueToViewport(106.25), equals(0));
@@ -172,7 +172,7 @@ void main() {
       domainScale.addDomain(50.0);
 
       // A single point should render in the middle of the scale.
-      expect(domainScale[50.0], closeTo(1100.0, EPSILON));
+      expect(domainScale[50.0], closeTo(1100.0, epsilon));
     });
 
     test('testAllZeros', () {
@@ -180,7 +180,7 @@ void main() {
       measureScale.range = ScaleOutputExtent(1000, 1200);
       measureScale.addDomain(0.0);
 
-      expect(measureScale[0.0], closeTo(1100.0, EPSILON));
+      expect(measureScale[0.0], closeTo(1100.0, epsilon));
     });
 
     test('scale calculates step size', () {
@@ -192,7 +192,7 @@ void main() {
       scale.range = ScaleOutputExtent(100, 200);
 
       // 1 - 11 has 6 steps of size 2, 0 - 12
-      expect(scale.rangeBand, closeTo(100.0 / 6.0, EPSILON));
+      expect(scale.rangeBand, closeTo(100.0 / 6.0, epsilon));
     });
 
     test('scale applies rangeBand to detected step size', () {
@@ -204,7 +204,7 @@ void main() {
       scale.range = ScaleOutputExtent(100, 200);
 
       // 100 range / 10 steps * 0.5percentStep = 5
-      expect(scale.rangeBand, closeTo(5.0, EPSILON));
+      expect(scale.rangeBand, closeTo(5.0, epsilon));
     });
 
     test('scale stepSize calculation survives copy', () {
@@ -214,7 +214,7 @@ void main() {
       scale.addDomain(1.0);
       scale.addDomain(3.0);
       scale.range = ScaleOutputExtent(100, 200);
-      expect(scale.copy().rangeBand, closeTo(100.0 / 3.0, EPSILON));
+      expect(scale.copy().rangeBand, closeTo(100.0 / 3.0, epsilon));
     });
 
     test('scale rangeBand calculation survives copy', () {
@@ -224,7 +224,7 @@ void main() {
       scale.addDomain(3.0);
       scale.range = ScaleOutputExtent(100, 200);
 
-      expect(scale.copy().rangeBand, closeTo(123, EPSILON));
+      expect(scale.copy().rangeBand, closeTo(123, epsilon));
     });
 
     test('scale rangeBand works for single domain value', () {
@@ -233,7 +233,7 @@ void main() {
       scale.addDomain(1.0);
       scale.range = ScaleOutputExtent(100, 200);
 
-      expect(scale.rangeBand, closeTo(100, EPSILON));
+      expect(scale.rangeBand, closeTo(100, epsilon));
     });
 
     test('scale rangeBand works for multiple domains of the same value', () {
@@ -243,14 +243,14 @@ void main() {
       scale.addDomain(1.0);
       scale.range = ScaleOutputExtent(100, 200);
 
-      expect(scale.rangeBand, closeTo(100.0, EPSILON));
+      expect(scale.rangeBand, closeTo(100.0, epsilon));
     });
 
     test('scale rangeBand is zero when no domains are added', () {
       LinearScale scale = LinearScale();
       scale.range = ScaleOutputExtent(100, 200);
 
-      expect(scale.rangeBand, closeTo(0.0, EPSILON));
+      expect(scale.rangeBand, closeTo(0.0, epsilon));
     });
 
     test('scale domain info reset on resetDomain', () {
@@ -262,8 +262,8 @@ void main() {
 
       scale.resetDomain();
       scale.resetViewportSettings();
-      expect(scale.viewportScalingFactor, closeTo(1.0, EPSILON));
-      expect(scale.viewportTranslatePx, closeTo(0, EPSILON));
+      expect(scale.viewportScalingFactor, closeTo(1.0, epsilon));
+      expect(scale.viewportTranslatePx, closeTo(0, epsilon));
       expect(scale.range, equals(ScaleOutputExtent(100, 200)));
     });
 
@@ -271,12 +271,12 @@ void main() {
       LinearScale scale = LinearScale();
       scale.rangeBandConfig = RangeBandConfig.percentOfStep(1.0);
       scale.addDomain(1.0);
-      scale.addDomain(null);
+
       scale.addDomain(3.0);
       scale.addDomain(11.0);
       scale.range = ScaleOutputExtent(100, 200);
 
-      expect(scale.rangeBand, closeTo(100.0 / 6.0, EPSILON));
+      expect(scale.rangeBand, closeTo(100.0 / 6.0, epsilon));
     });
 
     test('scale domainOverride survives copy', () {
@@ -290,7 +290,7 @@ void main() {
       LinearScale other = scale.copy();
 
       expect(other.domainOverride, equals(NumericExtents(0.0, 100.0)));
-      expect(other[5.0], closeTo(120.0, EPSILON));
+      expect(other[5.0], closeTo(120.0, epsilon));
     });
 
     test('scale calculates a scaleFactor given a domain window', () {
@@ -300,8 +300,8 @@ void main() {
       scale.addDomain(200.0);
       scale.addDomain(170.0);
 
-      expect(scale.computeViewportScaleFactor(10.0), closeTo(10, EPSILON));
-      expect(scale.computeViewportScaleFactor(100.0), closeTo(1, EPSILON));
+      expect(scale.computeViewportScaleFactor(10.0), closeTo(10, epsilon));
+      expect(scale.computeViewportScaleFactor(100.0), closeTo(1, epsilon));
     });
   });
 }

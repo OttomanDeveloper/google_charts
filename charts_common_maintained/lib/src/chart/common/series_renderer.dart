@@ -42,8 +42,9 @@ import 'series_datum.dart' show SeriesDatum;
 /// objects.
 const rendererIdKey = AttributeKey<String>('SeriesRenderer.rendererId');
 
-const rendererKey =
-    AttributeKey<SeriesRenderer<Object>>('SeriesRenderer.renderer');
+const rendererKey = AttributeKey<SeriesRenderer<Object>>(
+  'SeriesRenderer.renderer',
+);
 
 /// A series renderer draws one or more series of data onto a chart canvas.
 abstract class SeriesRenderer<D> extends LayoutView {
@@ -136,7 +137,9 @@ abstract class SeriesRenderer<D> extends LayoutView {
   /// [getDetailsForSeriesDatum]. Every concrete [SeriesRenderer] needs to
   /// implement custom logic for setting location data.
   DatumDetails<D> addPositionToDetailsForSeriesDatum(
-      DatumDetails<D> details, SeriesDatum<D> seriesDatum);
+    DatumDetails<D> details,
+    SeriesDatum<D> seriesDatum,
+  );
 }
 
 /// Concrete base class for [SeriesRenderer]s that implements common
@@ -163,9 +166,10 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
     required int layoutPaintOrder,
     this.symbolRenderer,
   }) : layoutConfig = LayoutViewConfig(
-            paintOrder: layoutPaintOrder,
-            position: LayoutPosition.DrawArea,
-            positionOrder: LayoutViewPositionOrder.drawArea);
+         paintOrder: layoutPaintOrder,
+         position: LayoutPosition.DrawArea,
+         positionOrder: LayoutViewPositionOrder.drawArea,
+       );
 
   @override
   void onAttach(BaseChart<D> chart) {}
@@ -181,8 +185,10 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
   ///     Setting it to false used different palettes (ie: s1 uses Blue500,
   ///     s2 uses Red500),
   @protected
-  void assignMissingColors(Iterable<MutableSeries<D>> seriesList,
-      {required bool emptyCategoryUsesSinglePalette}) {
+  void assignMissingColors(
+    Iterable<MutableSeries<D>> seriesList, {
+    required bool emptyCategoryUsesSinglePalette,
+  }) {
     const defaultCategory = '__default__';
 
     // Count up the number of missing series per category, keeping a max across
@@ -246,16 +252,17 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
 
       // Get a list of palettes to use given the number of categories we've
       // seen. One palette per category (but might need to repeat).
-      final colorPalettes = StyleFactory.style
-          .getOrderedPalettes(missingColorCountPerCategory.length);
+      final colorPalettes = StyleFactory.style.getOrderedPalettes(
+        missingColorCountPerCategory.length,
+      );
 
       // Create a map of Color palettes for each category. Each Palette uses
       // the max for any category to ensure that the gradients look appropriate.
       final colorsByCategory = <String, List<Color>>{};
       var index = 0;
       missingColorCountPerCategory.keys.forEach((String category) {
-        colorsByCategory[category] =
-            colorPalettes[index % colorPalettes.length].makeShades(maxMissing);
+        colorsByCategory[category] = colorPalettes[index % colorPalettes.length]
+            .makeShades(maxMissing);
         index++;
 
         // Reset the count so we can use it to count as we set the colorFn.
@@ -378,24 +385,25 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
     strokeWidthPx = strokeWidthPx?.toDouble();
 
     final details = DatumDetails<D>(
-        datum: seriesDatum.datum,
-        index: seriesDatum.index,
-        domain: domainValue,
-        domainLowerBound: domainLowerBoundValue,
-        domainUpperBound: domainUpperBoundValue,
-        measure: measureValue,
-        measureLowerBound: measureLowerBoundValue,
-        measureUpperBound: measureUpperBoundValue,
-        measureOffset: measureOffsetValue,
-        rawMeasure: rawMeasureValue,
-        rawMeasureLowerBound: rawMeasureLowerBoundValue,
-        rawMeasureUpperBound: rawMeasureUpperBoundValue,
-        series: series,
-        color: color,
-        fillColor: fillColor,
-        areaColor: areaColor,
-        radiusPx: radiusPx,
-        strokeWidthPx: strokeWidthPx);
+      datum: seriesDatum.datum,
+      index: seriesDatum.index,
+      domain: domainValue,
+      domainLowerBound: domainLowerBoundValue,
+      domainUpperBound: domainUpperBoundValue,
+      measure: measureValue,
+      measureLowerBound: measureLowerBoundValue,
+      measureUpperBound: measureUpperBoundValue,
+      measureOffset: measureOffsetValue,
+      rawMeasure: rawMeasureValue,
+      rawMeasureLowerBound: rawMeasureLowerBoundValue,
+      rawMeasureUpperBound: rawMeasureUpperBoundValue,
+      series: series,
+      color: color,
+      fillColor: fillColor,
+      areaColor: areaColor,
+      radiusPx: radiusPx,
+      strokeWidthPx: strokeWidthPx,
+    );
 
     // chartPosition depends on the shape of the rendered elements, and must be
     // added by concrete [SeriesRenderer] classes.

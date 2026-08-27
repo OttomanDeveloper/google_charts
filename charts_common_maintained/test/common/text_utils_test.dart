@@ -44,19 +44,19 @@ class FakeGraphicsFactory extends GraphicsFactory {
 /// Stores [TextStyle] properties for test to verify.
 class FakeTextStyle implements TextStyle {
   @override
-  Color color;
+  Color? color;
 
   @override
-  int fontSize;
+  int? fontSize;
 
   @override
-  String fontFamily;
+  String? fontFamily;
 
   @override
-  String fontWeight;
+  String? fontWeight;
 
   @override
-  double lineHeight;
+  double? lineHeight;
 }
 
 /// Fake [TextElement] which returns text length as [horizontalSliceWidth].
@@ -71,12 +71,12 @@ class FakeTextElement implements TextElement {
       var width = measureTextWidth(_text);
       var ellipsis = '...';
       var ellipsisWidth = measureTextWidth(ellipsis);
-      if (width <= maxWidth || width <= ellipsisWidth) {
+      if (maxWidth == null || width <= maxWidth! || width <= ellipsisWidth) {
         return _text;
       } else {
         var len = _text.length;
         var ellipsizedText = _text;
-        while (width >= maxWidth - ellipsisWidth && len-- > 0) {
+        while (width >= maxWidth! - ellipsisWidth && len-- > 0) {
           ellipsizedText = ellipsizedText.substring(0, len);
           width = measureTextWidth(ellipsizedText);
         }
@@ -87,26 +87,27 @@ class FakeTextElement implements TextElement {
   }
 
   @override
-  TextStyle textStyle;
+  TextStyle? textStyle;
 
   @override
-  int maxWidth;
+  int? maxWidth;
 
   @override
-  MaxWidthStrategy maxWidthStrategy;
+  MaxWidthStrategy? maxWidthStrategy;
 
   @override
-  TextDirection textDirection;
+  TextDirection textDirection = TextDirection.ltr;
 
-  double opacity;
+  double? opacity;
 
   FakeTextElement(this._text);
 
   @override
   TextMeasurement get measurement => TextMeasurement(
-      horizontalSliceWidth: _text.length.toDouble(),
-      verticalSliceWidth: textStyle.fontSize.toDouble(),
-      baseline: textStyle.fontSize.toDouble());
+    horizontalSliceWidth: _text.length.toDouble(),
+    verticalSliceWidth: textStyle!.fontSize!.toDouble(),
+    baseline: textStyle!.fontSize!.toDouble(),
+  );
 
   double measureTextWidth(String text) {
     return text.length.toDouble();
@@ -119,10 +120,10 @@ const _defaultFontSize = 12;
 const _defaultLineHeight = 12.0;
 
 void main() {
-  GraphicsFactory graphicsFactory;
-  num maxWidth;
-  num maxHeight;
-  FakeTextStyle textStyle;
+  late GraphicsFactory graphicsFactory;
+  late num maxWidth;
+  late num maxHeight;
+  late FakeTextStyle textStyle;
 
   setUpAll(() {
     graphicsFactory = FakeGraphicsFactory();
@@ -134,66 +135,86 @@ void main() {
   });
 
   group('tree map', () {
-    test(
-        'when label can fit in a single line, enable allowLabelOverflow, '
+    test('when label can fit in a single line, enable allowLabelOverflow, '
         'disable multiline, return full text', () {
       final textElement = FakeTextElement('text')..textStyle = textStyle;
       final textElements = wrapLabelLines(
-          textElement, graphicsFactory, maxWidth, maxHeight,
-          allowLabelOverflow: true, multiline: false);
+        textElement,
+        graphicsFactory,
+        maxWidth,
+        maxHeight,
+        allowLabelOverflow: true,
+        multiline: false,
+      );
 
       expect(textElements, hasLength(1));
       expect(textElements.first.text, 'text');
     });
 
-    test(
-        'when label can not fit in a single line, enable allowLabelOverflow, '
+    test('when label can not fit in a single line, enable allowLabelOverflow, '
         'disable multiline, return ellipsized text', () {
       final textElement = FakeTextElement('texttexttexttext')
         ..textStyle = textStyle;
       final textElements = wrapLabelLines(
-          textElement, graphicsFactory, maxWidth, maxHeight,
-          allowLabelOverflow: true, multiline: false);
+        textElement,
+        graphicsFactory,
+        maxWidth,
+        maxHeight,
+        allowLabelOverflow: true,
+        multiline: false,
+      );
 
       expect(textElements, hasLength(1));
       expect(textElements.first.text, 'textte...');
     });
 
-    test(
-        'when label can not fit in a single line, enable allowLabelOverflow '
+    test('when label can not fit in a single line, enable allowLabelOverflow '
         'and multiline, return two textElements', () {
       final textElement = FakeTextElement('texttexttexttext')
         ..textStyle = textStyle;
       final textElements = wrapLabelLines(
-          textElement, graphicsFactory, maxWidth, maxHeight,
-          allowLabelOverflow: true, multiline: true);
+        textElement,
+        graphicsFactory,
+        maxWidth,
+        maxHeight,
+        allowLabelOverflow: true,
+        multiline: true,
+      );
 
       expect(textElements, hasLength(2));
       expect(textElements.first.text, 'texttextte');
       expect(textElements.last.text, 'xttext');
     });
 
-    test(
-        'when both label and ellpisis can not fit in a single line, disable '
+    test('when both label and ellpisis can not fit in a single line, disable '
         'allowLabelOverflow and multiline, return empty', () {
       final maxWidth = 2;
       final textElement = FakeTextElement('texttexttexttext')
         ..textStyle = textStyle;
       final textElements = wrapLabelLines(
-          textElement, graphicsFactory, maxWidth, maxHeight,
-          allowLabelOverflow: false, multiline: false);
+        textElement,
+        graphicsFactory,
+        maxWidth,
+        maxHeight,
+        allowLabelOverflow: false,
+        multiline: false,
+      );
 
       expect(textElements, isEmpty);
     });
 
-    test(
-        'when both label and ellpisis can not fit in a single line, disable '
+    test('when both label and ellpisis can not fit in a single line, disable '
         'allowLabelOverflow but enable multiline, return textElements', () {
       final maxWidth = 2;
       final textElement = FakeTextElement('t ex text')..textStyle = textStyle;
       final textElements = wrapLabelLines(
-          textElement, graphicsFactory, maxWidth, maxHeight,
-          allowLabelOverflow: false, multiline: true);
+        textElement,
+        graphicsFactory,
+        maxWidth,
+        maxHeight,
+        allowLabelOverflow: false,
+        multiline: true,
+      );
 
       expect(textElements, hasLength(2));
       expect(textElements.first.text, 't');

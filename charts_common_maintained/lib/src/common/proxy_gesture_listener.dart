@@ -42,13 +42,16 @@ class ProxyGestureListener {
   bool onLongPress(Point<double> localPosition) {
     // Walk through listeners stopping at the first handled listener.
     final claimingListener = _activeListeners.firstWhereOrNull(
-        (GestureListener listener) =>
-            listener.onLongPress?.call(localPosition) ?? false);
+      (GestureListener listener) =>
+          listener.onLongPress?.call(localPosition) ?? false,
+    );
 
     // If someone claims the long press, then cancel everyone else.
     if (claimingListener != null) {
-      _activeListeners =
-          _cancel(all: _activeListeners, keep: [claimingListener]);
+      _activeListeners = _cancel(
+        all: _activeListeners,
+        keep: [claimingListener],
+      );
       return true;
     }
     return false;
@@ -57,14 +60,17 @@ class ProxyGestureListener {
   bool onTap(Point<double> localPosition) {
     // Walk through listeners stopping at the first handled listener.
     final claimingListener = _activeListeners.firstWhereOrNull(
-        (GestureListener listener) =>
-            listener.onTap?.call(localPosition) ?? false);
+      (GestureListener listener) =>
+          listener.onTap?.call(localPosition) ?? false,
+    );
 
     // If someone claims the tap, then cancel everyone else.
     // This should hopefully be rare, like for drilling.
     if (claimingListener != null) {
-      _activeListeners =
-          _cancel(all: _activeListeners, keep: [claimingListener]);
+      _activeListeners = _cancel(
+        all: _activeListeners,
+        keep: [claimingListener],
+      );
       return true;
     }
     return false;
@@ -75,8 +81,10 @@ class ProxyGestureListener {
     _activeListeners = <GestureListener>[];
 
     // Walk through listeners stopping at the first handled listener.
-    return _listeners.any((GestureListener listener) =>
-        listener.onHover?.call(localPosition) ?? false);
+    return _listeners.any(
+      (GestureListener listener) =>
+          listener.onHover?.call(localPosition) ?? false,
+    );
   }
 
   bool onDragStart(Point<double> localPosition) {
@@ -88,37 +96,49 @@ class ProxyGestureListener {
 
     // Walk through listeners stopping at the first handled listener.
     final claimingListener = _activeListeners.firstWhereOrNull(
-        (GestureListener listener) =>
-            listener.onDragStart?.call(localPosition) ?? false);
+      (GestureListener listener) =>
+          listener.onDragStart?.call(localPosition) ?? false,
+    );
 
     if (claimingListener != null) {
-      _activeListeners =
-          _cancel(all: _activeListeners, keep: [claimingListener]);
+      _activeListeners = _cancel(
+        all: _activeListeners,
+        keep: [claimingListener],
+      );
       return true;
     }
     return false;
   }
 
   bool onDragUpdate(Point<double> localPosition, double scale) {
-    return _activeListeners.any((GestureListener listener) =>
-        listener.onDragUpdate?.call(localPosition, scale) ?? false);
+    return _activeListeners.any(
+      (GestureListener listener) =>
+          listener.onDragUpdate?.call(localPosition, scale) ?? false,
+    );
   }
 
   bool onDragEnd(
-      Point<double> localPosition, double scale, double pixelsPerSecond) {
-    return _activeListeners.any((GestureListener listener) =>
-        listener.onDragEnd?.call(localPosition, scale, pixelsPerSecond) ??
-        false);
+    Point<double> localPosition,
+    double scale,
+    double pixelsPerSecond,
+  ) {
+    return _activeListeners.any(
+      (GestureListener listener) =>
+          listener.onDragEnd?.call(localPosition, scale, pixelsPerSecond) ??
+          false,
+    );
   }
 
   bool onFocus() {
-    return _listeners
-        .any((GestureListener listener) => listener.onFocus?.call() ?? false);
+    return _listeners.any(
+      (GestureListener listener) => listener.onFocus?.call() ?? false,
+    );
   }
 
   bool onBlur() {
-    return _listeners
-        .any((GestureListener listener) => listener.onBlur?.call() ?? false);
+    return _listeners.any(
+      (GestureListener listener) => listener.onBlur?.call() ?? false,
+    );
   }
 
   List<GestureListener> _cancel({

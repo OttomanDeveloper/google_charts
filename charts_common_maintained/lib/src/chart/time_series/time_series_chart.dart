@@ -31,20 +31,14 @@ import '../line/line_renderer.dart' show LineRenderer;
 class TimeSeriesChart extends CartesianChart<DateTime> {
   final DateTimeFactory dateTimeFactory;
 
-  TimeSeriesChart(
-      {bool? vertical,
-      LayoutConfig? layoutConfig,
-      NumericAxis? primaryMeasureAxis,
-      NumericAxis? secondaryMeasureAxis,
-      LinkedHashMap<String, NumericAxis>? disjointMeasureAxes,
-      this.dateTimeFactory = const LocalDateTimeFactory()})
-      : super(
-            vertical: vertical,
-            layoutConfig: layoutConfig,
-            domainAxis: DateTimeAxis(dateTimeFactory),
-            primaryMeasureAxis: primaryMeasureAxis,
-            secondaryMeasureAxis: secondaryMeasureAxis,
-            disjointMeasureAxes: disjointMeasureAxes);
+  TimeSeriesChart({
+    super.vertical,
+    super.layoutConfig,
+    super.primaryMeasureAxis,
+    super.secondaryMeasureAxis,
+    super.disjointMeasureAxes,
+    this.dateTimeFactory = const LocalDateTimeFactory(),
+  }) : super(domainAxis: DateTimeAxis(dateTimeFactory));
 
   @override
   void initDomainAxis() {

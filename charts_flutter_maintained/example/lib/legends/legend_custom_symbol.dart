@@ -14,6 +14,8 @@
 // limitations under the License.
 
 /// Bar chart with custom symbol in legend example.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -35,7 +37,7 @@ class IconRenderer extends charts.CustomSymbolRenderer {
     // Lighten the color if the symbol is not enabled
     // Example: If user has tapped on a Series deselecting it.
     if (color != null && !enabled) {
-      color = color.withOpacity(0.26);
+      color = color.withValues(alpha: 0.26);
     }
 
     return SizedBox.fromSize(
@@ -47,7 +49,8 @@ class LegendWithCustomSymbol extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  LegendWithCustomSymbol(this.seriesList, {this.animate = false});
+  const LegendWithCustomSymbol(this.seriesList,
+      {super.key, this.animate = false});
 
   factory LegendWithCustomSymbol.withSampleData() {
     return LegendWithCustomSymbol(
@@ -138,8 +141,8 @@ class LegendWithCustomSymbol extends StatelessWidget {
       // To change the symbol used in the legend, set the renderer attribute of
       // symbolRendererKey to a SymbolRenderer.
       behaviors: [charts.SeriesLegend()],
-      defaultRenderer: charts.BarRendererConfig(
-          symbolRenderer: IconRenderer(Icons.cloud)),
+      defaultRenderer:
+          charts.BarRendererConfig(symbolRenderer: IconRenderer(Icons.cloud)),
     );
   }
 

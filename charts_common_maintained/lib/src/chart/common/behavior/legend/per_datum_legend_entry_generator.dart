@@ -47,11 +47,16 @@ class PerDatumLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
 
     final series = seriesList[0];
     for (var i = 0; i < series.data.length; i++) {
-      legendEntries.add(LegendEntry<D>(series, series.domainFn(i).toString(),
+      legendEntries.add(
+        LegendEntry<D>(
+          series,
+          series.domainFn(i).toString(),
           color: series.colorFn!(i),
           datum: series.data[i],
           datumIndex: i,
-          textStyle: entryTextStyle));
+          textStyle: entryTextStyle,
+        ),
+      );
     }
 
     // Update with measures only if showing measure on no selection.
@@ -63,8 +68,11 @@ class PerDatumLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
   }
 
   @override
-  void updateLegendEntries(List<LegendEntry<D>> legendEntries,
-      SelectionModel<D> selectionModel, List<MutableSeries<D>> seriesList) {
+  void updateLegendEntries(
+    List<LegendEntry<D>> legendEntries,
+    SelectionModel<D> selectionModel,
+    List<MutableSeries<D>> seriesList,
+  ) {
     if (selectionModel.hasAnySelection) {
       _updateFromSelection(legendEntries, selectionModel);
     } else {
@@ -79,7 +87,9 @@ class PerDatumLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
 
   /// Update legend entries with measures of the selected datum
   void _updateFromSelection(
-      List<LegendEntry<D>> legendEntries, SelectionModel<D> selectionModel) {
+    List<LegendEntry<D>> legendEntries,
+    SelectionModel<D> selectionModel,
+  ) {
     // Given that each legend entry only has one datum associated with it, any
     // option for [legendDefaultMeasure] essentially boils down to just showing
     // the measure value.
@@ -90,8 +100,9 @@ class PerDatumLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
         entry.value = measure!.toDouble();
         entry.formattedValue = _getFormattedMeasureValue(series, measure);
 
-        entry.isSelected = selectionModel.selectedSeries
-            .any((selectedSeries) => series.id == selectedSeries.id);
+        entry.isSelected = selectionModel.selectedSeries.any(
+          (selectedSeries) => series.id == selectedSeries.id,
+        );
       }
     }
   }

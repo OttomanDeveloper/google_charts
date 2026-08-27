@@ -40,7 +40,36 @@ import 'package:charts_common_maintained/src/data/series.dart' show AccessorFn;
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-class MockCanvas extends Mock implements ChartCanvas {}
+class DrawTextCall {
+  DrawTextCall(this.textElement, this.offsetX, this.offsetY, this.rotation);
+
+  final TextElement textElement;
+  final int offsetX;
+  final int offsetY;
+  final double rotation;
+}
+
+class MockCanvas extends Mock implements ChartCanvas {
+  final drawTextCalls = <DrawTextCall>[];
+
+  List<dynamic> get captured => [
+    for (final call in drawTextCalls) ...[
+      call.textElement,
+      call.offsetX,
+      call.offsetY,
+    ],
+  ];
+
+  @override
+  void drawText(
+    TextElement textElement,
+    int offsetX,
+    int offsetY, {
+    double rotation = 0.0,
+  }) {
+    drawTextCalls.add(DrawTextCall(textElement, offsetX, offsetY, rotation));
+  }
+}
 
 /// A fake [GraphicsFactory] that returns [FakeTextStyle] and [FakeTextElement].
 class FakeGraphicsFactory extends GraphicsFactory {
@@ -57,19 +86,19 @@ class FakeGraphicsFactory extends GraphicsFactory {
 /// Stores [TextStyle] properties for test to verify.
 class FakeTextStyle implements TextStyle {
   @override
-  Color color;
+  Color? color;
 
   @override
-  int fontSize;
+  int? fontSize;
 
   @override
-  String fontFamily;
+  String? fontFamily;
 
   @override
-  double lineHeight;
+  double? lineHeight;
 
   @override
-  String fontWeight;
+  String? fontWeight;
 }
 
 /// Fake [TextElement] which returns text length as [horizontalSliceWidth].
@@ -80,51 +109,61 @@ class FakeTextElement implements TextElement {
   final String text;
 
   @override
-  TextStyle textStyle;
+  TextStyle? textStyle;
 
   @override
-  int maxWidth;
+  int? maxWidth;
 
   @override
-  MaxWidthStrategy maxWidthStrategy;
+  MaxWidthStrategy? maxWidthStrategy;
 
   @override
-  TextDirection textDirection;
-  double opacity;
+  TextDirection textDirection = TextDirection.ltr;
+  double? opacity;
 
   FakeTextElement(this.text);
 
   @override
   TextMeasurement get measurement => TextMeasurement(
-      horizontalSliceWidth: text.length.toDouble(),
-      verticalSliceWidth: textStyle.fontSize.toDouble(),
-      baseline: textStyle.fontSize.toDouble());
+    horizontalSliceWidth: text.length.toDouble(),
+    verticalSliceWidth: textStyle!.fontSize!.toDouble(),
+    baseline: textStyle!.fontSize!.toDouble(),
+  );
 }
 
 class MockLinePaint extends Mock implements LineStyle {}
 
 class FakeArcRendererElement extends ArcRendererElement<String> {
-  final _series = MockImmutableSeries<String>();
-  final AccessorFn<String> labelAccessor;
+  final AccessorFn<String>? labelAccessor;
   final List<String> data;
 
-  FakeArcRendererElement(this.labelAccessor, this.data) {
-    when(_series.labelAccessorFn).thenReturn(labelAccessor);
-    when(_series.data).thenReturn(data);
-  }
-
-  @override
-  ImmutableSeries<String> get series => _series;
+  FakeArcRendererElement(this.labelAccessor, this.data)
+    : super(
+        startAngle: 0,
+        endAngle: 0,
+        series: MockImmutableSeries<String>(labelAccessor, data),
+      );
 }
 
-class MockImmutableSeries<D> extends Mock implements ImmutableSeries<D> {}
+class MockImmutableSeries<D> extends Mock implements ImmutableSeries<D> {
+  MockImmutableSeries(this.labelAccessorFnValue, this.dataValue);
+
+  final AccessorFn<String>? labelAccessorFnValue;
+  final List<D> dataValue;
+
+  @override
+  AccessorFn<String>? get labelAccessorFn => labelAccessorFnValue;
+
+  @override
+  List<D> get data => dataValue;
+}
 
 void main() {
-  ChartCanvas canvas;
-  GraphicsFactory graphicsFactory;
-  Rectangle<int> drawBounds;
+  late ChartCanvas canvas;
+  late GraphicsFactory graphicsFactory;
+  late Rectangle<int> drawBounds;
 
-  setUpAll(() {
+  setUp(() {
     canvas = MockCanvas();
     graphicsFactory = FakeGraphicsFactory();
     drawBounds = Rectangle(0, 0, 200, 200);
@@ -153,11 +192,15 @@ void main() {
 
       final decorator = ArcLabelDecorator();
 
-      decorator.decorate([arcElements], canvas, graphicsFactory,
-          drawBounds: drawBounds, animationPercent: 1.0);
+      decorator.decorate(
+        [arcElements],
+        canvas,
+        graphicsFactory,
+        drawBounds: drawBounds,
+        animationPercent: 1.0,
+      );
 
-      final captured =
-          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      final captured = (canvas as MockCanvas).captured;
       // Draw text is called twice (once for each arc) and all 3 parameters were
       // captured. Total parameters captured expected to be 6.
       expect(captured, hasLength(6));
@@ -165,18 +208,25 @@ void main() {
       expect(captured[0].maxWidth, equals(10 - decorator.labelPadding));
       expect(captured[0].textDirection, equals(TextDirection.center));
       expect(captured[1], equals(135));
-      expect(captured[2],
-          equals(100 - decorator.insideLabelStyleSpec.fontSize ~/ 2));
+      expect(
+        captured[2],
+        equals(100 - decorator.insideLabelStyleSpec.fontSize! ~/ 2),
+      );
       // For arc 'B'.
       expect(captured[3].maxWidth, equals(20));
       expect(captured[3].textDirection, equals(TextDirection.rtl));
       expect(
-          captured[4],
-          equals(60 -
+        captured[4],
+        equals(
+          60 -
               decorator.leaderLineStyleSpec.length -
-              decorator.labelPadding * 3));
-      expect(captured[5],
-          equals(100 - decorator.outsideLabelStyleSpec.fontSize ~/ 2));
+              decorator.labelPadding * 3,
+        ),
+      );
+      expect(
+        captured[5],
+        equals(100 - decorator.outsideLabelStyleSpec.fontSize! ~/ 2),
+      );
     });
 
     test('LabelPosition.inside always paints inside the arc', () {
@@ -195,20 +245,27 @@ void main() {
       );
 
       final decorator = ArcLabelDecorator(
-          labelPosition: ArcLabelPosition.inside,
-          insideLabelStyleSpec: TextStyleSpec(fontSize: 10));
+        labelPosition: ArcLabelPosition.inside,
+        insideLabelStyleSpec: TextStyleSpec(fontSize: 10),
+      );
 
-      decorator.decorate([arcElements], canvas, graphicsFactory,
-          drawBounds: drawBounds, animationPercent: 1.0);
+      decorator.decorate(
+        [arcElements],
+        canvas,
+        graphicsFactory,
+        drawBounds: drawBounds,
+        animationPercent: 1.0,
+      );
 
-      final captured =
-          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      final captured = (canvas as MockCanvas).captured;
       expect(captured, hasLength(3));
       expect(captured[0].maxWidth, equals(10 - decorator.labelPadding));
       expect(captured[0].textDirection, equals(TextDirection.center));
       expect(captured[1], equals(135));
-      expect(captured[2],
-          equals(100 - decorator.insideLabelStyleSpec.fontSize ~/ 2));
+      expect(
+        captured[2],
+        equals(100 - decorator.insideLabelStyleSpec.fontSize! ~/ 2),
+      );
     });
 
     test('LabelPosition.outside always paints outside the arc', () {
@@ -227,24 +284,34 @@ void main() {
       );
 
       final decorator = ArcLabelDecorator(
-          labelPosition: ArcLabelPosition.outside,
-          outsideLabelStyleSpec: TextStyleSpec(fontSize: 10));
+        labelPosition: ArcLabelPosition.outside,
+        outsideLabelStyleSpec: TextStyleSpec(fontSize: 10),
+      );
 
-      decorator.decorate([arcElements], canvas, graphicsFactory,
-          drawBounds: drawBounds, animationPercent: 1.0);
+      decorator.decorate(
+        [arcElements],
+        canvas,
+        graphicsFactory,
+        drawBounds: drawBounds,
+        animationPercent: 1.0,
+      );
 
-      final captured =
-          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      final captured = (canvas as MockCanvas).captured;
       expect(captured, hasLength(3));
       expect(captured[0].maxWidth, equals(20));
       expect(captured[0].textDirection, equals(TextDirection.ltr));
       expect(
-          captured[1],
-          equals(140 +
+        captured[1],
+        equals(
+          140 +
               decorator.leaderLineStyleSpec.length +
-              decorator.labelPadding * 3));
-      expect(captured[2],
-          equals(100 - decorator.outsideLabelStyleSpec.fontSize ~/ 2));
+              decorator.labelPadding * 3,
+        ),
+      );
+      expect(
+        captured[2],
+        equals(100 - decorator.outsideLabelStyleSpec.fontSize! ~/ 2),
+      );
     });
 
     test('Inside and outside label styles are applied', () {
@@ -270,17 +337,28 @@ void main() {
       final insideColor = Color(r: 0, g: 0, b: 0);
       final outsideColor = Color(r: 255, g: 255, b: 255);
       final decorator = ArcLabelDecorator(
-          labelPadding: 0,
-          insideLabelStyleSpec: TextStyleSpec(
-              fontSize: 10, fontFamily: 'insideFont', color: insideColor),
-          outsideLabelStyleSpec: TextStyleSpec(
-              fontSize: 8, fontFamily: 'outsideFont', color: outsideColor));
+        labelPadding: 0,
+        insideLabelStyleSpec: TextStyleSpec(
+          fontSize: 10,
+          fontFamily: 'insideFont',
+          color: insideColor,
+        ),
+        outsideLabelStyleSpec: TextStyleSpec(
+          fontSize: 8,
+          fontFamily: 'outsideFont',
+          color: outsideColor,
+        ),
+      );
 
-      decorator.decorate([arcElements], canvas, graphicsFactory,
-          drawBounds: drawBounds, animationPercent: 1.0);
+      decorator.decorate(
+        [arcElements],
+        canvas,
+        graphicsFactory,
+        drawBounds: drawBounds,
+        animationPercent: 1.0,
+      );
 
-      final captured =
-          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      final captured = (canvas as MockCanvas).captured;
       // Draw text is called twice (once for each arc) and all 3 parameters were
       // captured. Total parameters captured expected to be 6.
       expect(captured, hasLength(6));
@@ -290,20 +368,27 @@ void main() {
       expect(captured[0].textStyle.fontFamily, equals('insideFont'));
       expect(captured[0].textStyle.color, equals(insideColor));
       expect(captured[1], equals(135));
-      expect(captured[2],
-          equals(100 - decorator.insideLabelStyleSpec.fontSize ~/ 2));
+      expect(
+        captured[2],
+        equals(100 - decorator.insideLabelStyleSpec.fontSize! ~/ 2),
+      );
       // For arc 'B'.
       expect(captured[3].maxWidth, equals(30));
       expect(captured[3].textDirection, equals(TextDirection.rtl));
       expect(captured[3].textStyle.fontFamily, equals('outsideFont'));
       expect(captured[3].textStyle.color, equals(outsideColor));
       expect(
-          captured[4],
-          equals(50 -
+        captured[4],
+        equals(
+          50 -
               decorator.leaderLineStyleSpec.length -
-              decorator.labelPadding * 3));
-      expect(captured[5],
-          equals(100 - decorator.outsideLabelStyleSpec.fontSize ~/ 2));
+              decorator.labelPadding * 3,
+        ),
+      );
+      expect(
+        captured[5],
+        equals(100 - decorator.outsideLabelStyleSpec.fontSize! ~/ 2),
+      );
     });
   });
 
@@ -321,10 +406,15 @@ void main() {
         startAngle: -pi / 2,
       );
 
-      ArcLabelDecorator().decorate([arcElements], canvas, graphicsFactory,
-          drawBounds: drawBounds, animationPercent: 1.0);
+      ArcLabelDecorator().decorate(
+        [arcElements],
+        canvas,
+        graphicsFactory,
+        drawBounds: drawBounds,
+        animationPercent: 1.0,
+      );
 
-      verifyNever(canvas.drawText(any, any, any));
+      expect((canvas as MockCanvas).drawTextCalls, isEmpty);
     });
 
     test('Skip label if label is null or empty', () {
@@ -344,10 +434,15 @@ void main() {
         startAngle: -pi / 2,
       );
 
-      ArcLabelDecorator().decorate([arcElements], canvas, graphicsFactory,
-          drawBounds: drawBounds, animationPercent: 1.0);
+      ArcLabelDecorator().decorate(
+        [arcElements],
+        canvas,
+        graphicsFactory,
+        drawBounds: drawBounds,
+        animationPercent: 1.0,
+      );
 
-      verifyNever(canvas.drawText(any, any, any));
+      expect((canvas as MockCanvas).drawTextCalls, isEmpty);
     });
   });
 }

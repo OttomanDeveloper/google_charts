@@ -60,9 +60,10 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
   // ignore: prefer_collection_literals, https://github.com/dart-lang/linter/issues/1649
   final _seriesInfo = LinkedHashMap<String, _SeriesInfo<D>>();
 
-  SymbolAnnotationRenderer(
-      {String? rendererId, SymbolAnnotationRendererConfig<D>? config})
-      : super(rendererId: rendererId ?? 'symbolAnnotation', config: config);
+  SymbolAnnotationRenderer({
+    String? rendererId,
+    SymbolAnnotationRendererConfig<D>? config,
+  }) : super(rendererId: rendererId ?? 'symbolAnnotation', config: config);
 
   //
   // Renderer methods
@@ -98,11 +99,13 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
 
       final rowInnerHeight = maxRadius * 2;
 
-      final rowHeight = localConfig.verticalSymbolBottomPaddingPx +
+      final rowHeight =
+          localConfig.verticalSymbolBottomPaddingPx +
           localConfig.verticalSymbolTopPaddingPx +
           rowInnerHeight;
 
-      final symbolCenter = offset +
+      final symbolCenter =
+          offset +
           localConfig.verticalSymbolTopPaddingPx +
           (rowInnerHeight / 2);
 
@@ -113,7 +116,8 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
       // the same point. This is a necessary hack because every annotation has a
       // measure value of 0, so the key generated in [PointRenderer] is not
       // unique enough.
-      series.keyFn ??= (index) => '${series.id}__${series.domainFn(index)}__'
+      series.keyFn ??= (index) =>
+          '${series.id}__${series.domainFn(index)}__'
           '${series.domainLowerBoundFn!(index)}__'
           '${series.domainUpperBoundFn!(index)}';
 
@@ -133,17 +137,18 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
 
   @override
   DatumPoint<D> getPoint(
-      Object? datum,
-      D? domainValue,
-      D? domainLowerBoundValue,
-      D? domainUpperBoundValue,
-      ImmutableSeries<D> series,
-      ImmutableAxis<D> domainAxis,
-      num? measureValue,
-      num? measureLowerBoundValue,
-      num? measureUpperBoundValue,
-      num? measureOffsetValue,
-      ImmutableAxis<num> measureAxis) {
+    Object? datum,
+    D? domainValue,
+    D? domainLowerBoundValue,
+    D? domainUpperBoundValue,
+    ImmutableSeries<D> series,
+    ImmutableAxis<D> domainAxis,
+    num? measureValue,
+    num? measureLowerBoundValue,
+    num? measureUpperBoundValue,
+    num? measureOffsetValue,
+    ImmutableAxis<num> measureAxis,
+  ) {
     final domainPosition = domainAxis.getLocation(domainValue);
 
     final domainLowerBoundPosition = domainLowerBoundValue != null
@@ -159,29 +164,33 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
 
     final measurePosition = _componentBounds.top + seriesInfo.symbolCenter;
 
-    final measureLowerBoundPosition =
-        domainLowerBoundPosition != null ? measurePosition : null;
+    final measureLowerBoundPosition = domainLowerBoundPosition != null
+        ? measurePosition
+        : null;
 
-    final measureUpperBoundPosition =
-        domainUpperBoundPosition != null ? measurePosition : null;
+    final measureUpperBoundPosition = domainUpperBoundPosition != null
+        ? measurePosition
+        : null;
 
     return DatumPoint<D>(
-        datum: datum,
-        domain: domainValue,
-        series: series,
-        x: domainPosition,
-        xLower: domainLowerBoundPosition,
-        xUpper: domainUpperBoundPosition,
-        y: measurePosition,
-        yLower: measureLowerBoundPosition,
-        yUpper: measureUpperBoundPosition);
+      datum: datum,
+      domain: domainValue,
+      series: series,
+      x: domainPosition,
+      xLower: domainLowerBoundPosition,
+      xUpper: domainUpperBoundPosition,
+      y: measurePosition,
+      yLower: measureLowerBoundPosition,
+      yUpper: measureUpperBoundPosition,
+    );
   }
 
   @override
   void onAttach(BaseChart<D> chart) {
     if (chart is! CartesianChart<D>) {
       throw ArgumentError(
-          'SymbolAnnotationRenderer can only be attached to a CartesianChart<D>');
+        'SymbolAnnotationRenderer can only be attached to a CartesianChart<D>',
+      );
     }
 
     _chart = chart;
@@ -212,9 +221,16 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
 
         final domainAxis = _chart.domainAxis!;
         final bounds = Rectangle<int>(
-            componentBounds.left, y.round(), componentBounds.width, 0);
-        domainAxis.tickDrawStrategy!
-            .drawAxisLine(canvas, domainAxis.axisOrientation!, bounds);
+          componentBounds.left,
+          y.round(),
+          componentBounds.width,
+          0,
+        );
+        domainAxis.tickDrawStrategy!.drawAxisLine(
+          canvas,
+          domainAxis.axisOrientation!,
+          bounds,
+        );
       });
     }
   }
@@ -226,9 +242,10 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
   @override
   LayoutViewConfig get layoutConfig {
     return LayoutViewConfig(
-        paintOrder: LayoutViewPaintOrder.point,
-        position: LayoutPosition.Bottom,
-        positionOrder: LayoutViewPositionOrder.symbolAnnotation);
+      paintOrder: LayoutViewPaintOrder.point,
+      position: LayoutPosition.Bottom,
+      positionOrder: LayoutViewPositionOrder.symbolAnnotation,
+    );
   }
 
   @override
@@ -237,7 +254,9 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
     // of the number of series rendered, even if that ends up taking all of the
     // available margin space.
     return ViewMeasuredSizes(
-        preferredWidth: maxWidth, preferredHeight: _currentHeight);
+      preferredWidth: maxWidth,
+      preferredHeight: _currentHeight,
+    );
   }
 
   @override
@@ -256,8 +275,9 @@ class _SeriesInfo<D> {
   double rowStart;
   double symbolCenter;
 
-  _SeriesInfo(
-      {required this.rowHeight,
-      required this.rowStart,
-      required this.symbolCenter});
+  _SeriesInfo({
+    required this.rowHeight,
+    required this.rowStart,
+    required this.symbolCenter,
+  });
 }

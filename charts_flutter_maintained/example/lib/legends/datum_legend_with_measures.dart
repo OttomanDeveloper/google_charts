@@ -18,6 +18,8 @@
 /// to use the customizations, they do not necessary have to be used together in
 /// this way. Choosing [end] as the position does not require the justification
 /// to also be [endDrawArea].
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -32,7 +34,8 @@ class DatumLegendWithMeasures extends StatelessWidget {
   final List<charts.Series<dynamic, int>> seriesList;
   final bool animate;
 
-  DatumLegendWithMeasures(this.seriesList, {this.animate = false});
+  const DatumLegendWithMeasures(this.seriesList,
+      {super.key, this.animate = false});
 
   factory DatumLegendWithMeasures.withSampleData() {
     return DatumLegendWithMeasures(

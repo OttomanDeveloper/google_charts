@@ -95,20 +95,20 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
   @override
   final rendererAttributes = RendererAttributes();
 
-  BaseBarRendererConfig(
-      {this.barGroupInnerPaddingPx = 2,
-      this.customRendererId,
-      this.dashPattern,
-      this.groupingType = BarGroupingType.grouped,
-      this.layoutPaintOrder,
-      this.minBarLengthPx = 0,
-      this.maxBarWidthPx,
-      this.fillPattern,
-      this.stackedBarPaddingPx = 1,
-      this.strokeWidthPx = 0.0,
-      SymbolRenderer? symbolRenderer,
-      this.weightPattern})
-      : symbolRenderer = symbolRenderer ?? RoundedRectSymbolRenderer();
+  BaseBarRendererConfig({
+    this.barGroupInnerPaddingPx = 2,
+    this.customRendererId,
+    this.dashPattern,
+    this.groupingType = BarGroupingType.grouped,
+    this.layoutPaintOrder,
+    this.minBarLengthPx = 0,
+    this.maxBarWidthPx,
+    this.fillPattern,
+    this.stackedBarPaddingPx = 1,
+    this.strokeWidthPx = 0.0,
+    SymbolRenderer? symbolRenderer,
+    this.weightPattern,
+  }) : symbolRenderer = symbolRenderer ?? RoundedRectSymbolRenderer();
 
   /// Whether or not the bars should be organized into groups.
   bool get grouped =>
@@ -142,17 +142,17 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
 
   @override
   int get hashCode => Object.hash(
-        customRendererId,
-        dashPattern,
-        fillPattern,
-        groupingType,
-        minBarLengthPx,
-        maxBarWidthPx,
-        stackedBarPaddingPx,
-        strokeWidthPx,
-        symbolRenderer,
-        weightPattern,
-      );
+    customRendererId,
+    dashPattern,
+    fillPattern,
+    groupingType,
+    minBarLengthPx,
+    maxBarWidthPx,
+    stackedBarPaddingPx,
+    strokeWidthPx,
+    symbolRenderer,
+    weightPattern,
+  );
 }
 
 /// Defines the way multiple series of bars are renderered per domain.

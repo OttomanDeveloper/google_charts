@@ -39,16 +39,16 @@ class Color {
     this.a = 255,
     Color? darker,
     Color? lighter,
-  })  : _darker = darker,
-        _lighter = lighter;
+  }) : _darker = darker,
+       _lighter = lighter;
 
   Color.fromOther({required Color color, Color? darker, Color? lighter})
-      : r = color.r,
-        g = color.g,
-        b = color.b,
-        a = color.a,
-        _darker = darker ?? color._darker,
-        _lighter = lighter ?? color._lighter;
+    : r = color.r,
+      g = color.g,
+      b = color.b,
+      a = color.a,
+      _darker = darker ?? color._darker,
+      _lighter = lighter ?? color._lighter;
 
   /// Construct the color from a hex code string, of the format #RRGGBB.
   factory Color.fromHex({required String code}) {
@@ -64,18 +64,20 @@ class Color {
   Color get darker =>
       _darker ??
       Color(
-          r: (r * _darkerPercentOfOrig).round(),
-          g: (g * _darkerPercentOfOrig).round(),
-          b: (b * _darkerPercentOfOrig).round(),
-          a: a);
+        r: (r * _darkerPercentOfOrig).round(),
+        g: (g * _darkerPercentOfOrig).round(),
+        b: (b * _darkerPercentOfOrig).round(),
+        a: a,
+      );
 
   Color get lighter =>
       _lighter ??
       Color(
-          r: r + ((255 - r) * _lighterPercentOfOrig).round(),
-          g: g + ((255 - g) * _lighterPercentOfOrig).round(),
-          b: b + ((255 - b) * _lighterPercentOfOrig).round(),
-          a: a);
+        r: r + ((255 - r) * _lighterPercentOfOrig).round(),
+        g: g + ((255 - g) * _lighterPercentOfOrig).round(),
+        b: b + ((255 - b) * _lighterPercentOfOrig).round(),
+        a: a,
+      );
 
   @override
   bool operator ==(Object other) =>
@@ -98,7 +100,8 @@ class Color {
   String toString() => rgbaHexString;
 
   /// Converts the character into a #RGBA hex string.
-  String get rgbaHexString => '#${_get2CharHex(r)}${_get2CharHex(g)}'
+  String get rgbaHexString =>
+      '#${_get2CharHex(r)}${_get2CharHex(g)}'
       '${_get2CharHex(b)}${_get2CharHex(a)}';
 
   /// Converts the character into a #RGB hex string.

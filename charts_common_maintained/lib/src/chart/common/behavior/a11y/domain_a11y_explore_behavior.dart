@@ -26,8 +26,8 @@ import 'a11y_explore_behavior.dart'
 import 'a11y_node.dart' show A11yNode, OnFocus;
 
 /// Returns a string for a11y vocalization from a list of series datum.
-typedef VocalizationCallback<D> = String Function(
-    List<SeriesDatum<D>> seriesDatums);
+typedef VocalizationCallback<D> =
+    String Function(List<SeriesDatum<D>> seriesDatums);
 
 /// A simple vocalization that returns the domain value to string.
 String domainVocalization<D>(List<SeriesDatum<D>> seriesDatums) {
@@ -45,18 +45,13 @@ class DomainA11yExploreBehavior<D> extends A11yExploreBehavior<D> {
   late CartesianChart<D> _chart;
   late List<MutableSeries<D>> _seriesList;
 
-  DomainA11yExploreBehavior(
-      {VocalizationCallback<D>? vocalizationCallback,
-      ExploreModeTrigger? exploreModeTrigger,
-      double? minimumWidth,
-      String? exploreModeEnabledAnnouncement,
-      String? exploreModeDisabledAnnouncement})
-      : _vocalizationCallback = vocalizationCallback ?? domainVocalization,
-        super(
-            exploreModeTrigger: exploreModeTrigger,
-            minimumWidth: minimumWidth,
-            exploreModeEnabledAnnouncement: exploreModeEnabledAnnouncement,
-            exploreModeDisabledAnnouncement: exploreModeDisabledAnnouncement) {
+  DomainA11yExploreBehavior({
+    VocalizationCallback<D>? vocalizationCallback,
+    super.exploreModeTrigger,
+    super.minimumWidth,
+    super.exploreModeEnabledAnnouncement,
+    super.exploreModeDisabledAnnouncement,
+  }) : _vocalizationCallback = vocalizationCallback ?? domainVocalization {
     _lifecycleListener = LifecycleListener<D>(onPostprocess: _updateSeriesList);
   }
 
@@ -91,13 +86,17 @@ class DomainA11yExploreBehavior<D> extends A11yExploreBehavior<D> {
           ? domainAxis.stepSize
           : minimumWidth;
 
-      nodes.add(_DomainA11yNode(a11yDescription,
+      nodes.add(
+        _DomainA11yNode(
+          a11yDescription,
           location: location,
           stepSize: stepSize,
           chartDrawBounds: _chart.drawAreaBounds,
           isRtl: _chart.context.isRtl,
           renderVertically: _chart.vertical,
-          onFocus: () => selectionModel.updateSelection(seriesDatums, [])));
+          onFocus: () => selectionModel.updateSelection(seriesDatums, []),
+        ),
+      );
     });
 
     // The screen reader navigates the nodes based on the order it is returned.
@@ -142,13 +141,15 @@ class _DomainA11yNode extends A11yNode implements Comparable<_DomainA11yNode> {
   final bool isRtl;
   final bool renderVertically;
 
-  factory _DomainA11yNode(String label,
-      {required double location,
-      required double stepSize,
-      required Rectangle<int> chartDrawBounds,
-      required bool isRtl,
-      required bool renderVertically,
-      OnFocus? onFocus}) {
+  factory _DomainA11yNode(
+    String label, {
+    required double location,
+    required double stepSize,
+    required Rectangle<int> chartDrawBounds,
+    required bool isRtl,
+    required bool renderVertically,
+    OnFocus? onFocus,
+  }) {
     Rectangle<int> boundingBox;
     if (renderVertically) {
       var left = (location - stepSize / 2).round();
@@ -164,19 +165,24 @@ class _DomainA11yNode extends A11yNode implements Comparable<_DomainA11yNode> {
       boundingBox = Rectangle(left, top, width, height);
     }
 
-    return _DomainA11yNode._internal(label, boundingBox,
-        location: location,
-        isRtl: isRtl,
-        renderVertically: renderVertically,
-        onFocus: onFocus);
+    return _DomainA11yNode._internal(
+      label,
+      boundingBox,
+      location: location,
+      isRtl: isRtl,
+      renderVertically: renderVertically,
+      onFocus: onFocus,
+    );
   }
 
-  _DomainA11yNode._internal(String label, Rectangle<int> boundingBox,
-      {required this.location,
-      required this.isRtl,
-      required this.renderVertically,
-      OnFocus? onFocus})
-      : super(label, boundingBox, onFocus: onFocus);
+  _DomainA11yNode._internal(
+    super.label,
+    super.boundingBox, {
+    required this.location,
+    required this.isRtl,
+    required this.renderVertically,
+    super.onFocus,
+  });
 
   @override
   int compareTo(_DomainA11yNode other) {

@@ -28,10 +28,10 @@ void main() {
   final DateTime testDate2 = DateTime.utc(1984, 11, 12);
   final DateTime testDate3 = DateTime.utc(1984, 11, 13);
 
-  BasicDateTimeTickFormatterSpec dateTimeTickSpec;
-  BasicDateTimeTickFormatterSpec dateTimeTickSpecWithDateFormat;
-  DateFormat dateFormat;
-  MockContext mockContext;
+  late BasicDateTimeTickFormatterSpec dateTimeTickSpec;
+  late BasicDateTimeTickFormatterSpec dateTimeTickSpecWithDateFormat;
+  late DateFormat dateFormat;
+  late MockContext mockContext;
 
   String testFormatter(DateTime dateTime) {
     return tickLabel;
@@ -48,13 +48,16 @@ void main() {
 
   group(BasicDateTimeTickFormatterSpec, () {
     test('formats ticks with custom formatter', () {
-      final DateTimeTickFormatter dateTimeTickFormatter =
-          dateTimeTickSpec.createTickFormatter(mockContext);
+      final DateTimeTickFormatter dateTimeTickFormatter = dateTimeTickSpec
+          .createTickFormatter(mockContext);
 
       final ticks = [testDate1, testDate2, testDate3];
       final expectedLabels = [tickLabel, tickLabel, tickLabel];
-      final actualLabels =
-          dateTimeTickFormatter.format(ticks, null, stepSize: 10);
+      final actualLabels = dateTimeTickFormatter.format(
+        ticks,
+        <DateTime, String>{},
+        stepSize: 10,
+      );
 
       expect(actualLabels, equals(expectedLabels));
     });
@@ -64,31 +67,33 @@ void main() {
           dateTimeTickSpecWithDateFormat.createTickFormatter(mockContext);
 
       final ticks = [testDate1, testDate2, testDate3];
-      final expectedLabels = [
-        'Nov 11, 1984',
-        'Nov 12, 1984',
-        'Nov 13, 1984',
-      ];
-      final actualLabels =
-          dateTimeTickFormatter.format(ticks, null, stepSize: 10);
+      final expectedLabels = ['Nov 11, 1984', 'Nov 12, 1984', 'Nov 13, 1984'];
+      final actualLabels = dateTimeTickFormatter.format(
+        ticks,
+        <DateTime, String>{},
+        stepSize: 10,
+      );
 
       expect(actualLabels, equals(expectedLabels));
     });
 
     test('== override works correctly', () {
-      final otherDateTimeTickSpec =
-          BasicDateTimeTickFormatterSpec(testFormatter);
+      final otherDateTimeTickSpec = BasicDateTimeTickFormatterSpec(
+        testFormatter,
+      );
       final otherDateTimeTickSpecWithDateFormat =
           BasicDateTimeTickFormatterSpec.fromDateFormat(dateFormat);
 
       expect(dateTimeTickSpec == otherDateTimeTickSpec, isTrue);
       expect(
-          dateTimeTickSpecWithDateFormat == otherDateTimeTickSpecWithDateFormat,
-          isTrue);
+        dateTimeTickSpecWithDateFormat == otherDateTimeTickSpecWithDateFormat,
+        isTrue,
+      );
     });
 
     test('hash code works correctly', () {
-      final expectedHash = dateTimeTickSpec.formatter.hashCode *
+      final expectedHash =
+          dateTimeTickSpec.formatter.hashCode *
           37 *
           dateTimeTickSpec.dateFormat.hashCode;
       final actualHash = dateTimeTickSpec.hashCode;

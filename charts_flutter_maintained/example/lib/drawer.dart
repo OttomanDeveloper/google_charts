@@ -20,11 +20,10 @@ class GalleryDrawer extends StatelessWidget {
   final bool showPerformanceOverlay;
   final ValueChanged<bool> onShowPerformanceOverlayChanged;
 
-  GalleryDrawer(
-      {Key? key,
+  const GalleryDrawer(
+      {super.key,
       this.showPerformanceOverlay = false,
-      required this.onShowPerformanceOverlayChanged})
-      : super(key: key);
+      required this.onShowPerformanceOverlayChanged});
 
   @override
   Widget build(BuildContext context) {

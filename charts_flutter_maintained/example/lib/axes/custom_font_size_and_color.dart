@@ -14,6 +14,8 @@
 // limitations under the License.
 
 /// Custom Font Style Example
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -30,7 +32,8 @@ class CustomFontSizeAndColor extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  CustomFontSizeAndColor(this.seriesList, {this.animate = false});
+  const CustomFontSizeAndColor(this.seriesList,
+      {super.key, this.animate = false});
 
   factory CustomFontSizeAndColor.withSampleData() {
     return CustomFontSizeAndColor(
@@ -90,8 +93,8 @@ class CustomFontSizeAndColor extends StatelessWidget {
                   color: charts.MaterialPalette.black),
 
               // Change the line colors to match text color.
-              lineStyle: charts.LineStyleSpec(
-                  color: charts.MaterialPalette.black))),
+              lineStyle:
+                  charts.LineStyleSpec(color: charts.MaterialPalette.black))),
 
       /// Assign a custom style for the measure axis.
       primaryMeasureAxis: charts.NumericAxisSpec(
@@ -103,8 +106,8 @@ class CustomFontSizeAndColor extends StatelessWidget {
                   color: charts.MaterialPalette.black),
 
               // Change the line colors to match text color.
-              lineStyle: charts.LineStyleSpec(
-                  color: charts.MaterialPalette.black))),
+              lineStyle:
+                  charts.LineStyleSpec(color: charts.MaterialPalette.black))),
     );
   }
 

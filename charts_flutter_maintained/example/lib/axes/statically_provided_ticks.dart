@@ -14,6 +14,8 @@
 // limitations under the License.
 
 /// Example of axis using statically provided ticks.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -38,7 +40,8 @@ class StaticallyProvidedTicks extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  StaticallyProvidedTicks(this.seriesList, {this.animate = false});
+  const StaticallyProvidedTicks(this.seriesList,
+      {super.key, this.animate = false});
 
   factory StaticallyProvidedTicks.withSampleData() {
     return StaticallyProvidedTicks(
@@ -101,8 +104,7 @@ class StaticallyProvidedTicks extends StatelessWidget {
       seriesList,
       animate: animate,
       domainAxis: charts.OrdinalAxisSpec(
-          tickProviderSpec:
-              charts.StaticOrdinalTickProviderSpec(staticTicks)),
+          tickProviderSpec: charts.StaticOrdinalTickProviderSpec(staticTicks)),
     );
   }
 

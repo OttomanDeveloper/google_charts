@@ -75,25 +75,31 @@ class Graph<N, L, D> {
   /// Store additional key-value pairs for link attributes
   final LinkAttributes linkAttributes = LinkAttributes();
 
-  factory Graph(
-      {required String id,
-      required List<N> nodes,
-      required List<L> links,
-      required TypedAccessorFn<N, D> nodeDomainFn,
-      required TypedAccessorFn<L, D> linkDomainFn,
-      required TypedAccessorFn<L, N> sourceFn,
-      required TypedAccessorFn<L, N> targetFn,
-      required TypedAccessorFn<N, num?> nodeMeasureFn,
-      required TypedAccessorFn<L, num?> linkMeasureFn,
-      TypedAccessorFn<N, Color>? nodeColorFn,
-      TypedAccessorFn<N, Color>? nodeFillColorFn,
-      TypedAccessorFn<N, FillPatternType>? nodeFillPatternFn,
-      TypedAccessorFn<N, num>? nodeStrokeWidthPxFn,
-      TypedAccessorFn<L, Color>? linkFillColorFn}) {
+  factory Graph({
+    required String id,
+    required List<N> nodes,
+    required List<L> links,
+    required TypedAccessorFn<N, D> nodeDomainFn,
+    required TypedAccessorFn<L, D> linkDomainFn,
+    required TypedAccessorFn<L, N> sourceFn,
+    required TypedAccessorFn<L, N> targetFn,
+    required TypedAccessorFn<N, num?> nodeMeasureFn,
+    required TypedAccessorFn<L, num?> linkMeasureFn,
+    TypedAccessorFn<N, Color>? nodeColorFn,
+    TypedAccessorFn<N, Color>? nodeFillColorFn,
+    TypedAccessorFn<N, FillPatternType>? nodeFillPatternFn,
+    TypedAccessorFn<N, num>? nodeStrokeWidthPxFn,
+    TypedAccessorFn<L, Color>? linkFillColorFn,
+  }) {
     return Graph.base(
       id: id,
       nodes: convertGraphNodes<N, L, D>(
-          nodes, links, sourceFn, targetFn, nodeDomainFn),
+        nodes,
+        links,
+        sourceFn,
+        targetFn,
+        nodeDomainFn,
+      ),
       links: convertGraphLinks<N, L>(links, sourceFn, targetFn),
       nodeDomainFn: actOnNodeData<N, L, D>(nodeDomainFn)!,
       linkDomainFn: actOnLinkData<N, L, D>(linkDomainFn)!,
@@ -101,8 +107,9 @@ class Graph<N, L, D> {
       linkMeasureFn: actOnLinkData<N, L, num?>(linkMeasureFn)!,
       nodeColorFn: actOnNodeData<N, L, Color>(nodeColorFn),
       nodeFillColorFn: actOnNodeData<N, L, Color>(nodeFillColorFn),
-      nodeFillPatternFn:
-          actOnNodeData<N, L, FillPatternType>(nodeFillPatternFn),
+      nodeFillPatternFn: actOnNodeData<N, L, FillPatternType>(
+        nodeFillPatternFn,
+      ),
       nodeStrokeWidthPxFn: actOnNodeData<N, L, num>(nodeStrokeWidthPxFn),
       linkFillColorFn: actOnLinkData<N, L, Color>(linkFillColorFn),
     );
@@ -171,8 +178,11 @@ class Graph<N, L, D> {
 }
 
 /// Return a list of links from the generic link data type
-List<Link<N, L>> convertGraphLinks<N, L>(List<L> links,
-    TypedAccessorFn<L, N> sourceFn, TypedAccessorFn<L, N> targetFn) {
+List<Link<N, L>> convertGraphLinks<N, L>(
+  List<L> links,
+  TypedAccessorFn<L, N> sourceFn,
+  TypedAccessorFn<L, N> targetFn,
+) {
   List<Link<N, L>> graphLinks = [];
   for (var i = 0; i < links.length; i++) {
     N sourceNode = sourceFn(links[i], i);
@@ -184,11 +194,12 @@ List<Link<N, L>> convertGraphLinks<N, L>(List<L> links,
 
 /// Return a list of nodes from the generic node data type
 List<Node<N, L>> convertGraphNodes<N, L, D>(
-    List<N> nodes,
-    List<L> links,
-    TypedAccessorFn<L, N> sourceFn,
-    TypedAccessorFn<L, N> targetFn,
-    TypedAccessorFn<N, D> nodeDomainFn) {
+  List<N> nodes,
+  List<L> links,
+  TypedAccessorFn<L, N> sourceFn,
+  TypedAccessorFn<L, N> targetFn,
+  TypedAccessorFn<N, D> nodeDomainFn,
+) {
   List<Node<N, L>> graphNodes = [];
   var graphLinks = convertGraphLinks(links, sourceFn, targetFn);
   var nodeClassDomainFn = actOnNodeData<N, L, D>(nodeDomainFn)!;
@@ -201,12 +212,16 @@ List<Node<N, L>> convertGraphNodes<N, L, D>(
 
   // Add ingoing and outgoing links to the nodes in nodeMap
   for (var link in graphLinks) {
-    nodeMap.update(nodeClassDomainFn(link.target, indexNotRelevant),
-        (node) => addLinkToNode(node, link, isIncomingLink: true),
-        ifAbsent: () => addLinkToAbsentNode(link, isIncomingLink: true));
-    nodeMap.update(nodeClassDomainFn(link.source, indexNotRelevant),
-        (node) => addLinkToNode(node, link, isIncomingLink: false),
-        ifAbsent: () => addLinkToAbsentNode(link, isIncomingLink: false));
+    nodeMap.update(
+      nodeClassDomainFn(link.target, indexNotRelevant),
+      (node) => addLinkToNode(node, link, isIncomingLink: true),
+      ifAbsent: () => addLinkToAbsentNode(link, isIncomingLink: true),
+    );
+    nodeMap.update(
+      nodeClassDomainFn(link.source, indexNotRelevant),
+      (node) => addLinkToNode(node, link, isIncomingLink: false),
+      ifAbsent: () => addLinkToAbsentNode(link, isIncomingLink: false),
+    );
   }
 
   nodeMap.forEach((domainId, node) => graphNodes.add(node));
@@ -228,18 +243,19 @@ class Node<N, L> extends GraphElement<N> {
   List<Link<N, L>> outgoingLinks;
 
   Node(
-    N data, {
+    super.data, {
     List<Link<N, L>>? incomingLinks,
     List<Link<N, L>>? outgoingLinks,
-  })  : incomingLinks = incomingLinks ?? [],
-        outgoingLinks = outgoingLinks ?? [],
-        super(data);
+  }) : incomingLinks = incomingLinks ?? [],
+       outgoingLinks = outgoingLinks ?? [];
 
   /// Return.a new copy of a node with all associated links.
   Node.clone(Node<N, L> node)
-      : this(node.data,
-            incomingLinks: _cloneLinkList<N, L>(node.incomingLinks),
-            outgoingLinks: _cloneLinkList<N, L>(node.outgoingLinks));
+    : this(
+        node.data,
+        incomingLinks: _cloneLinkList<N, L>(node.incomingLinks),
+        outgoingLinks: _cloneLinkList<N, L>(node.outgoingLinks),
+      );
 
   /// Return a new copy of a node with user defined data only, no links.
   Node.cloneData(Node<N, L> node) : this(node.data);
@@ -256,8 +272,7 @@ class Link<N, L> extends GraphElement<L> {
   Link(this.source, this.target, L data) : super(data);
 
   Link.clone(Link<N, L> link)
-      : this(Node.cloneData(link.source), Node.cloneData(link.target),
-            link.data);
+    : this(Node.cloneData(link.source), Node.cloneData(link.target), link.data);
 }
 
 List<Link<N, L>> _cloneLinkList<N, L>(List<Link<N, L>> linkList) {

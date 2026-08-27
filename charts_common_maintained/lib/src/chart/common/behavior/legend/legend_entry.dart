@@ -48,16 +48,18 @@ class LegendEntryBase {
   /// Indicates whether this is in the last column of a tabular layout.
   bool? inLastColumn;
 
-  LegendEntryBase(this.label,
-      {this.textStyle,
-      this.rowNumber,
-      this.columnNumber,
-      this.rowCount,
-      this.columnCount,
-      this.inFirstRow,
-      this.inFirstColumn,
-      this.inLastRow,
-      this.inLastColumn});
+  LegendEntryBase(
+    this.label, {
+    this.textStyle,
+    this.rowNumber,
+    this.columnNumber,
+    this.rowCount,
+    this.columnCount,
+    this.inFirstRow,
+    this.inFirstColumn,
+    this.inLastRow,
+    this.inLastColumn,
+  });
 }
 
 /// When the legend groups by category it will create additional legend entries
@@ -67,27 +69,18 @@ class LegendCategory<D> extends LegendEntryBase {
   final List<LegendEntry<D>>? entries;
 
   LegendCategory(
-    String label,
+    super.label,
     this.entries, {
-    TextStyleSpec? textStyle,
-    int? rowNumber,
-    int? columnNumber,
-    int? rowCount,
-    int? columnCount,
-    bool? inFirstRow,
-    bool? inFirstColumn,
-    bool? inLastRow,
-    bool? inLastColumn,
-  }) : super(label,
-            textStyle: textStyle,
-            rowNumber: rowNumber,
-            columnNumber: columnNumber,
-            rowCount: rowCount,
-            columnCount: columnCount,
-            inFirstRow: inFirstRow,
-            inFirstColumn: inFirstColumn,
-            inLastRow: inLastRow,
-            inLastColumn: inLastColumn);
+    super.textStyle,
+    super.rowNumber,
+    super.columnNumber,
+    super.rowCount,
+    super.columnCount,
+    super.inFirstRow,
+    super.inFirstColumn,
+    super.inLastRow,
+    super.inLastColumn,
+  });
 }
 
 /// Holder for the information used for a legend row.
@@ -110,7 +103,7 @@ class LegendEntry<D> extends LegendEntryBase {
 
   LegendEntry(
     this.series,
-    String label, {
+    super.label, {
     this.datum,
     this.datumIndex,
     this.domain,
@@ -118,25 +111,16 @@ class LegendEntry<D> extends LegendEntryBase {
     this.selectedDataIndexes,
     this.color,
     this.isSelected = false,
-    TextStyleSpec? textStyle,
-    int? rowNumber,
-    int? columnNumber,
-    int? rowCount,
-    int? columnCount,
-    bool? inFirstRow,
-    bool? inFirstColumn,
-    bool? inLastRow,
-    bool? inLastColumn,
-  }) : super(label,
-            textStyle: textStyle,
-            rowNumber: rowNumber,
-            columnNumber: columnNumber,
-            rowCount: rowCount,
-            columnCount: columnCount,
-            inFirstRow: inFirstRow,
-            inFirstColumn: inFirstColumn,
-            inLastRow: inLastRow,
-            inLastColumn: inLastColumn);
+    super.textStyle,
+    super.rowNumber,
+    super.columnNumber,
+    super.rowCount,
+    super.columnCount,
+    super.inFirstRow,
+    super.inFirstColumn,
+    super.inLastRow,
+    super.inLastColumn,
+  });
 
   /// Get the native symbol renderer stored in the series.
   SymbolRenderer? get symbolRenderer =>

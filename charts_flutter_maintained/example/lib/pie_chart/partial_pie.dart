@@ -15,6 +15,8 @@
 
 /// Partial pie chart example, where the data does not cover a full revolution
 /// in the chart.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -26,7 +28,7 @@ class PartialPieChart extends StatelessWidget {
   final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  PartialPieChart(this.seriesList, {this.animate = false});
+  const PartialPieChart(this.seriesList, {super.key, this.animate = false});
 
   /// Creates a [PieChart] with sample data and no transition.
   factory PartialPieChart.withSampleData() {

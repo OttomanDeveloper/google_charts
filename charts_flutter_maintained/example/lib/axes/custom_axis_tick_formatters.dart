@@ -14,6 +14,8 @@
 // limitations under the License.
 
 /// Example of timeseries chart with custom measure and domain formatters.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -26,7 +28,8 @@ class CustomAxisTickFormatters extends StatelessWidget {
   final List<charts.Series<dynamic, DateTime>> seriesList;
   final bool animate;
 
-  CustomAxisTickFormatters(this.seriesList, {this.animate = false});
+  const CustomAxisTickFormatters(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [TimeSeriesChart] with sample data and no transition.
   factory CustomAxisTickFormatters.withSampleData() {
@@ -95,8 +98,8 @@ class CustomAxisTickFormatters extends StatelessWidget {
     return charts.TimeSeriesChart(seriesList,
         animate: animate,
         // Sets up a currency formatter for the measure axis.
-        primaryMeasureAxis: charts.NumericAxisSpec(
-            tickFormatterSpec: simpleCurrencyFormatter),
+        primaryMeasureAxis:
+            charts.NumericAxisSpec(tickFormatterSpec: simpleCurrencyFormatter),
 
         /// Customizes the date tick formatter. It will print the day of month
         /// as the default format, but include the month and year if it

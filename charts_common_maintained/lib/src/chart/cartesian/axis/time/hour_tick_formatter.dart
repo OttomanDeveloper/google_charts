@@ -22,16 +22,15 @@ import 'time_tick_formatter_impl.dart'
 class HourTickFormatter extends TimeTickFormatterImpl {
   late final DateFormat _noonFormat;
 
-  HourTickFormatter(
-      {required DateTimeFactory dateTimeFactory,
-      required String? simpleFormat,
-      required String? transitionFormat,
-      required String? noonFormat})
-      : super(
-            dateTimeFactory: dateTimeFactory,
-            simpleFormat: simpleFormat,
-            transitionFormat: transitionFormat,
-            transitionField: CalendarField.date) {
+  HourTickFormatter({
+    required DateTimeFactory dateTimeFactory,
+    required super.simpleFormat,
+    required super.transitionFormat,
+    required String? noonFormat,
+  }) : super(
+         dateTimeFactory: dateTimeFactory,
+         transitionField: CalendarField.date,
+       ) {
     _noonFormat = dateTimeFactory.createDateFormat(noonFormat);
   }
 

@@ -15,6 +15,8 @@
 
 /// Example of timeseries chart that has a measure axis that does NOT include
 /// zero. It starts at 100 and goes to 140.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -26,7 +28,8 @@ class NonzeroBoundMeasureAxis extends StatelessWidget {
   final List<charts.Series<dynamic, DateTime>> seriesList;
   final bool animate;
 
-  NonzeroBoundMeasureAxis(this.seriesList, {this.animate = false});
+  const NonzeroBoundMeasureAxis(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [TimeSeriesChart] with sample data and no transition.
   factory NonzeroBoundMeasureAxis.withSampleData() {

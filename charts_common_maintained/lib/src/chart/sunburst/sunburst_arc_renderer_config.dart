@@ -25,8 +25,11 @@ import '../../data/tree.dart' show TreeNode;
 
 /// Given the selected node and a list of currently expanded node, returns the
 /// new set of node to be expanded (shown beyond the initialDisplayLevel).
-typedef ExpandNodeCallback = List<TreeNode<dynamic>> Function(
-    TreeNode<dynamic> node, List<TreeNode<dynamic>> expandedNode);
+typedef ExpandNodeCallback =
+    List<TreeNode<dynamic>> Function(
+      TreeNode<dynamic> node,
+      List<TreeNode<dynamic>> expandedNode,
+    );
 
 /// Configuration for an [ArcRenderer].
 class SunburstArcRendererConfig<D> extends BaseArcRendererConfig<D> {
@@ -61,35 +64,25 @@ class SunburstArcRendererConfig<D> extends BaseArcRendererConfig<D> {
   /// data.
   final int maxDisplayLevel;
 
-  SunburstArcRendererConfig(
-      {String? customRendererId,
-      double arcLength = 2 * pi,
-      List<ArcRendererDecorator<D>> arcRendererDecorators = const [],
-      double? arcRatio,
-      this.arcRatios,
-      int? arcWidth,
-      this.arcWidths,
-      this.colorAssignmentStrategy = SunburstColorStrategy.newShadePerLevel,
-      int layoutPaintOrder = LayoutViewPaintOrder.arc,
-      int? maxDisplayLevel,
-      int? initialDisplayLevel,
-      int minHoleWidthForCenterContent = 30,
-      double startAngle = -pi / 2,
-      double strokeWidthPx = 2.0,
-      SymbolRenderer? symbolRenderer})
-      : maxDisplayLevel = maxDisplayLevel ?? _maxInt32Value,
-        initialDisplayLevel =
-            initialDisplayLevel ?? maxDisplayLevel ?? _maxInt32Value,
-        super(
-            customRendererId: customRendererId,
-            arcLength: arcLength,
-            arcRatio: arcRatio,
-            arcWidth: arcWidth,
-            layoutPaintOrder: layoutPaintOrder,
-            minHoleWidthForCenterContent: minHoleWidthForCenterContent,
-            startAngle: startAngle,
-            strokeWidthPx: strokeWidthPx,
-            arcRendererDecorators: arcRendererDecorators);
+  SunburstArcRendererConfig({
+    super.customRendererId,
+    super.arcLength,
+    super.arcRendererDecorators,
+    super.arcRatio,
+    this.arcRatios,
+    super.arcWidth,
+    this.arcWidths,
+    this.colorAssignmentStrategy = SunburstColorStrategy.newShadePerLevel,
+    super.layoutPaintOrder,
+    int? maxDisplayLevel,
+    int? initialDisplayLevel,
+    super.minHoleWidthForCenterContent,
+    super.startAngle,
+    super.strokeWidthPx,
+    SymbolRenderer? symbolRenderer,
+  }) : maxDisplayLevel = maxDisplayLevel ?? _maxInt32Value,
+       initialDisplayLevel =
+           initialDisplayLevel ?? maxDisplayLevel ?? _maxInt32Value;
 
   @override
   SunburstArcRenderer<D> build() {

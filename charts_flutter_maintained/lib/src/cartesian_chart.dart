@@ -18,20 +18,9 @@ import 'package:meta/meta.dart' show immutable, protected;
 
 import 'package:charts_common_maintained/charts_common_maintained.dart'
     as common
-    show
-        AxisSpec,
-        BaseChart,
-        CartesianChart,
-        NumericAxis,
-        NumericAxisSpec,
-        RTLSpec,
-        Series,
-        SeriesRendererConfig;
+    show AxisSpec, BaseChart, CartesianChart, NumericAxis, NumericAxisSpec;
 import 'base_chart_state.dart' show BaseChartState;
-import 'behaviors/chart_behavior.dart' show ChartBehavior;
-import 'base_chart.dart' show BaseChart, LayoutConfig;
-import 'selection_model_config.dart' show SelectionModelConfig;
-import 'user_managed_state.dart' show UserManagedState;
+import 'base_chart.dart' show BaseChart;
 
 @immutable
 abstract class CartesianChart<D> extends BaseChart<D> {
@@ -41,40 +30,32 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   final LinkedHashMap<String, common.NumericAxisSpec>? disjointMeasureAxes;
   final bool? flipVerticalAxis;
 
-  CartesianChart(
-    List<common.Series<dynamic, D>> seriesList, {
-    bool? animate,
-    Duration? animationDuration,
+  const CartesianChart(
+    super.seriesList, {
+    super.key,
+    super.animate,
+    super.animationDuration,
     this.domainAxis,
     this.primaryMeasureAxis,
     this.secondaryMeasureAxis,
     this.disjointMeasureAxes,
-    common.SeriesRendererConfig<D>? defaultRenderer,
-    List<common.SeriesRendererConfig<D>>? customSeriesRenderers,
-    List<ChartBehavior<D>>? behaviors,
-    List<SelectionModelConfig<D>>? selectionModels,
-    common.RTLSpec? rtlSpec,
-    bool defaultInteractions = true,
-    LayoutConfig? layoutConfig,
-    UserManagedState<D>? userManagedState,
+    super.defaultRenderer,
+    super.customSeriesRenderers,
+    super.behaviors,
+    super.selectionModels,
+    super.rtlSpec,
+    super.defaultInteractions,
+    super.layoutConfig,
+    super.userManagedState,
     this.flipVerticalAxis,
-  }) : super(
-          seriesList,
-          animate: animate,
-          animationDuration: animationDuration,
-          defaultRenderer: defaultRenderer,
-          customSeriesRenderers: customSeriesRenderers,
-          behaviors: behaviors,
-          selectionModels: selectionModels,
-          rtlSpec: rtlSpec,
-          defaultInteractions: defaultInteractions,
-          layoutConfig: layoutConfig,
-          userManagedState: userManagedState,
-        );
+  });
 
   @override
-  void updateCommonChart(common.BaseChart<D> baseChart, BaseChart<D>? oldWidget,
-      BaseChartState<D> chartState) {
+  void updateCommonChart(
+    common.BaseChart<D> baseChart,
+    BaseChart<D>? oldWidget,
+    BaseChartState<D> chartState,
+  ) {
     super.updateCommonChart(baseChart, oldWidget, chartState);
 
     final prev = oldWidget as CartesianChart?;
@@ -108,14 +89,16 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   @protected
   LinkedHashMap<String, common.NumericAxis>? createDisjointMeasureAxes() {
     if (disjointMeasureAxes != null) {
-      final disjointAxes = LinkedHashMap<String, common.NumericAxis>();
+      final disjointAxes = <String, common.NumericAxis>{};
 
-      disjointMeasureAxes!
-          .forEach((String axisId, common.NumericAxisSpec axisSpec) {
+      disjointMeasureAxes!.forEach((
+        String axisId,
+        common.NumericAxisSpec axisSpec,
+      ) {
         disjointAxes[axisId] = axisSpec.createAxis();
       });
 
-      return disjointAxes;
+      return LinkedHashMap<String, common.NumericAxis>.from(disjointAxes);
     } else {
       return null;
     }

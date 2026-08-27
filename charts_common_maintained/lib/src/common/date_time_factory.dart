@@ -29,14 +29,16 @@ abstract class DateTimeFactory {
   // we can use DateTime as the interface.
   DateTime createDateTimeFromMilliSecondsSinceEpoch(int millisecondsSinceEpoch);
 
-  DateTime createDateTime(int year,
-      [int month = 1,
-      int day = 1,
-      int hour = 0,
-      int minute = 0,
-      int second = 0,
-      int millisecond = 0,
-      int microsecond = 0]);
+  DateTime createDateTime(
+    int year, [
+    int month = 1,
+    int day = 1,
+    int hour = 0,
+    int minute = 0,
+    int second = 0,
+    int millisecond = 0,
+    int microsecond = 0,
+  ]);
 
   /// Returns a [DateFormat].
   DateFormat createDateFormat(String? pattern);
@@ -48,21 +50,32 @@ class LocalDateTimeFactory implements DateTimeFactory {
 
   @override
   DateTime createDateTimeFromMilliSecondsSinceEpoch(
-      int millisecondsSinceEpoch) {
+    int millisecondsSinceEpoch,
+  ) {
     return DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch);
   }
 
   @override
-  DateTime createDateTime(int year,
-      [int month = 1,
-      int day = 1,
-      int hour = 0,
-      int minute = 0,
-      int second = 0,
-      int millisecond = 0,
-      int microsecond = 0]) {
+  DateTime createDateTime(
+    int year, [
+    int month = 1,
+    int day = 1,
+    int hour = 0,
+    int minute = 0,
+    int second = 0,
+    int millisecond = 0,
+    int microsecond = 0,
+  ]) {
     return DateTime(
-        year, month, day, hour, minute, second, millisecond, microsecond);
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+    );
   }
 
   /// Returns a [DateFormat].
@@ -76,22 +89,35 @@ class UTCDateTimeFactory implements DateTimeFactory {
 
   @override
   DateTime createDateTimeFromMilliSecondsSinceEpoch(
-      int millisecondsSinceEpoch) {
-    return DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch,
-        isUtc: true);
+    int millisecondsSinceEpoch,
+  ) {
+    return DateTime.fromMillisecondsSinceEpoch(
+      millisecondsSinceEpoch,
+      isUtc: true,
+    );
   }
 
   @override
-  DateTime createDateTime(int year,
-      [int month = 1,
-      int day = 1,
-      int hour = 0,
-      int minute = 0,
-      int second = 0,
-      int millisecond = 0,
-      int microsecond = 0]) {
+  DateTime createDateTime(
+    int year, [
+    int month = 1,
+    int day = 1,
+    int hour = 0,
+    int minute = 0,
+    int second = 0,
+    int millisecond = 0,
+    int microsecond = 0,
+  ]) {
     return DateTime.utc(
-        year, month, day, hour, minute, second, millisecond, microsecond);
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+    );
   }
 
   /// Returns a [DateFormat].

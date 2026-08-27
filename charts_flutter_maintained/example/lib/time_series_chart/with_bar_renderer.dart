@@ -14,6 +14,8 @@
 // limitations under the License.
 
 /// Example of a time series chart using a bar renderer.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -25,7 +27,7 @@ class TimeSeriesBar extends StatelessWidget {
   final List<charts.Series<TimeSeriesSales, DateTime>> seriesList;
   final bool animate;
 
-  TimeSeriesBar(this.seriesList, {this.animate = false});
+  const TimeSeriesBar(this.seriesList, {super.key, this.animate = false});
 
   /// Creates a [TimeSeriesChart] with sample data and no transition.
   factory TimeSeriesBar.withSampleData() {

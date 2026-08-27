@@ -25,6 +25,8 @@
 /// the [charts.LineRendererConfig]. This could be used, for example, to define
 /// a default dash pattern for the series, with only a specific datum called out
 /// with a different pattern.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -36,7 +38,7 @@ class SegmentsLineChart extends StatelessWidget {
   final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  SegmentsLineChart(this.seriesList, {this.animate = false});
+  const SegmentsLineChart(this.seriesList, {super.key, this.animate = false});
 
   /// Creates a [LineChart] with sample data and no transition.
   factory SegmentsLineChart.withSampleData() {

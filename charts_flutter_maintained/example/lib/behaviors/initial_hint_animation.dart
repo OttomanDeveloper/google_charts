@@ -40,6 +40,7 @@
 /// of 4. When the chart is drawn for the first time, the viewport will show
 /// 2022 as the first value and the viewport will animate by panning values to
 /// the right until 2018 is the first value in the viewport.
+library;
 
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
@@ -52,7 +53,8 @@ class InitialHintAnimation extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  InitialHintAnimation(this.seriesList, {this.animate = false});
+  const InitialHintAnimation(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [BarChart] with sample data and no transition.
   factory InitialHintAnimation.withSampleData() {

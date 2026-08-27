@@ -69,8 +69,10 @@ class StaticTickProvider<D> extends TickProvider<D> {
     late List<String> formattedValues;
     if (!allTicksHaveLabels) {
       formattedValues = formatter.format(
-          tickSpec.map((spec) => spec.value).toList(), formatterValueCache,
-          stepSize: scale.domainStepSize);
+        tickSpec.map((spec) => spec.value).toList(),
+        formatterValueCache,
+        stepSize: scale.domainStepSize,
+      );
     }
 
     for (var i = 0; i < tickSpec.length; i += tickIncrement) {
@@ -79,10 +81,12 @@ class StaticTickProvider<D> extends TickProvider<D> {
       // extend the axis for OrdinalScale.
       if (scale.compareDomainValueToViewport(spec.value) == 0) {
         final tick = Tick<D>(
-            value: spec.value,
-            textElement: graphicsFactory
-                .createTextElement(spec.label ?? formattedValues[i]),
-            locationPx: scale[spec.value]?.toDouble());
+          value: spec.value,
+          textElement: graphicsFactory.createTextElement(
+            spec.label ?? formattedValues[i],
+          ),
+          locationPx: scale[spec.value]?.toDouble(),
+        );
         final style = spec.style;
         if (style != null) {
           tick.textElement!.textStyle = graphicsFactory.createTextPaint()

@@ -39,24 +39,29 @@ import 'comparison_points_decorator.dart' show ComparisonPointsDecorator;
 import 'point_renderer_config.dart' show PointRendererConfig;
 import 'point_renderer_decorator.dart' show PointRendererDecorator;
 
-const pointElementsKey =
-    AttributeKey<List<PointRendererElement<Object>>>('PointRenderer.elements');
+const pointElementsKey = AttributeKey<List<PointRendererElement<dynamic>>>(
+  'PointRenderer.elements',
+);
 
-const pointSymbolRendererFnKey =
-    AttributeKey<AccessorFn<String>>('PointRenderer.symbolRendererFn');
+const pointSymbolRendererFnKey = AttributeKey<AccessorFn<String?>>(
+  'PointRenderer.symbolRendererFn',
+);
 
-const pointSymbolRendererIdKey =
-    AttributeKey<String>('PointRenderer.symbolRendererId');
+const pointSymbolRendererIdKey = AttributeKey<String>(
+  'PointRenderer.symbolRendererId',
+);
 
 /// Defines a fixed radius for data bounds lines (typically drawn by attaching a
 /// [ComparisonPointsDecorator] to the renderer.
-const boundsLineRadiusPxKey =
-    AttributeKey<double>('SymbolAnnotationRenderer.boundsLineRadiusPx');
+const boundsLineRadiusPxKey = AttributeKey<double>(
+  'SymbolAnnotationRenderer.boundsLineRadiusPx',
+);
 
 /// Defines an [AccessorFn] for the radius for data bounds lines (typically
 /// drawn by attaching a [ComparisonPointsDecorator] to the renderer.
 const boundsLineRadiusPxFnKey = AttributeKey<AccessorFn<double?>>(
-    'SymbolAnnotationRenderer.boundsLineRadiusPxFn');
+  'SymbolAnnotationRenderer.boundsLineRadiusPxFn',
+);
 
 const defaultSymbolRendererId = '__default__';
 
@@ -88,13 +93,14 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
   final _currentKeys = <String>[];
 
   PointRenderer({String? rendererId, PointRendererConfig<D>? config})
-      : config = config ?? PointRendererConfig<D>(),
-        pointRendererDecorators = config?.pointRendererDecorators ?? [],
-        super(
-            rendererId: rendererId ?? 'point',
-            layoutPaintOrder:
-                config?.layoutPaintOrder ?? LayoutViewPaintOrder.point,
-            symbolRenderer: config?.symbolRenderer ?? CircleSymbolRenderer());
+    : config = config ?? PointRendererConfig<D>(),
+      pointRendererDecorators = config?.pointRendererDecorators ?? [],
+      super(
+        rendererId: rendererId ?? 'point',
+        layoutPaintOrder:
+            config?.layoutPaintOrder ?? LayoutViewPaintOrder.point,
+        symbolRenderer: config?.symbolRenderer ?? CircleSymbolRenderer(),
+      );
 
   @override
   void configureSeries(List<MutableSeries<D>> seriesList) {
@@ -134,9 +140,9 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
       // series data between chart draw cycles. Ideally we should require the
       // user to provide a key function, but this at least provides some
       // smoothing when adding/removing data.
-      series.keyFn ??=
-          (int? index) => '${series.id}__${series.domainFn(index)}__'
-              '${series.measureFn(index)}';
+      series.keyFn ??= (int? index) =>
+          '${series.id}__${series.domainFn(index)}__'
+          '${series.measureFn(index)}';
 
       for (var index = 0; index < series.data.length; index++) {
         // Default to the configured radius if none was returned by the
@@ -148,7 +154,9 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         if (boundsLineRadiusPxFn != null) {
           boundsLineRadiusPx = (boundsLineRadiusPxFn is TypedAccessorFn)
               ? (boundsLineRadiusPxFn as TypedAccessorFn<dynamic, int>)(
-                  series.data[index], index)
+                  series.data[index],
+                  index,
+                )
               : boundsLineRadiusPxFn(index);
         }
         boundsLineRadiusPx ??= config.boundsLineRadiusPx;
@@ -196,7 +204,10 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         elements.add(details);
       }
 
-      series.setAttr(pointElementsKey, elements);
+      series.setAttr(
+        pointElementsKey,
+        elements.cast<PointRendererElement<dynamic>>().toList(),
+      );
     });
   }
 
@@ -242,23 +253,25 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
 
         // Create a new point using the final location.
         final point = getPoint(
-            datum,
-            domainValue,
-            domainLowerBoundValue,
-            domainUpperBoundValue,
-            series,
-            domainAxis,
-            measureValue,
-            measureLowerBoundValue,
-            measureUpperBoundValue,
-            measureOffsetValue,
-            measureAxis);
+          datum,
+          domainValue,
+          domainLowerBoundValue,
+          domainUpperBoundValue,
+          series,
+          domainAxis,
+          measureValue,
+          measureLowerBoundValue,
+          measureUpperBoundValue,
+          measureOffsetValue,
+          measureAxis,
+        );
 
         final pointKey = keyFn(index);
 
         // If we already have an AnimatingPoint for that index, use it.
-        var animatingPoint =
-            pointList.firstWhereOrNull((point) => point.key == pointKey);
+        var animatingPoint = pointList.firstWhereOrNull(
+          (point) => point.key == pointKey,
+        );
 
         // If we don't have any existing arc element, create a new arc and
         // have it animate in from the position of the previous arc's end
@@ -267,31 +280,36 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         if (animatingPoint == null) {
           // Create a new point and have it animate in from axis.
           final point = getPoint(
-              datum,
-              domainValue,
-              domainLowerBoundValue,
-              domainUpperBoundValue,
-              series,
-              domainAxis,
-              0.0,
-              0.0,
-              0.0,
-              0.0,
-              measureAxis);
+            datum,
+            domainValue,
+            domainLowerBoundValue,
+            domainUpperBoundValue,
+            series,
+            domainAxis,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            measureAxis,
+          );
 
-          animatingPoint = AnimatedPoint<D>(
-              key: pointKey, overlaySeries: series.overlaySeries)
-            ..setNewTarget(PointRendererElement<D>(
-              index: details.index,
-              color: details.color,
-              fillColor: details.fillColor,
-              measureAxisPosition: measureAxis.getLocation(0.0),
-              point: point,
-              radiusPx: details.radiusPx,
-              boundsLineRadiusPx: details.boundsLineRadiusPx,
-              strokeWidthPx: details.strokeWidthPx,
-              symbolRendererId: details.symbolRendererId,
-            ));
+          animatingPoint =
+              AnimatedPoint<D>(
+                key: pointKey,
+                overlaySeries: series.overlaySeries,
+              )..setNewTarget(
+                PointRendererElement<D>(
+                  index: details.index,
+                  color: details.color,
+                  fillColor: details.fillColor,
+                  measureAxisPosition: measureAxis.getLocation(0.0),
+                  point: point,
+                  radiusPx: details.radiusPx,
+                  boundsLineRadiusPx: details.boundsLineRadiusPx,
+                  strokeWidthPx: details.strokeWidthPx,
+                  symbolRendererId: details.symbolRendererId,
+                ),
+              );
 
           pointList.add(animatingPoint);
         }
@@ -320,9 +338,10 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
     // They may get disordered between chart draw cycles if a behavior adds or
     // removes series from the list (e.g. click to hide on legends).
     seriesPointMap = LinkedHashMap<String, List<AnimatedPoint<D>>>.fromIterable(
-        sortedSeriesIds,
-        key: (dynamic k) => k as String,
-        value: (dynamic k) => seriesPointMap[k]!);
+      sortedSeriesIds,
+      key: (dynamic k) => k as String,
+      value: (dynamic k) => seriesPointMap[k]!,
+    );
 
     // Animate out points that don't exist anymore.
     seriesPointMap.forEach((String key, List<AnimatedPoint<D>> points) {
@@ -362,61 +381,80 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
 
     seriesPointMap.forEach((String key, List<AnimatedPoint<D>> points) {
       points
-          .map<PointRendererElement<D>>((AnimatedPoint<D> animatingPoint) =>
-              animatingPoint.getCurrentPoint(animationPercent))
+          .map<PointRendererElement<D>>(
+            (AnimatedPoint<D> animatingPoint) =>
+                animatingPoint.getCurrentPoint(animationPercent),
+          )
           .forEach((point) {
-        // Decorate the points with decorators that should appear below the main
-        // series data.
-        pointRendererDecorators
-            .where((decorator) => !decorator.renderAbove)
-            .forEach((decorator) {
-          decorator.decorate(point, canvas, graphicsFactory!,
-              drawBounds: componentBounds!,
-              animationPercent: animationPercent,
-              rtl: isRtl);
-        });
+            // Decorate the points with decorators that should appear below the main
+            // series data.
+            pointRendererDecorators
+                .where((decorator) => !decorator.renderAbove)
+                .forEach((decorator) {
+                  decorator.decorate(
+                    point,
+                    canvas,
+                    graphicsFactory!,
+                    drawBounds: componentBounds!,
+                    animationPercent: animationPercent,
+                    rtl: isRtl,
+                  );
+                });
 
-        // Skip points whose center lies outside the draw bounds. Those that lie
-        // near the edge will be allowed to render partially outside. This
-        // prevents harshly clipping off half of the shape.
-        if (point.point!.y != null &&
-            componentBounds!.containsPoint(point.point!.toPoint())) {
-          final bounds = Rectangle<double>(
-              point.point!.x! - point.radiusPx,
-              point.point!.y! - point.radiusPx,
-              point.radiusPx * 2,
-              point.radiusPx * 2);
+            // Skip points whose center lies outside the draw bounds. Those that lie
+            // near the edge will be allowed to render partially outside. This
+            // prevents harshly clipping off half of the shape.
+            if (point.point!.y != null &&
+                componentBounds!.containsPoint(point.point!.toPoint())) {
+              final bounds = Rectangle<double>(
+                point.point!.x! - point.radiusPx,
+                point.point!.y! - point.radiusPx,
+                point.radiusPx * 2,
+                point.radiusPx * 2,
+              );
 
-          if (point.symbolRendererId == defaultSymbolRendererId) {
-            symbolRenderer!.paint(canvas, bounds,
-                fillColor: point.fillColor,
-                strokeColor: point.color,
-                strokeWidthPx: point.strokeWidthPx);
-          } else {
-            final id = point.symbolRendererId;
-            if (!config.customSymbolRenderers!.containsKey(id)) {
-              throw ArgumentError('Invalid custom symbol renderer id "${id}"');
+              if (point.symbolRendererId == defaultSymbolRendererId) {
+                symbolRenderer!.paint(
+                  canvas,
+                  bounds,
+                  fillColor: point.fillColor,
+                  strokeColor: point.color,
+                  strokeWidthPx: point.strokeWidthPx,
+                );
+              } else {
+                final id = point.symbolRendererId;
+                if (!config.customSymbolRenderers!.containsKey(id)) {
+                  throw ArgumentError(
+                    'Invalid custom symbol renderer id "${id}"',
+                  );
+                }
+
+                final customRenderer = config.customSymbolRenderers![id]!;
+                customRenderer.paint(
+                  canvas,
+                  bounds,
+                  fillColor: point.fillColor,
+                  strokeColor: point.color,
+                  strokeWidthPx: point.strokeWidthPx,
+                );
+              }
             }
 
-            final customRenderer = config.customSymbolRenderers![id]!;
-            customRenderer.paint(canvas, bounds,
-                fillColor: point.fillColor,
-                strokeColor: point.color,
-                strokeWidthPx: point.strokeWidthPx);
-          }
-        }
-
-        // Decorate the points with decorators that should appear above the main
-        // series data. This is the typical place for labels.
-        pointRendererDecorators
-            .where((decorator) => decorator.renderAbove)
-            .forEach((decorator) {
-          decorator.decorate(point, canvas, graphicsFactory!,
-              drawBounds: componentBounds!,
-              animationPercent: animationPercent,
-              rtl: isRtl);
-        });
-      });
+            // Decorate the points with decorators that should appear above the main
+            // series data. This is the typical place for labels.
+            pointRendererDecorators
+                .where((decorator) => decorator.renderAbove)
+                .forEach((decorator) {
+                  decorator.decorate(
+                    point,
+                    canvas,
+                    graphicsFactory!,
+                    drawBounds: componentBounds!,
+                    animationPercent: animationPercent,
+                    rtl: isRtl,
+                  );
+                });
+          });
     });
   }
 
@@ -424,17 +462,18 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
 
   @protected
   DatumPoint<D> getPoint(
-      Object? datum,
-      D? domainValue,
-      D? domainLowerBoundValue,
-      D? domainUpperBoundValue,
-      ImmutableSeries<D> series,
-      ImmutableAxis<D> domainAxis,
-      num? measureValue,
-      num? measureLowerBoundValue,
-      num? measureUpperBoundValue,
-      num? measureOffsetValue,
-      ImmutableAxis<num> measureAxis) {
+    Object? datum,
+    D? domainValue,
+    D? domainLowerBoundValue,
+    D? domainUpperBoundValue,
+    ImmutableSeries<D> series,
+    ImmutableAxis<D> domainAxis,
+    num? measureValue,
+    num? measureLowerBoundValue,
+    num? measureUpperBoundValue,
+    num? measureOffsetValue,
+    ImmutableAxis<num> measureAxis,
+  ) {
     final domainPosition = domainAxis.getLocation(domainValue);
 
     final domainLowerBoundPosition = domainLowerBoundValue != null
@@ -458,15 +497,16 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         : null;
 
     return DatumPoint<D>(
-        datum: datum,
-        domain: domainValue,
-        series: series,
-        x: domainPosition,
-        xLower: domainLowerBoundPosition,
-        xUpper: domainUpperBoundPosition,
-        y: measurePosition,
-        yLower: measureLowerBoundPosition,
-        yUpper: measureUpperBoundPosition);
+      datum: datum,
+      domain: domainValue,
+      series: series,
+      x: domainPosition,
+      xLower: domainLowerBoundPosition,
+      xUpper: domainUpperBoundPosition,
+      y: measurePosition,
+      yLower: measureLowerBoundPosition,
+      yUpper: measureUpperBoundPosition,
+    );
   }
 
   @override
@@ -489,9 +529,10 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
       PointRendererElement<D>? nearestPoint;
 
       var nearestDistances = _Distances(
-          domainDistance: _maxInitialDistance,
-          measureDistance: _maxInitialDistance,
-          relativeDistance: _maxInitialDistance);
+        domainDistance: _maxInitialDistance,
+        measureDistance: _maxInitialDistance,
+        relativeDistance: _maxInitialDistance,
+      );
 
       points.forEach((point) {
         if (point.overlaySeries) {
@@ -554,7 +595,9 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
   }
 
   DatumDetails<D> _createDatumDetails(
-      PointRendererElement<D> point, _Distances distances) {
+    PointRendererElement<D> point,
+    _Distances distances,
+  ) {
     SymbolRenderer? pointSymbolRenderer;
     if (point.symbolRendererId == defaultSymbolRendererId) {
       pointSymbolRenderer = symbolRenderer;
@@ -566,19 +609,22 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
       pointSymbolRenderer = config.customSymbolRenderers![id];
     }
     return DatumDetails<D>(
-        datum: point.point!.datum,
-        domain: point.point!.domain,
-        series: point.point!.series,
-        domainDistance: distances.domainDistance,
-        measureDistance: distances.measureDistance,
-        relativeDistance: distances.relativeDistance,
-        symbolRenderer: pointSymbolRenderer);
+      datum: point.point!.datum,
+      domain: point.point!.domain,
+      series: point.point!.series,
+      domainDistance: distances.domainDistance,
+      measureDistance: distances.measureDistance,
+      relativeDistance: distances.relativeDistance,
+      symbolRenderer: pointSymbolRenderer,
+    );
   }
 
   /// Returns a struct containing domain, measure, and relative distance between
   /// a datum and a point within the chart.
   _Distances _getDatumDistance(
-      AnimatedPoint<D> point, Point<double> chartPoint) {
+    AnimatedPoint<D> point,
+    Point<double> chartPoint,
+  ) {
     final datumPoint = point._currentPoint!.point!;
     final radiusPx = point._currentPoint!.radiusPx;
     final boundsLineRadiusPx = point._currentPoint!.boundsLineRadiusPx;
@@ -605,14 +651,15 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
       // use the smaller of this distance and the distance from the primary
       // point as the relativeDistance from this datum.
       final relativeDistanceBounds = distanceBetweenPointAndLineSegment(
-          Vector2(chartPoint.x, chartPoint.y),
-          Vector2(datumPoint.xLower!, datumPoint.yLower!),
-          Vector2(datumPoint.xUpper!, datumPoint.yUpper!));
+        Vector2(chartPoint.x, chartPoint.y),
+        Vector2(datumPoint.xLower!, datumPoint.yLower!),
+        Vector2(datumPoint.xUpper!, datumPoint.yUpper!),
+      );
 
-      insidePoint = (relativeDistance < radiusPx) ||
-          (boundsLineRadiusPx != null &&
-              // This may be inaccurate if the symbol is drawn without end caps.
-              relativeDistanceBounds < boundsLineRadiusPx);
+      insidePoint =
+          (relativeDistance < radiusPx) ||
+          // This may be inaccurate if the symbol is drawn without end caps.
+          relativeDistanceBounds < boundsLineRadiusPx;
 
       // Keep the smaller relative distance after we have determined whether
       // [chartPoint] is located inside the datum.
@@ -631,24 +678,27 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
 
   @override
   DatumDetails<D> addPositionToDetailsForSeriesDatum(
-      DatumDetails<D> details, SeriesDatum<D> seriesDatum) {
+    DatumDetails<D> details,
+    SeriesDatum<D> seriesDatum,
+  ) {
     final series = details.series!;
 
     final domainAxis = series.getAttr(domainAxisKey) as ImmutableAxis<D>;
     final measureAxis = series.getAttr(measureAxisKey) as ImmutableAxis<num>;
 
     final point = getPoint(
-        seriesDatum.datum,
-        details.domain,
-        details.domainLowerBound,
-        details.domainUpperBound,
-        series,
-        domainAxis,
-        details.measure,
-        details.measureLowerBound,
-        details.measureUpperBound,
-        details.measureOffset,
-        measureAxis);
+      seriesDatum.datum,
+      details.domain,
+      details.domainLowerBound,
+      details.domainUpperBound,
+      series,
+      domainAxis,
+      details.measure,
+      details.measureLowerBound,
+      details.measureUpperBound,
+      details.measureOffset,
+      measureAxis,
+    );
 
     final symbolRendererFn = series.getAttr(pointSymbolRendererFnKey);
 
@@ -675,11 +725,13 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
       nearestSymbolRenderer = config.customSymbolRenderers![id];
     }
 
-    return DatumDetails.from(details,
-        chartPosition: NullablePoint(point.x, point.y),
-        chartPositionLower: NullablePoint(point.xLower, point.yLower),
-        chartPositionUpper: NullablePoint(point.xUpper, point.yUpper),
-        symbolRenderer: nearestSymbolRenderer);
+    return DatumDetails.from(
+      details,
+      chartPosition: NullablePoint(point.x, point.y),
+      chartPositionLower: NullablePoint(point.xLower, point.yLower),
+      chartPositionUpper: NullablePoint(point.xUpper, point.yUpper),
+      symbolRenderer: nearestSymbolRenderer,
+    );
   }
 }
 
@@ -708,23 +760,26 @@ class DatumPoint<D> extends NullablePoint {
     required this.yUpper,
   }) : super(x, y);
 
-  factory DatumPoint.from(DatumPoint<D> other,
-      {double? x,
-      double? xLower,
-      double? xUpper,
-      double? y,
-      double? yLower,
-      double? yUpper}) {
+  factory DatumPoint.from(
+    DatumPoint<D> other, {
+    double? x,
+    double? xLower,
+    double? xUpper,
+    double? y,
+    double? yLower,
+    double? yUpper,
+  }) {
     return DatumPoint<D>(
-        datum: other.datum,
-        domain: other.domain,
-        series: other.series,
-        x: x ?? other.x,
-        xLower: xLower ?? other.xLower,
-        xUpper: xUpper ?? other.xUpper,
-        y: y ?? other.y,
-        yLower: yLower ?? other.yLower,
-        yUpper: yUpper ?? other.yUpper);
+      datum: other.datum,
+      domain: other.domain,
+      series: other.series,
+      x: x ?? other.x,
+      xLower: xLower ?? other.xLower,
+      xUpper: xUpper ?? other.xUpper,
+      y: y ?? other.y,
+      yLower: yLower ?? other.yLower,
+      yUpper: yUpper ?? other.yUpper,
+    );
   }
 }
 
@@ -765,27 +820,32 @@ class PointRendererElement<D> {
     );
   }
 
-  void updateAnimationPercent(PointRendererElement<D> previous,
-      PointRendererElement<D> target, double animationPercent) {
+  void updateAnimationPercent(
+    PointRendererElement<D> previous,
+    PointRendererElement<D> target,
+    double animationPercent,
+  ) {
     final targetPoint = target.point!;
     final previousPoint = previous.point!;
 
-    final x = ((targetPoint.x! - previousPoint.x!) * animationPercent) +
+    final x =
+        ((targetPoint.x! - previousPoint.x!) * animationPercent) +
         previousPoint.x!;
 
     final xLower = targetPoint.xLower != null && previousPoint.xLower != null
         ? ((targetPoint.xLower! - previousPoint.xLower!) * animationPercent) +
-            previousPoint.xLower!
+              previousPoint.xLower!
         : null;
 
     final xUpper = targetPoint.xUpper != null && previousPoint.xUpper != null
         ? ((targetPoint.xUpper! - previousPoint.xUpper!) * animationPercent) +
-            previousPoint.xUpper!
+              previousPoint.xUpper!
         : null;
 
     double? y;
     if (targetPoint.y != null && previousPoint.y != null) {
-      y = ((targetPoint.y! - previousPoint.y!) * animationPercent) +
+      y =
+          ((targetPoint.y! - previousPoint.y!) * animationPercent) +
           previousPoint.y!;
     } else if (targetPoint.y != null) {
       y = targetPoint.y;
@@ -795,38 +855,44 @@ class PointRendererElement<D> {
 
     final yLower = targetPoint.yLower != null && previousPoint.yLower != null
         ? ((targetPoint.yLower! - previousPoint.yLower!) * animationPercent) +
-            previousPoint.yLower!
+              previousPoint.yLower!
         : null;
 
     final yUpper = targetPoint.yUpper != null && previousPoint.yUpper != null
         ? ((targetPoint.yUpper! - previousPoint.yUpper!) * animationPercent) +
-            previousPoint.yUpper!
+              previousPoint.yUpper!
         : null;
 
-    point = DatumPoint<D>.from(targetPoint,
-        x: x,
-        xLower: xLower,
-        xUpper: xUpper,
-        y: y,
-        yLower: yLower,
-        yUpper: yUpper);
+    point = DatumPoint<D>.from(
+      targetPoint,
+      x: x,
+      xLower: xLower,
+      xUpper: xUpper,
+      y: y,
+      yLower: yLower,
+      yUpper: yUpper,
+    );
 
     color = getAnimatedColor(previous.color!, target.color!, animationPercent);
 
     fillColor = getAnimatedColor(
-        previous.fillColor!, target.fillColor!, animationPercent);
+      previous.fillColor!,
+      target.fillColor!,
+      animationPercent,
+    );
 
-    radiusPx = (target.radiusPx - previous.radiusPx) * animationPercent +
+    radiusPx =
+        (target.radiusPx - previous.radiusPx) * animationPercent +
         previous.radiusPx;
 
     boundsLineRadiusPx =
         ((target.boundsLineRadiusPx - previous.boundsLineRadiusPx) *
-                animationPercent) +
-            previous.boundsLineRadiusPx;
+            animationPercent) +
+        previous.boundsLineRadiusPx;
 
     strokeWidthPx =
         ((target.strokeWidthPx - previous.strokeWidthPx) * animationPercent) +
-            previous.strokeWidthPx;
+        previous.strokeWidthPx;
   }
 }
 
@@ -888,7 +954,10 @@ class AnimatedPoint<D> {
     }
 
     _currentPoint!.updateAnimationPercent(
-        _previousPoint!, _targetPoint, animationPercent);
+      _previousPoint!,
+      _targetPoint,
+      animationPercent,
+    );
 
     return _currentPoint!;
   }

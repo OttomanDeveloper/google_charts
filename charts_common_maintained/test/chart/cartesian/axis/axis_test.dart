@@ -21,13 +21,35 @@ import 'package:charts_common_maintained/src/chart/cartesian/axis/draw_strategy/
 import 'package:charts_common_maintained/src/chart/cartesian/axis/scale.dart';
 import 'package:charts_common_maintained/src/chart/cartesian/axis/spec/tick_spec.dart';
 import 'package:charts_common_maintained/src/chart/cartesian/axis/static_tick_provider.dart';
+import 'package:charts_common_maintained/src/chart/cartesian/axis/tick.dart';
 import 'package:charts_common_maintained/src/common/graphics_factory.dart';
 import 'package:charts_common_maintained/src/common/text_element.dart';
+import 'package:charts_common_maintained/src/common/text_measurement.dart';
+import 'package:charts_common_maintained/src/common/text_style.dart';
 
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-class MockTickDrawStrategy extends Mock implements TickDrawStrategy<num> {}
+class MockTickDrawStrategy extends Mock implements TickDrawStrategy<num> {
+  int updateTickWidthCallCount = 0;
+
+  @override
+  CollisionReport<num> collides(
+    List<Tick<num>>? ticks,
+    AxisOrientation? orientation,
+  ) => CollisionReport.empty();
+
+  @override
+  void updateTickWidth(
+    List<Tick<num>> ticks,
+    int maxWidth,
+    int maxHeight,
+    AxisOrientation orientation, {
+    bool collision = false,
+  }) {
+    updateTickWidthCallCount += 1;
+  }
+}
 
 class MockGraphicsFactory extends Mock implements GraphicsFactory {
   @override
@@ -36,25 +58,44 @@ class MockGraphicsFactory extends Mock implements GraphicsFactory {
   }
 }
 
-class MockTextElement extends Mock implements TextElement {}
+class MockTextElement extends Mock implements TextElement {
+  @override
+  final String text = '';
+
+  @override
+  final TextMeasurement measurement = TextMeasurement(
+    horizontalSliceWidth: 0,
+    verticalSliceWidth: 0,
+  );
+
+  @override
+  TextStyle? textStyle;
+
+  @override
+  int? maxWidth;
+
+  @override
+  MaxWidthStrategy? maxWidthStrategy;
+
+  @override
+  TextDirection textDirection = TextDirection.ltr;
+
+  @override
+  double? opacity;
+}
 
 StaticTickProvider<num> _createProvider(List<num> values) =>
     StaticTickProvider<num>(values.map((v) => TickSpec(v)).toList());
 
 void main() {
   test('changing first tick only', () {
-    var axis = NumericAxis(
-      tickProvider: _createProvider([1, 10]),
-    );
+    var axis = NumericAxis(tickProvider: _createProvider([1, 10]));
 
     var drawStrategy = MockTickDrawStrategy();
-    when(drawStrategy.collides(any, any)).thenReturn(CollisionReport<num>(
-        ticks: [], ticksCollide: false, alternateTicksUsed: false));
-
     var tester = AxisTester(axis);
     axis.tickDrawStrategy = drawStrategy;
     axis.graphicsFactory = MockGraphicsFactory();
-    tester.scale.range = ScaleOutputExtent(0, 300);
+    tester.scale!.range = ScaleOutputExtent(0, 300);
 
     axis.updateTicks();
 
@@ -67,14 +108,9 @@ void main() {
   });
 
   test('updates max label width on layout change', () {
-    var axis = NumericAxis(
-      tickProvider: _createProvider([1, 10]),
-    );
+    var axis = NumericAxis(tickProvider: _createProvider([1, 10]));
 
     var drawStrategy = MockTickDrawStrategy();
-    when(drawStrategy.collides(any, any)).thenReturn(CollisionReport<num>(
-        ticks: [], ticksCollide: false, alternateTicksUsed: false));
-
     axis.tickDrawStrategy = drawStrategy;
     axis.graphicsFactory = MockGraphicsFactory();
     var axisOrientation = AxisOrientation.left;
@@ -86,9 +122,6 @@ void main() {
     var drawBounds = Rectangle<int>(0, 0, maxWidth, maxHeight);
     axis.layout(componentBounds, drawBounds);
 
-    verify(drawStrategy.updateTickWidth(
-            any, maxWidth, maxHeight, axisOrientation,
-            collision: false))
-        .called(1);
+    expect(drawStrategy.updateTickWidthCallCount, equals(1));
   });
 }

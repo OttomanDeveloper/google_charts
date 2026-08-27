@@ -15,6 +15,8 @@
 
 /// Example of a percentage bar chart which shows each bar as the percentage of
 /// the total series measure value.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -26,7 +28,8 @@ class PercentOfSeriesBarChart extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  PercentOfSeriesBarChart(this.seriesList, {this.animate = false});
+  const PercentOfSeriesBarChart(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a stacked [BarChart] with sample data and no transition.
   factory PercentOfSeriesBarChart.withSampleData() {

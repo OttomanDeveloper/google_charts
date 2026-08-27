@@ -14,6 +14,8 @@
 // limitations under the License.
 
 /// Bar chart example
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -33,7 +35,7 @@ class FlippedVerticalAxis extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  FlippedVerticalAxis(this.seriesList, {this.animate = false});
+  const FlippedVerticalAxis(this.seriesList, {super.key, this.animate = false});
 
   factory FlippedVerticalAxis.withSampleData() {
     return FlippedVerticalAxis(

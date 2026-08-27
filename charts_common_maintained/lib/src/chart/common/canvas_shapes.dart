@@ -27,12 +27,14 @@ class CanvasRect {
   final Color? stroke;
   final double? strokeWidthPx;
 
-  CanvasRect(this.bounds,
-      {this.dashPattern,
-      this.fill,
-      this.pattern,
-      this.stroke,
-      this.strokeWidthPx});
+  CanvasRect(
+    this.bounds, {
+    this.dashPattern,
+    this.fill,
+    this.pattern,
+    this.stroke,
+    this.strokeWidthPx,
+  });
 }
 
 /// A stack of [CanvasRect] to be painted by [ChartCanvas].
@@ -113,8 +115,14 @@ class CanvasPie {
   /// Stroke width of separator lines between arcs.
   double strokeWidthPx;
 
-  CanvasPie(this.slices, this.center, this.radius, this.innerRadius,
-      {this.stroke, this.strokeWidthPx = 0.0});
+  CanvasPie(
+    this.slices,
+    this.center,
+    this.radius,
+    this.innerRadius, {
+    this.stroke,
+    this.strokeWidthPx = 0.0,
+  });
 }
 
 /// A circle sector to be painted by [ChartCanvas].

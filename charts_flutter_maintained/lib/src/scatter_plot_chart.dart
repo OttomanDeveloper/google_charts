@@ -13,71 +13,43 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:collection' show LinkedHashMap;
-
 import 'package:charts_common_maintained/charts_common_maintained.dart'
     as common
-    show
-        AxisSpec,
-        NumericAxisSpec,
-        PointRendererConfig,
-        RTLSpec,
-        ScatterPlotChart,
-        SeriesRendererConfig,
-        Series;
-import 'behaviors/chart_behavior.dart' show ChartBehavior;
-import 'base_chart.dart' show LayoutConfig;
+    show PointRendererConfig, ScatterPlotChart;
 import 'base_chart_state.dart' show BaseChartState;
 import 'cartesian_chart.dart' show CartesianChart;
-import 'selection_model_config.dart' show SelectionModelConfig;
-import 'user_managed_state.dart' show UserManagedState;
 
 class ScatterPlotChart extends CartesianChart<num> {
-  ScatterPlotChart(
-    List<common.Series<dynamic, num>> seriesList, {
-    bool? animate,
-    Duration? animationDuration,
-    common.AxisSpec? domainAxis,
-    common.NumericAxisSpec? primaryMeasureAxis,
-    common.NumericAxisSpec? secondaryMeasureAxis,
-    LinkedHashMap<String, common.NumericAxisSpec>? disjointMeasureAxes,
-    common.PointRendererConfig<num>? defaultRenderer,
-    List<common.SeriesRendererConfig<num>>? customSeriesRenderers,
-    List<ChartBehavior<num>>? behaviors,
-    List<SelectionModelConfig<num>>? selectionModels,
-    common.RTLSpec? rtlSpec,
-    LayoutConfig? layoutConfig,
-    bool defaultInteractions = true,
-    bool? flipVerticalAxis,
-    UserManagedState<num>? userManagedState,
-  }) : super(
-          seriesList,
-          animate: animate,
-          animationDuration: animationDuration,
-          domainAxis: domainAxis,
-          primaryMeasureAxis: primaryMeasureAxis,
-          secondaryMeasureAxis: secondaryMeasureAxis,
-          disjointMeasureAxes: disjointMeasureAxes,
-          defaultRenderer: defaultRenderer,
-          customSeriesRenderers: customSeriesRenderers,
-          behaviors: behaviors,
-          selectionModels: selectionModels,
-          rtlSpec: rtlSpec,
-          layoutConfig: layoutConfig,
-          defaultInteractions: defaultInteractions,
-          flipVerticalAxis: flipVerticalAxis,
-          userManagedState: userManagedState,
-        );
+  const ScatterPlotChart(
+    super.seriesList, {
+    super.key,
+    super.animate,
+    super.animationDuration,
+    super.domainAxis,
+    super.primaryMeasureAxis,
+    super.secondaryMeasureAxis,
+    super.disjointMeasureAxes,
+    common.PointRendererConfig<num>? super.defaultRenderer,
+    super.customSeriesRenderers,
+    super.behaviors,
+    super.selectionModels,
+    super.rtlSpec,
+    super.layoutConfig,
+    super.defaultInteractions,
+    super.flipVerticalAxis,
+    super.userManagedState,
+  });
 
   @override
   common.ScatterPlotChart createCommonChart(BaseChartState chartState) {
     // Optionally create primary and secondary measure axes if the chart was
     // configured with them. If no axes were configured, then the chart will
     // use its default types (usually a numeric axis).
-    return new common.ScatterPlotChart(
-        layoutConfig: layoutConfig?.commonLayoutConfig,
-        primaryMeasureAxis: primaryMeasureAxis?.createAxis(),
-        secondaryMeasureAxis: secondaryMeasureAxis?.createAxis(),
-        disjointMeasureAxes: createDisjointMeasureAxes());
+    return common.ScatterPlotChart(
+      layoutConfig: layoutConfig?.commonLayoutConfig,
+      primaryMeasureAxis: primaryMeasureAxis?.createAxis(),
+      secondaryMeasureAxis: secondaryMeasureAxis?.createAxis(),
+      disjointMeasureAxes: createDisjointMeasureAxes(),
+    );
   }
 }

@@ -34,11 +34,10 @@ class FakeCartesianRenderer extends BaseCartesianRenderer {
   List<DatumDetails> getNearestDatumDetailPerSeries(
     Point<double> chartPoint,
     bool byDomain,
-    Rectangle<int> boundsOverride, {
-    selectOverlappingPoints = false,
-    selectExactEventLocation = false,
-  }) =>
-      null;
+    Rectangle<int>? boundsOverride, {
+    bool selectOverlappingPoints = false,
+    bool selectExactEventLocation = false,
+  }) => <DatumDetails>[];
 
   @override
   void paint(ChartCanvas canvas, double animationPercent) {}
@@ -47,20 +46,28 @@ class FakeCartesianRenderer extends BaseCartesianRenderer {
   void update(List<ImmutableSeries> seriesList, bool isAnimating) {}
 
   @override
-  SymbolRenderer get symbolRenderer => null;
+  SymbolRenderer? get symbolRenderer => null;
 
   @override
   DatumDetails addPositionToDetailsForSeriesDatum(
-      DatumDetails details, SeriesDatum seriesDatum) {
-    assert(details != null);
+    DatumDetails details,
+    SeriesDatum seriesDatum,
+  ) {
     return details;
   }
 }
 
-class MockAxis extends Mock implements Axis {}
+class MockAxis extends Mock implements Axis {
+  final values = <dynamic, int>{};
+  int defaultValue = 0;
+
+  @override
+  int compareDomainValueToViewport(dynamic domain) =>
+      values[domain] ?? defaultValue;
+}
 
 void main() {
-  BaseCartesianRenderer renderer;
+  late BaseCartesianRenderer renderer;
 
   setUp(() {
     renderer = FakeCartesianRenderer();
@@ -69,15 +76,15 @@ void main() {
   group('find viewport start', () {
     test('several domains are in the viewport', () {
       final data = [0, 1, 2, 3, 4, 5, 6];
-      final domainFn = (int index) => data[index];
+      int domainFn(int? index) => data[index!];
       final axis = MockAxis();
-      when(axis.compareDomainValueToViewport(0)).thenReturn(-1);
-      when(axis.compareDomainValueToViewport(1)).thenReturn(-1);
-      when(axis.compareDomainValueToViewport(2)).thenReturn(0);
-      when(axis.compareDomainValueToViewport(3)).thenReturn(0);
-      when(axis.compareDomainValueToViewport(4)).thenReturn(0);
-      when(axis.compareDomainValueToViewport(5)).thenReturn(1);
-      when(axis.compareDomainValueToViewport(6)).thenReturn(1);
+      axis.values[0] = -1;
+      axis.values[1] = -1;
+      axis.values[2] = 0;
+      axis.values[3] = 0;
+      axis.values[4] = 0;
+      axis.values[5] = 1;
+      axis.values[6] = 1;
 
       final start = renderer.findNearestViewportStart(axis, domainFn, data);
 
@@ -87,9 +94,9 @@ void main() {
     test('extents are all in the viewport, use the first domain', () {
       // Start of viewport is the same as the start of the domain.
       final data = [0, 1, 2, 3];
-      final domainFn = (int index) => data[index];
+      int domainFn(int? index) => data[index!];
       final axis = MockAxis();
-      when(axis.compareDomainValueToViewport(any)).thenReturn(0);
+      axis.defaultValue = 0;
 
       final start = renderer.findNearestViewportStart(axis, domainFn, data);
 
@@ -98,12 +105,12 @@ void main() {
 
     test('is the first domain', () {
       final data = [0, 1, 2, 3];
-      final domainFn = (int index) => data[index];
+      int domainFn(int? index) => data[index!];
       final axis = MockAxis();
-      when(axis.compareDomainValueToViewport(0)).thenReturn(0);
-      when(axis.compareDomainValueToViewport(1)).thenReturn(1);
-      when(axis.compareDomainValueToViewport(2)).thenReturn(1);
-      when(axis.compareDomainValueToViewport(3)).thenReturn(1);
+      axis.values[0] = 0;
+      axis.values[1] = 1;
+      axis.values[2] = 1;
+      axis.values[3] = 1;
 
       final start = renderer.findNearestViewportStart(axis, domainFn, data);
 
@@ -112,12 +119,12 @@ void main() {
 
     test('is the last domain', () {
       final data = [0, 1, 2, 3];
-      final domainFn = (int index) => data[index];
+      int domainFn(int? index) => data[index!];
       final axis = MockAxis();
-      when(axis.compareDomainValueToViewport(0)).thenReturn(-1);
-      when(axis.compareDomainValueToViewport(1)).thenReturn(-1);
-      when(axis.compareDomainValueToViewport(2)).thenReturn(-1);
-      when(axis.compareDomainValueToViewport(3)).thenReturn(0);
+      axis.values[0] = -1;
+      axis.values[1] = -1;
+      axis.values[2] = -1;
+      axis.values[3] = 0;
 
       final start = renderer.findNearestViewportStart(axis, domainFn, data);
 
@@ -126,15 +133,15 @@ void main() {
 
     test('is the middle', () {
       final data = [0, 1, 2, 3, 4, 5, 6];
-      final domainFn = (int index) => data[index];
+      int domainFn(int? index) => data[index!];
       final axis = MockAxis();
-      when(axis.compareDomainValueToViewport(0)).thenReturn(-1);
-      when(axis.compareDomainValueToViewport(1)).thenReturn(-1);
-      when(axis.compareDomainValueToViewport(2)).thenReturn(-1);
-      when(axis.compareDomainValueToViewport(3)).thenReturn(0);
-      when(axis.compareDomainValueToViewport(4)).thenReturn(1);
-      when(axis.compareDomainValueToViewport(5)).thenReturn(1);
-      when(axis.compareDomainValueToViewport(6)).thenReturn(1);
+      axis.values[0] = -1;
+      axis.values[1] = -1;
+      axis.values[2] = -1;
+      axis.values[3] = 0;
+      axis.values[4] = 1;
+      axis.values[5] = 1;
+      axis.values[6] = 1;
 
       final start = renderer.findNearestViewportStart(axis, domainFn, data);
 
@@ -143,12 +150,12 @@ void main() {
 
     test('viewport is between data', () {
       final data = [0, 1, 2, 3];
-      final domainFn = (int index) => data[index];
+      int domainFn(int? index) => data[index!];
       final axis = MockAxis();
-      when(axis.compareDomainValueToViewport(0)).thenReturn(-1);
-      when(axis.compareDomainValueToViewport(1)).thenReturn(-1);
-      when(axis.compareDomainValueToViewport(2)).thenReturn(1);
-      when(axis.compareDomainValueToViewport(3)).thenReturn(1);
+      axis.values[0] = -1;
+      axis.values[1] = -1;
+      axis.values[2] = 1;
+      axis.values[3] = 1;
 
       final start = renderer.findNearestViewportStart(axis, domainFn, data);
 
@@ -160,9 +167,9 @@ void main() {
     test('all extents greater than viewport ', () {
       // Return the right most value as start of viewport.
       final data = [0, 1, 2, 3];
-      final domainFn = (int index) => data[index];
+      int domainFn(int? index) => data[index!];
       final axis = MockAxis();
-      when(axis.compareDomainValueToViewport(any)).thenReturn(1);
+      axis.defaultValue = 1;
 
       final start = renderer.findNearestViewportStart(axis, domainFn, data);
 
@@ -174,9 +181,9 @@ void main() {
     test('all extents less than viewport ', () {
       // Return the left most value as the start of the viewport.
       final data = [0, 1, 2, 3];
-      final domainFn = (int index) => data[index];
+      int domainFn(int? index) => data[index!];
       final axis = MockAxis();
-      when(axis.compareDomainValueToViewport(any)).thenReturn(-1);
+      axis.defaultValue = -1;
 
       final start = renderer.findNearestViewportStart(axis, domainFn, data);
 
@@ -187,15 +194,15 @@ void main() {
   group('find viewport end', () {
     test('several domains are in the viewport', () {
       final data = [0, 1, 2, 3, 4, 5, 6];
-      final domainFn = (int index) => data[index];
+      int domainFn(int? index) => data[index!];
       final axis = MockAxis();
-      when(axis.compareDomainValueToViewport(0)).thenReturn(-1);
-      when(axis.compareDomainValueToViewport(1)).thenReturn(-1);
-      when(axis.compareDomainValueToViewport(2)).thenReturn(0);
-      when(axis.compareDomainValueToViewport(3)).thenReturn(0);
-      when(axis.compareDomainValueToViewport(4)).thenReturn(0);
-      when(axis.compareDomainValueToViewport(5)).thenReturn(1);
-      when(axis.compareDomainValueToViewport(6)).thenReturn(1);
+      axis.values[0] = -1;
+      axis.values[1] = -1;
+      axis.values[2] = 0;
+      axis.values[3] = 0;
+      axis.values[4] = 0;
+      axis.values[5] = 1;
+      axis.values[6] = 1;
 
       final start = renderer.findNearestViewportEnd(axis, domainFn, data);
 
@@ -205,9 +212,9 @@ void main() {
     test('extents are all in the viewport, use the last domain', () {
       // Start of viewport is the same as the end of the domain.
       final data = [0, 1, 2, 3];
-      final domainFn = (int index) => data[index];
+      int domainFn(int? index) => data[index!];
       final axis = MockAxis();
-      when(axis.compareDomainValueToViewport(any)).thenReturn(0);
+      axis.defaultValue = 0;
 
       final start = renderer.findNearestViewportEnd(axis, domainFn, data);
 
@@ -216,12 +223,12 @@ void main() {
 
     test('is the first domain', () {
       final data = [0, 1, 2, 3];
-      final domainFn = (int index) => data[index];
+      int domainFn(int? index) => data[index!];
       final axis = MockAxis();
-      when(axis.compareDomainValueToViewport(0)).thenReturn(0);
-      when(axis.compareDomainValueToViewport(1)).thenReturn(1);
-      when(axis.compareDomainValueToViewport(2)).thenReturn(1);
-      when(axis.compareDomainValueToViewport(3)).thenReturn(1);
+      axis.values[0] = 0;
+      axis.values[1] = 1;
+      axis.values[2] = 1;
+      axis.values[3] = 1;
 
       final start = renderer.findNearestViewportEnd(axis, domainFn, data);
 
@@ -230,12 +237,12 @@ void main() {
 
     test('is the last domain', () {
       final data = [0, 1, 2, 3];
-      final domainFn = (int index) => data[index];
+      int domainFn(int? index) => data[index!];
       final axis = MockAxis();
-      when(axis.compareDomainValueToViewport(0)).thenReturn(-1);
-      when(axis.compareDomainValueToViewport(1)).thenReturn(-1);
-      when(axis.compareDomainValueToViewport(2)).thenReturn(-1);
-      when(axis.compareDomainValueToViewport(3)).thenReturn(0);
+      axis.values[0] = -1;
+      axis.values[1] = -1;
+      axis.values[2] = -1;
+      axis.values[3] = 0;
 
       final start = renderer.findNearestViewportEnd(axis, domainFn, data);
 
@@ -244,15 +251,15 @@ void main() {
 
     test('is the middle', () {
       final data = [0, 1, 2, 3, 4, 5, 6];
-      final domainFn = (int index) => data[index];
+      int domainFn(int? index) => data[index!];
       final axis = MockAxis();
-      when(axis.compareDomainValueToViewport(0)).thenReturn(-1);
-      when(axis.compareDomainValueToViewport(1)).thenReturn(-1);
-      when(axis.compareDomainValueToViewport(2)).thenReturn(-1);
-      when(axis.compareDomainValueToViewport(3)).thenReturn(0);
-      when(axis.compareDomainValueToViewport(4)).thenReturn(1);
-      when(axis.compareDomainValueToViewport(5)).thenReturn(1);
-      when(axis.compareDomainValueToViewport(6)).thenReturn(1);
+      axis.values[0] = -1;
+      axis.values[1] = -1;
+      axis.values[2] = -1;
+      axis.values[3] = 0;
+      axis.values[4] = 1;
+      axis.values[5] = 1;
+      axis.values[6] = 1;
 
       final start = renderer.findNearestViewportEnd(axis, domainFn, data);
 
@@ -261,12 +268,12 @@ void main() {
 
     test('viewport is between data', () {
       final data = [0, 1, 2, 3];
-      final domainFn = (int index) => data[index];
+      int domainFn(int? index) => data[index!];
       final axis = MockAxis();
-      when(axis.compareDomainValueToViewport(0)).thenReturn(-1);
-      when(axis.compareDomainValueToViewport(1)).thenReturn(-1);
-      when(axis.compareDomainValueToViewport(2)).thenReturn(1);
-      when(axis.compareDomainValueToViewport(3)).thenReturn(1);
+      axis.values[0] = -1;
+      axis.values[1] = -1;
+      axis.values[2] = 1;
+      axis.values[3] = 1;
 
       final start = renderer.findNearestViewportEnd(axis, domainFn, data);
 
@@ -278,9 +285,9 @@ void main() {
     test('all extents greater than viewport ', () {
       // Return the right most value as start of viewport.
       final data = [0, 1, 2, 3];
-      final domainFn = (int index) => data[index];
+      int domainFn(int? index) => data[index!];
       final axis = MockAxis();
-      when(axis.compareDomainValueToViewport(any)).thenReturn(1);
+      axis.defaultValue = 1;
 
       final start = renderer.findNearestViewportEnd(axis, domainFn, data);
 
@@ -292,9 +299,9 @@ void main() {
     test('all extents less than viewport ', () {
       // Return the left most value as the start of the viewport.
       final data = [0, 1, 2, 3];
-      final domainFn = (int index) => data[index];
+      int domainFn(int? index) => data[index!];
       final axis = MockAxis();
-      when(axis.compareDomainValueToViewport(any)).thenReturn(-1);
+      axis.defaultValue = -1;
 
       final start = renderer.findNearestViewportEnd(axis, domainFn, data);
 

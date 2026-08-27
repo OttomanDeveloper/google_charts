@@ -43,30 +43,31 @@ class SymbolAnnotationRendererConfig<D> extends PointRendererConfig<D> {
   /// into.
   final double verticalSymbolTopPaddingPx;
 
-  SymbolAnnotationRendererConfig(
-      {String? customRendererId,
-      List<PointRendererDecorator<D>>? pointRendererDecorators,
-      double radiusPx = 5.0,
-      SymbolRenderer? symbolRenderer,
-      Map<String, SymbolRenderer>? customSymbolRenderers,
-      this.showBottomSeparatorLine = false,
-      this.showSeparatorLines = true,
-      this.verticalSymbolBottomPaddingPx = 5.0,
-      this.verticalSymbolTopPaddingPx = 5.0})
-      : super(
-            customRendererId: customRendererId,
-            pointRendererDecorators: pointRendererDecorators ??
-                [
-                  ComparisonPointsDecorator<D>(
-                      symbolRenderer: RectangleRangeSymbolRenderer())
-                ],
-            radiusPx: radiusPx,
-            symbolRenderer: symbolRenderer,
-            customSymbolRenderers: customSymbolRenderers);
+  SymbolAnnotationRendererConfig({
+    super.customRendererId,
+    List<PointRendererDecorator<D>>? pointRendererDecorators,
+    super.radiusPx = 5.0,
+    super.symbolRenderer,
+    super.customSymbolRenderers,
+    this.showBottomSeparatorLine = false,
+    this.showSeparatorLines = true,
+    this.verticalSymbolBottomPaddingPx = 5.0,
+    this.verticalSymbolTopPaddingPx = 5.0,
+  }) : super(
+         pointRendererDecorators:
+             pointRendererDecorators ??
+             [
+               ComparisonPointsDecorator<D>(
+                 symbolRenderer: RectangleRangeSymbolRenderer(),
+               ),
+             ],
+       );
 
   @override
   SymbolAnnotationRenderer<D> build() {
     return SymbolAnnotationRenderer<D>(
-        config: this, rendererId: customRendererId);
+      config: this,
+      rendererId: customRendererId,
+    );
   }
 }

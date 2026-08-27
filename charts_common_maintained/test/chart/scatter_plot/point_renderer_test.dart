@@ -28,16 +28,25 @@ class MyRow {
   final String campaignString;
   final int campaign;
   final int clickCount;
-  final double radius;
-  final double boundsRadius;
-  final String shape;
-  MyRow(this.campaignString, this.campaign, this.clickCount, this.radius,
-      this.boundsRadius, this.shape);
+  final double? radius;
+  final double? boundsRadius;
+  final String? shape;
+  MyRow(
+    this.campaignString,
+    this.campaign,
+    this.clickCount,
+    this.radius,
+    this.boundsRadius,
+    this.shape,
+  );
 }
 
 void main() {
   PointRenderer renderer;
-  List<MutableSeries<int>> numericSeriesList;
+  late List<MutableSeries<int>> numericSeriesList;
+
+  String? symbolRendererFor(int? index) =>
+      (numericSeriesList[0].data[index!] as MyRow).shape;
 
   setUp(() {
     var myFakeDesktopData = [
@@ -52,28 +61,33 @@ void main() {
     final maxMeasure = 300;
 
     numericSeriesList = [
-      MutableSeries<int>(Series<MyRow, int>(
-          id: 'Desktop',
-          colorFn: (MyRow row, _) {
-            // Color bucket the measure column value into 3 distinct colors.
-            final bucket = row.clickCount / maxMeasure;
+      MutableSeries<int>(
+        Series<MyRow, int>(
+            id: 'Desktop',
+            colorFn: (MyRow row, _) {
+              // Color bucket the measure column value into 3 distinct colors.
+              final bucket = row.clickCount / maxMeasure;
 
-            if (bucket < 1 / 3) {
-              return MaterialPalette.blue.shadeDefault;
-            } else if (bucket < 2 / 3) {
-              return MaterialPalette.red.shadeDefault;
-            } else {
-              return MaterialPalette.green.shadeDefault;
-            }
-          },
-          domainFn: (MyRow row, _) => row.campaign,
-          measureFn: (MyRow row, _) => row.clickCount,
-          measureOffsetFn: (MyRow row, _) => 0,
-          radiusPxFn: (MyRow row, _) => row.radius,
-          data: myFakeDesktopData)
-        // Define a bounds line radius function.
-        ..setAttribute(boundsLineRadiusPxFnKey,
-            (int index) => myFakeDesktopData[index].boundsRadius))
+              if (bucket < 1 / 3) {
+                return MaterialPalette.blue.shadeDefault;
+              } else if (bucket < 2 / 3) {
+                return MaterialPalette.red.shadeDefault;
+              } else {
+                return MaterialPalette.green.shadeDefault;
+              }
+            },
+            domainFn: (MyRow row, _) => row.campaign,
+            measureFn: (MyRow row, _) => row.clickCount,
+            measureOffsetFn: (MyRow row, _) => 0,
+            radiusPxFn: (MyRow row, _) => row.radius ?? 3.5,
+            data: myFakeDesktopData,
+          )
+          // Define a bounds line radius function.
+          ..setAttribute(
+            boundsLineRadiusPxFnKey,
+            (int? index) => myFakeDesktopData[index!].boundsRadius,
+          ),
+      ),
     ];
   });
 
@@ -88,9 +102,9 @@ void main() {
       // Validate Desktop series.
       var series = numericSeriesList[0];
 
-      var keyFn = series.keyFn;
+      var keyFn = series.keyFn!;
 
-      var elementsList = series.getAttr(pointElementsKey);
+      var elementsList = series.getAttr(pointElementsKey)!;
       expect(elementsList.length, equals(4));
 
       expect(elementsList[0].index, equals(0));
@@ -121,7 +135,8 @@ void main() {
 
     test('with numeric data and missing radiusPxFn', () {
       renderer = PointRenderer<int>(
-          config: PointRendererConfig(radiusPx: 2.0, boundsLineRadiusPx: 1.5));
+        config: PointRendererConfig(radiusPx: 2.0, boundsLineRadiusPx: 1.5),
+      );
 
       // Remove the radius functions to test configured defaults.
       numericSeriesList[0].radiusPxFn = null;
@@ -134,7 +149,7 @@ void main() {
       // Validate Desktop series.
       var series = numericSeriesList[0];
 
-      var elementsList = series.getAttr(pointElementsKey);
+      var elementsList = series.getAttr(pointElementsKey)!;
       expect(elementsList.length, equals(4));
 
       expect(elementsList[0].radiusPx, equals(2.0));
@@ -151,8 +166,7 @@ void main() {
     test('with custom symbol renderer ID in data', () {
       renderer = PointRenderer<int>(config: PointRendererConfig());
 
-      numericSeriesList[0].setAttr(pointSymbolRendererFnKey,
-          (int index) => numericSeriesList[0].data[index].shape as String);
+      numericSeriesList[0].setAttr(pointSymbolRendererFnKey, symbolRendererFor);
 
       renderer.preprocessSeries(numericSeriesList);
 
@@ -161,7 +175,7 @@ void main() {
       // Validate Desktop series.
       var series = numericSeriesList[0];
 
-      var elementsList = series.getAttr(pointElementsKey);
+      var elementsList = series.getAttr(pointElementsKey)!;
       expect(elementsList.length, equals(4));
 
       expect(elementsList[0].symbolRendererId, equals(defaultSymbolRendererId));
@@ -173,8 +187,7 @@ void main() {
     test('with custom symbol renderer ID in series and data', () {
       renderer = PointRenderer<int>(config: PointRendererConfig());
 
-      numericSeriesList[0].setAttr(pointSymbolRendererFnKey,
-          (int index) => numericSeriesList[0].data[index].shape as String);
+      numericSeriesList[0].setAttr(pointSymbolRendererFnKey, symbolRendererFor);
       numericSeriesList[0].setAttr(pointSymbolRendererIdKey, 'shape 0');
 
       renderer.preprocessSeries(numericSeriesList);
@@ -184,7 +197,7 @@ void main() {
       // Validate Desktop series.
       var series = numericSeriesList[0];
 
-      var elementsList = series.getAttr(pointElementsKey);
+      var elementsList = series.getAttr(pointElementsKey)!;
       expect(elementsList.length, equals(4));
 
       expect(elementsList[0].symbolRendererId, equals('shape 0'));

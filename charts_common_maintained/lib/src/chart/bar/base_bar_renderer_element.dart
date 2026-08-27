@@ -50,11 +50,17 @@ abstract class BaseBarRendererElement {
     measureIsNegative = other.measureIsNegative;
   }
 
-  void updateAnimationPercent(BaseBarRendererElement previous,
-      BaseBarRendererElement target, double animationPercent) {
+  void updateAnimationPercent(
+    BaseBarRendererElement previous,
+    BaseBarRendererElement target,
+    double animationPercent,
+  ) {
     color = getAnimatedColor(previous.color!, target.color!, animationPercent);
     fillColor = getAnimatedColor(
-        previous.fillColor!, target.fillColor!, animationPercent);
+      previous.fillColor!,
+      target.fillColor!,
+      animationPercent,
+    );
     measureIsNull = target.measureIsNull;
     measureIsNegative = target.measureIsNegative;
   }
@@ -125,8 +131,11 @@ abstract class BaseAnimatedBar<D, R extends BaseBarRendererElement> {
       return _currentBar!;
     }
 
-    _currentBar!
-        .updateAnimationPercent(_previousBar!, _targetBar!, animationPercent);
+    _currentBar!.updateAnimationPercent(
+      _previousBar!,
+      _targetBar!,
+      animationPercent,
+    );
 
     return _currentBar!;
   }

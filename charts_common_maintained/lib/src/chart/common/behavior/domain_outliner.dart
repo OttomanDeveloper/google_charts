@@ -48,8 +48,8 @@ class DomainOutliner<D> implements ChartBehavior<D> {
     this.selectionType = SelectionModelType.info,
     double? defaultStrokePx,
     double? strokePaddingPx,
-  })  : defaultStrokePx = defaultStrokePx ?? 2.0,
-        strokePaddingPx = strokePaddingPx ?? 1.0 {
+  }) : defaultStrokePx = defaultStrokePx ?? 2.0,
+       strokePaddingPx = strokePaddingPx ?? 1.0 {
     _lifecycleListener = LifecycleListener<D>(onPostprocess: _outline);
   }
 

@@ -91,10 +91,10 @@ class ViewMargin {
   final int leftPx;
 
   const ViewMargin({int? topPx, int? bottomPx, int? rightPx, int? leftPx})
-      : topPx = topPx ?? 0,
-        bottomPx = bottomPx ?? 0,
-        rightPx = rightPx ?? 0,
-        leftPx = leftPx ?? 0;
+    : topPx = topPx ?? 0,
+      bottomPx = bottomPx ?? 0,
+      rightPx = rightPx ?? 0,
+      leftPx = leftPx ?? 0;
 
   /// Total width.
   int get width => leftPx + rightPx;
@@ -155,7 +155,11 @@ class LayoutViewConfig {
 class ViewMeasuredSizes {
   /// All zeroes component size.
   static const zero = ViewMeasuredSizes(
-      preferredWidth: 0, preferredHeight: 0, minWidth: 0, minHeight: 0);
+    preferredWidth: 0,
+    preferredHeight: 0,
+    minWidth: 0,
+    minHeight: 0,
+  );
 
   final int preferredWidth;
   final int preferredHeight;
@@ -168,13 +172,13 @@ class ViewMeasuredSizes {
   /// [preferredHeight] the component's preferred width.
   /// [minWidth] the component's minimum width. If not set, default to 0.
   /// [minHeight] the component's minimum height. If not set, default to 0.
-  const ViewMeasuredSizes(
-      {required this.preferredWidth,
-      required this.preferredHeight,
-      int? minWidth,
-      int? minHeight})
-      : minWidth = minWidth ?? 0,
-        minHeight = minHeight ?? 0;
+  const ViewMeasuredSizes({
+    required this.preferredWidth,
+    required this.preferredHeight,
+    int? minWidth,
+    int? minHeight,
+  }) : minWidth = minWidth ?? 0,
+       minHeight = minHeight ?? 0;
 }
 
 /// A component that measures its size and accepts bounds to complete layout.
@@ -212,13 +216,17 @@ abstract class LayoutView {
 /// Translates a component's [BehaviorPosition] and [OutsideJustification] into
 /// a [LayoutPosition] that a [LayoutManager] can use to place components on the
 /// chart.
-LayoutPosition layoutPosition(BehaviorPosition behaviorPosition,
-    OutsideJustification outsideJustification, bool isRtl) {
+LayoutPosition layoutPosition(
+  BehaviorPosition behaviorPosition,
+  OutsideJustification outsideJustification,
+  bool isRtl,
+) {
   var position = switch (behaviorPosition) {
     BehaviorPosition.bottom => LayoutPosition.Bottom,
     BehaviorPosition.end => isRtl ? LayoutPosition.Left : LayoutPosition.Right,
     BehaviorPosition.inside => LayoutPosition.DrawArea,
-    BehaviorPosition.start => isRtl ? LayoutPosition.Right : LayoutPosition.Left,
+    BehaviorPosition.start =>
+      isRtl ? LayoutPosition.Right : LayoutPosition.Left,
     BehaviorPosition.top => LayoutPosition.Top,
   };
 

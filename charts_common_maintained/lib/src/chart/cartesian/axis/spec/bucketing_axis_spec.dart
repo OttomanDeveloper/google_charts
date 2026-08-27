@@ -67,27 +67,31 @@ class BucketingAxisSpec extends NumericAxisSpec {
 
   /// Creates a [NumericAxisSpec] that is specialized for percentage data.
   BucketingAxisSpec({
-    RenderSpec<num>? renderSpec,
+    super.renderSpec,
     NumericTickProviderSpec? tickProviderSpec,
     NumericTickFormatterSpec? tickFormatterSpec,
-    bool? showAxisLine,
+    super.showAxisLine,
     bool? showBucket,
     this.threshold,
     NumericExtents? viewport,
-  })  : showBucket = showBucket ?? true,
-        super(
-            renderSpec: renderSpec,
-            tickProviderSpec:
-                tickProviderSpec ?? const BucketingNumericTickProviderSpec(),
-            tickFormatterSpec: tickFormatterSpec ??
-                BasicNumericTickFormatterSpec.fromNumberFormat(
-                    NumberFormat.percentPattern()),
-            showAxisLine: showAxisLine,
-            viewport: viewport ?? const NumericExtents(0.0, 1.0));
+  }) : showBucket = showBucket ?? true,
+       super(
+         tickProviderSpec:
+             tickProviderSpec ?? const BucketingNumericTickProviderSpec(),
+         tickFormatterSpec:
+             tickFormatterSpec ??
+             BasicNumericTickFormatterSpec.fromNumberFormat(
+               NumberFormat.percentPattern(),
+             ),
+         viewport: viewport ?? const NumericExtents(0.0, 1.0),
+       );
 
   @override
   void configure(
-      Axis<num> axis, ChartContext context, GraphicsFactory graphicsFactory) {
+    Axis<num> axis,
+    ChartContext context,
+    GraphicsFactory graphicsFactory,
+  ) {
     super.configure(axis, context, graphicsFactory);
 
     if (axis is NumericAxis && viewport != null) {
@@ -139,19 +143,16 @@ class BucketingNumericTickProviderSpec extends BasicNumericTickProviderSpec {
   /// [desiredMaxTickCount] automatically choose the best tick
   ///     count to produce the 'nicest' ticks but make sure we don't have more
   ///     than this many.
-  const BucketingNumericTickProviderSpec(
-      {bool? zeroBound,
-      bool? dataIsInWholeNumbers,
-      int? desiredTickCount,
-      int? desiredMinTickCount,
-      int? desiredMaxTickCount})
-      : super(
-          zeroBound: zeroBound ?? true,
-          dataIsInWholeNumbers: dataIsInWholeNumbers ?? false,
-          desiredTickCount: desiredTickCount,
-          desiredMinTickCount: desiredMinTickCount,
-          desiredMaxTickCount: desiredMaxTickCount,
-        );
+  const BucketingNumericTickProviderSpec({
+    bool? zeroBound,
+    bool? dataIsInWholeNumbers,
+    super.desiredTickCount,
+    super.desiredMinTickCount,
+    super.desiredMaxTickCount,
+  }) : super(
+         zeroBound: zeroBound ?? true,
+         dataIsInWholeNumbers: dataIsInWholeNumbers ?? false,
+       );
 
   @override
   BucketingNumericTickProvider createTickProvider(ChartContext context) {
@@ -162,8 +163,10 @@ class BucketingNumericTickProviderSpec extends BasicNumericTickProviderSpec {
     if (desiredMinTickCount != null ||
         desiredMaxTickCount != null ||
         desiredTickCount != null) {
-      provider.setTickCount(desiredMaxTickCount ?? desiredTickCount ?? 10,
-          desiredMinTickCount ?? desiredTickCount ?? 2);
+      provider.setTickCount(
+        desiredMaxTickCount ?? desiredTickCount ?? 10,
+        desiredMinTickCount ?? desiredTickCount ?? 2,
+      );
     }
     return provider;
   }

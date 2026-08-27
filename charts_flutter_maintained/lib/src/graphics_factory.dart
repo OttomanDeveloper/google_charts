@@ -14,7 +14,8 @@
 // limitations under the License.
 
 import 'package:charts_common_maintained/charts_common_maintained.dart'
-    as common show GraphicsFactory, LineStyle, TextElement, TextStyle;
+    as common
+    show GraphicsFactory, LineStyle, TextElement, TextStyle;
 import 'package:flutter/widgets.dart'
     show BuildContext, DefaultTextStyle, MediaQuery;
 import 'line_style.dart' show LineStyle;
@@ -25,10 +26,11 @@ class GraphicsFactory implements common.GraphicsFactory {
   final double textScaleFactor;
   final DefaultTextStyle defaultTextStyle;
 
-  GraphicsFactory(BuildContext context,
-      {GraphicsFactoryHelper helper = const GraphicsFactoryHelper()})
-      : textScaleFactor = helper.getTextScaleFactorOf(context),
-        defaultTextStyle = DefaultTextStyle.of(context);
+  GraphicsFactory(
+    BuildContext context, {
+    GraphicsFactoryHelper helper = const GraphicsFactoryHelper(),
+  }) : textScaleFactor = helper.getTextScaleFactorOf(context),
+       defaultTextStyle = DefaultTextStyle.of(context);
 
   /// Returns a [TextStyle] object.
   @override
@@ -51,5 +53,5 @@ class GraphicsFactoryHelper {
   const GraphicsFactoryHelper();
 
   double getTextScaleFactorOf(BuildContext context) =>
-      MediaQuery.textScalerOf(context).textScaleFactor;
+      MediaQuery.textScalerOf(context).scale(1.0);
 }

@@ -21,6 +21,7 @@
 /// In this example, the series list has numeric data from 0 to 10, but we
 /// want to show from 3 to 7.
 /// We can do this by specifying an [NumericExtents] in [NumericAxisSpec].
+library;
 
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
@@ -33,7 +34,8 @@ class NumericInitialViewport extends StatelessWidget {
   final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  NumericInitialViewport(this.seriesList, {this.animate = false});
+  const NumericInitialViewport(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [LineChart] with sample data and no transition.
   factory NumericInitialViewport.withSampleData() {

@@ -14,6 +14,8 @@
 // limitations under the License.
 
 /// Bar chart example
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -34,7 +36,8 @@ class BarChartWithSecondaryAxisOnly extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  BarChartWithSecondaryAxisOnly(this.seriesList, {this.animate = false});
+  const BarChartWithSecondaryAxisOnly(this.seriesList,
+      {super.key, this.animate = false});
 
   factory BarChartWithSecondaryAxisOnly.withSampleData() {
     return BarChartWithSecondaryAxisOnly(

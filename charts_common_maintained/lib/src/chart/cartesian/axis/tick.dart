@@ -34,13 +34,15 @@ class Tick<D> {
   /// offset for ticks on a horizontal axis.
   double? labelOffsetPx;
 
-  Tick(
-      {required this.value,
-      required this.textElement,
-      this.locationPx,
-      this.labelOffsetPx});
+  Tick({
+    required this.value,
+    required this.textElement,
+    this.locationPx,
+    this.labelOffsetPx,
+  });
 
   @override
-  String toString() => 'Tick(value: $value, locationPx: $locationPx, '
+  String toString() =>
+      'Tick(value: $value, locationPx: $locationPx, '
       'labelOffsetPx: $labelOffsetPx)';
 }

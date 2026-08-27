@@ -31,10 +31,16 @@ class MyRow {
   final int campaign;
   final int clickCount;
   final Color color;
-  final List<int> dashPattern;
+  final List<int>? dashPattern;
   final double strokeWidthPx;
-  MyRow(this.campaignString, this.campaign, this.clickCount, this.color,
-      this.dashPattern, this.strokeWidthPx);
+  MyRow(
+    this.campaignString,
+    this.campaign,
+    this.clickCount,
+    this.color,
+    this.dashPattern,
+    this.strokeWidthPx,
+  );
 }
 
 class MockImmutableSeries<D> extends Mock implements ImmutableSeries<D> {
@@ -47,100 +53,151 @@ class MockImmutableSeries<D> extends Mock implements ImmutableSeries<D> {
 
 void main() {
   LineRenderer renderer;
-  List<MutableSeries<int>> numericSeriesList;
-  List<MutableSeries<String>> ordinalSeriesList;
+  late List<MutableSeries<int>> numericSeriesList;
+  late List<MutableSeries<String>> ordinalSeriesList;
 
-  List<MyRow> myFakeDesktopData;
-  List<MyRow> myFakeTabletData;
-  List<MyRow> myFakeMobileData;
+  late List<MyRow> myFakeDesktopData;
+  late List<MyRow> myFakeTabletData;
+  late List<MyRow> myFakeMobileData;
 
   setUp(() {
     myFakeDesktopData = [
       MyRow('MyCampaign1', 1, 5, MaterialPalette.blue.shadeDefault, null, 2.0),
       MyRow(
-          'MyCampaign2', 2, 25, MaterialPalette.green.shadeDefault, null, 2.0),
+        'MyCampaign2',
+        2,
+        25,
+        MaterialPalette.green.shadeDefault,
+        null,
+        2.0,
+      ),
       MyRow('MyCampaign3', 3, 100, MaterialPalette.red.shadeDefault, null, 2.0),
-      MyRow('MyOtherCampaign', 4, 75, MaterialPalette.red.shadeDefault, null,
-          2.0),
+      MyRow(
+        'MyOtherCampaign',
+        4,
+        75,
+        MaterialPalette.red.shadeDefault,
+        null,
+        2.0,
+      ),
     ];
 
     myFakeTabletData = [
-      MyRow(
-          'MyCampaign1', 1, 5, MaterialPalette.blue.shadeDefault, [2, 2], 2.0),
-      MyRow(
-          'MyCampaign2', 2, 25, MaterialPalette.blue.shadeDefault, [3, 3], 2.0),
-      MyRow('MyCampaign3', 3, 100, MaterialPalette.blue.shadeDefault, [4, 4],
-          2.0),
-      MyRow('MyOtherCampaign', 4, 75, MaterialPalette.blue.shadeDefault, [4, 4],
-          2.0),
+      MyRow('MyCampaign1', 1, 5, MaterialPalette.blue.shadeDefault, [
+        2,
+        2,
+      ], 2.0),
+      MyRow('MyCampaign2', 2, 25, MaterialPalette.blue.shadeDefault, [
+        3,
+        3,
+      ], 2.0),
+      MyRow('MyCampaign3', 3, 100, MaterialPalette.blue.shadeDefault, [
+        4,
+        4,
+      ], 2.0),
+      MyRow('MyOtherCampaign', 4, 75, MaterialPalette.blue.shadeDefault, [
+        4,
+        4,
+      ], 2.0),
     ];
 
     myFakeMobileData = [
       MyRow('MyCampaign1', 1, 5, MaterialPalette.blue.shadeDefault, null, 2.0),
       MyRow('MyCampaign2', 2, 25, MaterialPalette.blue.shadeDefault, null, 3.0),
       MyRow(
-          'MyCampaign3', 3, 100, MaterialPalette.blue.shadeDefault, null, 4.0),
-      MyRow('MyOtherCampaign', 4, 75, MaterialPalette.blue.shadeDefault, null,
-          4.0),
+        'MyCampaign3',
+        3,
+        100,
+        MaterialPalette.blue.shadeDefault,
+        null,
+        4.0,
+      ),
+      MyRow(
+        'MyOtherCampaign',
+        4,
+        75,
+        MaterialPalette.blue.shadeDefault,
+        null,
+        4.0,
+      ),
     ];
 
     numericSeriesList = [
-      MutableSeries<int>(Series<MyRow, int>(
+      MutableSeries<int>(
+        Series<MyRow, int>(
           id: 'Desktop',
-          colorFn: (_, __) => MaterialPalette.blue.shadeDefault,
+          colorFn: (_, _) => MaterialPalette.blue.shadeDefault,
           domainFn: (row, _) => row.campaign,
           measureFn: (row, _) => row.clickCount,
-          measureOffsetFn: (_, __) => 0,
-          data: myFakeDesktopData)),
-      MutableSeries<int>(Series<MyRow, int>(
+          measureOffsetFn: (_, _) => 0,
+          data: myFakeDesktopData,
+        ),
+      ),
+      MutableSeries<int>(
+        Series<MyRow, int>(
           id: 'Tablet',
-          colorFn: (_, __) => MaterialPalette.red.shadeDefault,
+          colorFn: (_, _) => MaterialPalette.red.shadeDefault,
           domainFn: (row, _) => row.campaign,
           measureFn: (row, _) => row.clickCount,
-          measureOffsetFn: (_, __) => 0,
-          strokeWidthPxFn: (_, __) => 1.25,
-          data: myFakeTabletData)),
-      MutableSeries<int>(Series<MyRow, int>(
+          measureOffsetFn: (_, _) => 0,
+          strokeWidthPxFn: (_, _) => 1.25,
+          data: myFakeTabletData,
+        ),
+      ),
+      MutableSeries<int>(
+        Series<MyRow, int>(
           id: 'Mobile',
-          colorFn: (_, __) => MaterialPalette.green.shadeDefault,
+          colorFn: (_, _) => MaterialPalette.green.shadeDefault,
           domainFn: (row, _) => row.campaign,
           measureFn: (row, _) => row.clickCount,
-          measureOffsetFn: (_, __) => 0,
-          strokeWidthPxFn: (_, __) => 3.0,
-          data: myFakeMobileData))
+          measureOffsetFn: (_, _) => 0,
+          strokeWidthPxFn: (_, _) => 3.0,
+          data: myFakeMobileData,
+        ),
+      ),
     ];
 
     ordinalSeriesList = [
-      MutableSeries<String>(Series<MyRow, String>(
+      MutableSeries<String>(
+        Series<MyRow, String>(
           id: 'Desktop',
-          colorFn: (_, __) => MaterialPalette.blue.shadeDefault,
+          colorFn: (_, _) => MaterialPalette.blue.shadeDefault,
           domainFn: (row, _) => row.campaignString,
           measureFn: (row, _) => row.clickCount,
-          measureOffsetFn: (_, __) => 0,
-          data: myFakeDesktopData)),
-      MutableSeries<String>(Series<MyRow, String>(
+          measureOffsetFn: (_, _) => 0,
+          data: myFakeDesktopData,
+        ),
+      ),
+      MutableSeries<String>(
+        Series<MyRow, String>(
           id: 'Tablet',
-          colorFn: (_, __) => MaterialPalette.red.shadeDefault,
+          colorFn: (_, _) => MaterialPalette.red.shadeDefault,
           domainFn: (row, _) => row.campaignString,
           measureFn: (row, _) => row.clickCount,
-          measureOffsetFn: (_, __) => 0,
-          strokeWidthPxFn: (_, __) => 1.25,
-          data: myFakeTabletData)),
-      MutableSeries<String>(Series<MyRow, String>(
+          measureOffsetFn: (_, _) => 0,
+          strokeWidthPxFn: (_, _) => 1.25,
+          data: myFakeTabletData,
+        ),
+      ),
+      MutableSeries<String>(
+        Series<MyRow, String>(
           id: 'Mobile',
-          colorFn: (_, __) => MaterialPalette.green.shadeDefault,
+          colorFn: (_, _) => MaterialPalette.green.shadeDefault,
           domainFn: (row, _) => row.campaignString,
           measureFn: (row, _) => row.clickCount,
-          measureOffsetFn: (_, __) => 0,
-          strokeWidthPxFn: (_, __) => 3.0,
-          data: myFakeMobileData))
+          measureOffsetFn: (_, _) => 0,
+          strokeWidthPxFn: (_, _) => 3.0,
+          data: myFakeMobileData,
+        ),
+      ),
     ];
   });
 
   group('preprocess', () {
     test('with numeric data and simple lines', () {
-      renderer =
-          LineRenderer<num>(config: LineRendererConfig(strokeWidthPx: 2.0));
+      renderer = LineRenderer<num>(
+        config: LineRendererConfig(strokeWidthPx: 2.0),
+      );
 
       renderer.configureSeries(numericSeriesList);
       renderer.preprocessSeries(numericSeriesList);
@@ -151,7 +208,7 @@ void main() {
       var series = numericSeriesList[0];
 
       var styleSegments = series.getAttr(styleSegmentsKey);
-      expect(styleSegments.length, equals(1));
+      expect(styleSegments!.length, equals(1));
 
       var segment = styleSegments[0];
       expect(segment.color, equals(MaterialPalette.blue.shadeDefault));
@@ -160,16 +217,16 @@ void main() {
       expect(segment.domainExtent.end, equals(4));
       expect(segment.strokeWidthPx, equals(2.0));
 
-      expect(series.measureOffsetFn(0), 0);
-      expect(series.measureOffsetFn(1), 0);
-      expect(series.measureOffsetFn(2), 0);
-      expect(series.measureOffsetFn(3), 0);
+      expect(series.measureOffsetFn!(0), 0);
+      expect(series.measureOffsetFn!(1), 0);
+      expect(series.measureOffsetFn!(2), 0);
+      expect(series.measureOffsetFn!(3), 0);
 
       // Validate Tablet series.
       series = numericSeriesList[1];
 
       styleSegments = series.getAttr(styleSegmentsKey);
-      expect(styleSegments.length, equals(1));
+      expect(styleSegments!.length, equals(1));
 
       segment = styleSegments[0];
       expect(segment.color, equals(MaterialPalette.red.shadeDefault));
@@ -178,16 +235,16 @@ void main() {
       expect(segment.domainExtent.end, equals(4));
       expect(segment.strokeWidthPx, equals(1.25));
 
-      expect(series.measureOffsetFn(0), 0);
-      expect(series.measureOffsetFn(1), 0);
-      expect(series.measureOffsetFn(2), 0);
-      expect(series.measureOffsetFn(3), 0);
+      expect(series.measureOffsetFn!(0), 0);
+      expect(series.measureOffsetFn!(1), 0);
+      expect(series.measureOffsetFn!(2), 0);
+      expect(series.measureOffsetFn!(3), 0);
 
       // Validate Mobile series.
       series = numericSeriesList[2];
 
       styleSegments = series.getAttr(styleSegmentsKey);
-      expect(styleSegments.length, equals(1));
+      expect(styleSegments!.length, equals(1));
 
       segment = styleSegments[0];
       expect(segment.color, equals(MaterialPalette.green.shadeDefault));
@@ -196,15 +253,16 @@ void main() {
       expect(segment.domainExtent.end, equals(4));
       expect(segment.strokeWidthPx, equals(3.0));
 
-      expect(series.measureOffsetFn(0), 0);
-      expect(series.measureOffsetFn(1), 0);
-      expect(series.measureOffsetFn(2), 0);
-      expect(series.measureOffsetFn(3), 0);
+      expect(series.measureOffsetFn!(0), 0);
+      expect(series.measureOffsetFn!(1), 0);
+      expect(series.measureOffsetFn!(2), 0);
+      expect(series.measureOffsetFn!(3), 0);
     });
 
     test('with numeric data and stacked lines', () {
       renderer = LineRenderer<num>(
-          config: LineRendererConfig(stacked: true, strokeWidthPx: 2.0));
+        config: LineRendererConfig(stacked: true, strokeWidthPx: 2.0),
+      );
 
       renderer.configureSeries(numericSeriesList);
       renderer.preprocessSeries(numericSeriesList);
@@ -215,7 +273,7 @@ void main() {
       var series = numericSeriesList[0];
 
       var styleSegments = series.getAttr(styleSegmentsKey);
-      expect(styleSegments.length, equals(1));
+      expect(styleSegments!.length, equals(1));
 
       var segment = styleSegments[0];
       expect(segment.color, equals(MaterialPalette.blue.shadeDefault));
@@ -224,16 +282,16 @@ void main() {
       expect(segment.domainExtent.end, equals(4));
       expect(segment.strokeWidthPx, equals(2.0));
 
-      expect(series.measureOffsetFn(0), 0);
-      expect(series.measureOffsetFn(1), 0);
-      expect(series.measureOffsetFn(2), 0);
-      expect(series.measureOffsetFn(3), 0);
+      expect(series.measureOffsetFn!(0), 0);
+      expect(series.measureOffsetFn!(1), 0);
+      expect(series.measureOffsetFn!(2), 0);
+      expect(series.measureOffsetFn!(3), 0);
 
       // Validate Tablet series.
       series = numericSeriesList[1];
 
       styleSegments = series.getAttr(styleSegmentsKey);
-      expect(styleSegments.length, equals(1));
+      expect(styleSegments!.length, equals(1));
 
       segment = styleSegments[0];
       expect(segment.color, equals(MaterialPalette.red.shadeDefault));
@@ -242,16 +300,16 @@ void main() {
       expect(segment.domainExtent.end, equals(4));
       expect(segment.strokeWidthPx, equals(1.25));
 
-      expect(series.measureOffsetFn(0), 5);
-      expect(series.measureOffsetFn(1), 25);
-      expect(series.measureOffsetFn(2), 100);
-      expect(series.measureOffsetFn(3), 75);
+      expect(series.measureOffsetFn!(0), 5);
+      expect(series.measureOffsetFn!(1), 25);
+      expect(series.measureOffsetFn!(2), 100);
+      expect(series.measureOffsetFn!(3), 75);
 
       // Validate Mobile series.
       series = numericSeriesList[2];
 
       styleSegments = series.getAttr(styleSegmentsKey);
-      expect(styleSegments.length, equals(1));
+      expect(styleSegments!.length, equals(1));
 
       segment = styleSegments[0];
       expect(segment.color, equals(MaterialPalette.green.shadeDefault));
@@ -260,45 +318,55 @@ void main() {
       expect(segment.domainExtent.end, equals(4));
       expect(segment.strokeWidthPx, equals(3.0));
 
-      expect(series.measureOffsetFn(0), 10);
-      expect(series.measureOffsetFn(1), 50);
-      expect(series.measureOffsetFn(2), 200);
-      expect(series.measureOffsetFn(3), 150);
+      expect(series.measureOffsetFn!(0), 10);
+      expect(series.measureOffsetFn!(1), 50);
+      expect(series.measureOffsetFn!(2), 200);
+      expect(series.measureOffsetFn!(3), 150);
     });
 
     test('with numeric data and changes in style', () {
       numericSeriesList = [
-        MutableSeries<int>(Series<MyRow, int>(
+        MutableSeries<int>(
+          Series<MyRow, int>(
             id: 'Desktop',
             colorFn: (MyRow row, _) => row.color,
             dashPatternFn: (MyRow row, _) => row.dashPattern,
             strokeWidthPxFn: (MyRow row, _) => row.strokeWidthPx,
             domainFn: (row, _) => row.campaign,
             measureFn: (row, _) => row.clickCount,
-            measureOffsetFn: (_, __) => 0,
-            data: myFakeDesktopData)),
-        MutableSeries<int>(Series<MyRow, int>(
+            measureOffsetFn: (_, _) => 0,
+            data: myFakeDesktopData,
+          ),
+        ),
+        MutableSeries<int>(
+          Series<MyRow, int>(
             id: 'Tablet',
             colorFn: (MyRow row, _) => row.color,
             dashPatternFn: (MyRow row, _) => row.dashPattern,
             strokeWidthPxFn: (MyRow row, _) => row.strokeWidthPx,
             domainFn: (row, _) => row.campaign,
             measureFn: (row, _) => row.clickCount,
-            measureOffsetFn: (_, __) => 0,
-            data: myFakeTabletData)),
-        MutableSeries<int>(Series<MyRow, int>(
+            measureOffsetFn: (_, _) => 0,
+            data: myFakeTabletData,
+          ),
+        ),
+        MutableSeries<int>(
+          Series<MyRow, int>(
             id: 'Mobile',
             colorFn: (MyRow row, _) => row.color,
             dashPatternFn: (MyRow row, _) => row.dashPattern,
             strokeWidthPxFn: (MyRow row, _) => row.strokeWidthPx,
             domainFn: (row, _) => row.campaign,
             measureFn: (row, _) => row.clickCount,
-            measureOffsetFn: (_, __) => 0,
-            data: myFakeMobileData))
+            measureOffsetFn: (_, _) => 0,
+            data: myFakeMobileData,
+          ),
+        ),
       ];
 
-      renderer =
-          LineRenderer<num>(config: LineRendererConfig(strokeWidthPx: 2.0));
+      renderer = LineRenderer<num>(
+        config: LineRendererConfig(strokeWidthPx: 2.0),
+      );
 
       renderer.configureSeries(numericSeriesList);
       renderer.preprocessSeries(numericSeriesList);
@@ -309,7 +377,7 @@ void main() {
       var series = numericSeriesList[0];
 
       var styleSegments = series.getAttr(styleSegmentsKey);
-      expect(styleSegments.length, equals(3));
+      expect(styleSegments!.length, equals(3));
 
       var segment = styleSegments[0];
       expect(segment.color, equals(MaterialPalette.blue.shadeDefault));
@@ -332,16 +400,16 @@ void main() {
       expect(segment.domainExtent.end, equals(4));
       expect(segment.strokeWidthPx, equals(2.0));
 
-      expect(series.measureOffsetFn(0), 0);
-      expect(series.measureOffsetFn(1), 0);
-      expect(series.measureOffsetFn(2), 0);
-      expect(series.measureOffsetFn(3), 0);
+      expect(series.measureOffsetFn!(0), 0);
+      expect(series.measureOffsetFn!(1), 0);
+      expect(series.measureOffsetFn!(2), 0);
+      expect(series.measureOffsetFn!(3), 0);
 
       // Validate Tablet series.
       series = numericSeriesList[1];
 
       styleSegments = series.getAttr(styleSegmentsKey);
-      expect(styleSegments.length, equals(3));
+      expect(styleSegments!.length, equals(3));
 
       segment = segment = styleSegments[0];
       expect(segment.color, equals(MaterialPalette.blue.shadeDefault));
@@ -364,16 +432,16 @@ void main() {
       expect(segment.domainExtent.end, equals(4));
       expect(segment.strokeWidthPx, equals(2.0));
 
-      expect(series.measureOffsetFn(0), 0);
-      expect(series.measureOffsetFn(1), 0);
-      expect(series.measureOffsetFn(2), 0);
-      expect(series.measureOffsetFn(3), 0);
+      expect(series.measureOffsetFn!(0), 0);
+      expect(series.measureOffsetFn!(1), 0);
+      expect(series.measureOffsetFn!(2), 0);
+      expect(series.measureOffsetFn!(3), 0);
 
       // Validate Mobile series.
       series = numericSeriesList[2];
 
       styleSegments = series.getAttr(styleSegmentsKey);
-      expect(styleSegments.length, equals(3));
+      expect(styleSegments!.length, equals(3));
 
       segment = segment = styleSegments[0];
       expect(segment.color, equals(MaterialPalette.blue.shadeDefault));
@@ -396,46 +464,98 @@ void main() {
       expect(segment.domainExtent.end, equals(4));
       expect(segment.strokeWidthPx, equals(4.0));
 
-      expect(series.measureOffsetFn(0), 0);
-      expect(series.measureOffsetFn(1), 0);
-      expect(series.measureOffsetFn(2), 0);
-      expect(series.measureOffsetFn(3), 0);
+      expect(series.measureOffsetFn!(0), 0);
+      expect(series.measureOffsetFn!(1), 0);
+      expect(series.measureOffsetFn!(2), 0);
+      expect(series.measureOffsetFn!(3), 0);
     });
 
     test('with numeric data and repeats in style', () {
       var myFakeData = [
         MyRow(
-            'MyCampaign1', 1, 5, MaterialPalette.blue.shadeDefault, null, 2.0),
-        MyRow('MyCampaign2', 2, 25, MaterialPalette.green.shadeDefault, null,
-            2.0),
-        MyRow('MyCampaign3', 3, 100, MaterialPalette.blue.shadeDefault, null,
-            2.0),
-        MyRow('MyCampaign4', 4, 75, MaterialPalette.green.shadeDefault, null,
-            2.0),
+          'MyCampaign1',
+          1,
+          5,
+          MaterialPalette.blue.shadeDefault,
+          null,
+          2.0,
+        ),
         MyRow(
-            'MyCampaign1', 5, 5, MaterialPalette.blue.shadeDefault, null, 2.0),
-        MyRow('MyCampaign2', 6, 25, MaterialPalette.green.shadeDefault, null,
-            2.0),
-        MyRow('MyCampaign3', 7, 100, MaterialPalette.blue.shadeDefault, null,
-            2.0),
-        MyRow('MyCampaign4', 8, 75, MaterialPalette.green.shadeDefault, null,
-            2.0),
+          'MyCampaign2',
+          2,
+          25,
+          MaterialPalette.green.shadeDefault,
+          null,
+          2.0,
+        ),
+        MyRow(
+          'MyCampaign3',
+          3,
+          100,
+          MaterialPalette.blue.shadeDefault,
+          null,
+          2.0,
+        ),
+        MyRow(
+          'MyCampaign4',
+          4,
+          75,
+          MaterialPalette.green.shadeDefault,
+          null,
+          2.0,
+        ),
+        MyRow(
+          'MyCampaign1',
+          5,
+          5,
+          MaterialPalette.blue.shadeDefault,
+          null,
+          2.0,
+        ),
+        MyRow(
+          'MyCampaign2',
+          6,
+          25,
+          MaterialPalette.green.shadeDefault,
+          null,
+          2.0,
+        ),
+        MyRow(
+          'MyCampaign3',
+          7,
+          100,
+          MaterialPalette.blue.shadeDefault,
+          null,
+          2.0,
+        ),
+        MyRow(
+          'MyCampaign4',
+          8,
+          75,
+          MaterialPalette.green.shadeDefault,
+          null,
+          2.0,
+        ),
       ];
 
       numericSeriesList = [
-        MutableSeries<int>(Series<MyRow, int>(
+        MutableSeries<int>(
+          Series<MyRow, int>(
             id: 'Desktop',
             colorFn: (row, _) => row.color,
             dashPatternFn: (row, _) => row.dashPattern,
             strokeWidthPxFn: (row, _) => row.strokeWidthPx,
             domainFn: (row, _) => row.campaign,
             measureFn: (row, _) => row.clickCount,
-            measureOffsetFn: (_, __) => 0,
-            data: myFakeData)),
+            measureOffsetFn: (_, _) => 0,
+            data: myFakeData,
+          ),
+        ),
       ];
 
-      renderer =
-          LineRenderer<num>(config: LineRendererConfig(strokeWidthPx: 2.0));
+      renderer = LineRenderer<num>(
+        config: LineRendererConfig(strokeWidthPx: 2.0),
+      );
 
       renderer.configureSeries(numericSeriesList);
       renderer.preprocessSeries(numericSeriesList);
@@ -446,7 +566,7 @@ void main() {
       var series = numericSeriesList[0];
 
       var styleSegments = series.getAttr(styleSegmentsKey);
-      expect(styleSegments.length, equals(8));
+      expect(styleSegments!.length, equals(8));
 
       var segment = styleSegments[0];
       expect(segment.color, equals(MaterialPalette.blue.shadeDefault));
@@ -490,8 +610,9 @@ void main() {
     });
 
     test('with ordinal data and simple lines', () {
-      renderer =
-          LineRenderer<String>(config: LineRendererConfig(strokeWidthPx: 2.0));
+      renderer = LineRenderer<String>(
+        config: LineRendererConfig(strokeWidthPx: 2.0),
+      );
 
       renderer.configureSeries(ordinalSeriesList);
       renderer.preprocessSeries(ordinalSeriesList);
@@ -502,7 +623,7 @@ void main() {
       var series = ordinalSeriesList[0];
 
       var styleSegments = series.getAttr(styleSegmentsKey);
-      expect(styleSegments.length, equals(1));
+      expect(styleSegments!.length, equals(1));
 
       var segment = styleSegments[0];
       expect(segment.color, equals(MaterialPalette.blue.shadeDefault));
@@ -515,7 +636,7 @@ void main() {
       series = ordinalSeriesList[1];
 
       styleSegments = series.getAttr(styleSegmentsKey);
-      expect(styleSegments.length, equals(1));
+      expect(styleSegments!.length, equals(1));
 
       segment = styleSegments[0];
       expect(segment.color, equals(MaterialPalette.red.shadeDefault));
@@ -528,7 +649,7 @@ void main() {
       series = ordinalSeriesList[2];
 
       styleSegments = series.getAttr(styleSegmentsKey);
-      expect(styleSegments.length, equals(1));
+      expect(styleSegments!.length, equals(1));
 
       segment = styleSegments[0];
       expect(segment.color, equals(MaterialPalette.green.shadeDefault));

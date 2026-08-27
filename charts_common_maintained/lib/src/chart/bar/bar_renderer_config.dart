@@ -30,33 +30,21 @@ class BarRendererConfig<D> extends BaseBarRendererConfig<D> {
   final BarRendererDecorator<D>? barRendererDecorator;
 
   BarRendererConfig({
-    int barGroupInnerPaddingPx = 2,
-    String? customRendererId,
+    super.barGroupInnerPaddingPx,
+    super.customRendererId,
     CornerStrategy? cornerStrategy,
-    FillPatternType? fillPattern,
+    super.fillPattern,
     BarGroupingType? groupingType,
-    int layoutPaintOrder = LayoutViewPaintOrder.bar,
-    int minBarLengthPx = 0,
-    int? maxBarWidthPx,
-    int stackedBarPaddingPx = 1,
-    double strokeWidthPx = 0.0,
+    int super.layoutPaintOrder = LayoutViewPaintOrder.bar,
+    super.minBarLengthPx,
+    super.maxBarWidthPx,
+    super.stackedBarPaddingPx,
+    super.strokeWidthPx,
     this.barRendererDecorator,
-    SymbolRenderer? symbolRenderer,
-    List<int>? weightPattern,
-  })  : cornerStrategy = cornerStrategy ?? const ConstCornerStrategy(2),
-        super(
-          barGroupInnerPaddingPx: barGroupInnerPaddingPx,
-          customRendererId: customRendererId,
-          groupingType: groupingType ?? BarGroupingType.grouped,
-          layoutPaintOrder: layoutPaintOrder,
-          minBarLengthPx: minBarLengthPx,
-          maxBarWidthPx: maxBarWidthPx,
-          fillPattern: fillPattern,
-          stackedBarPaddingPx: stackedBarPaddingPx,
-          strokeWidthPx: strokeWidthPx,
-          symbolRenderer: symbolRenderer,
-          weightPattern: weightPattern,
-        );
+    super.symbolRenderer,
+    super.weightPattern,
+  }) : cornerStrategy = cornerStrategy ?? const ConstCornerStrategy(2),
+       super(groupingType: groupingType ?? BarGroupingType.grouped);
 
   @override
   BarRenderer<D> build() {

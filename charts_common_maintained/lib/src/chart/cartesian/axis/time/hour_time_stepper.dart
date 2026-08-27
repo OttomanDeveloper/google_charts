@@ -24,18 +24,21 @@ class HourTimeStepper extends BaseTimeStepper {
 
   final List<int> _allowedTickIncrements;
 
-  HourTimeStepper._internal(
-      DateTimeFactory dateTimeFactory, List<int> increments)
-      : _allowedTickIncrements = increments,
-        super(dateTimeFactory);
+  HourTimeStepper._internal(super.dateTimeFactory, List<int> increments)
+    : _allowedTickIncrements = increments;
 
-  factory HourTimeStepper(DateTimeFactory dateTimeFactory,
-      {List<int>? allowedTickIncrements}) {
+  factory HourTimeStepper(
+    DateTimeFactory dateTimeFactory, {
+    List<int>? allowedTickIncrements,
+  }) {
     // Set the default increments if null.
     allowedTickIncrements ??= _defaultIncrements;
 
-    assert(allowedTickIncrements
-        .every((increment) => increment >= 1 && increment <= 24));
+    assert(
+      allowedTickIncrements.every(
+        (increment) => increment >= 1 && increment <= 24,
+      ),
+    );
 
     return HourTimeStepper._internal(dateTimeFactory, allowedTickIncrements);
   }
@@ -57,7 +60,10 @@ class HourTimeStepper extends BaseTimeStepper {
         .createDateTime(time.year, time.month, time.day)
         .add(Duration(hours: _hoursInDay + 1));
     final nextDayStart = dateTimeFactory.createDateTime(
-        nextDay.year, nextDay.month, nextDay.day);
+      nextDay.year,
+      nextDay.month,
+      nextDay.day,
+    );
 
     final hoursToNextDay =
         ((nextDayStart.millisecondsSinceEpoch - time.millisecondsSinceEpoch) /
@@ -65,10 +71,15 @@ class HourTimeStepper extends BaseTimeStepper {
             .ceil();
 
     final hoursRemainder = hoursToNextDay % tickIncrement;
-    final rewindHours =
-        hoursRemainder == 0 ? 0 : tickIncrement - hoursRemainder;
+    final rewindHours = hoursRemainder == 0
+        ? 0
+        : tickIncrement - hoursRemainder;
     final stepBefore = dateTimeFactory.createDateTime(
-        time.year, time.month, time.day, time.hour - rewindHours);
+      time.year,
+      time.month,
+      time.day,
+      time.hour - rewindHours,
+    );
 
     return stepBefore;
   }

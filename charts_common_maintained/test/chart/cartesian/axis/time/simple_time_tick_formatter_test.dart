@@ -22,8 +22,8 @@ void main() {
   final DateTime testDate1 = DateTime.utc(1984, 11, 11);
   final DateTime testDate2 = DateTime.utc(1984, 11, 12);
 
-  SimpleTimeTickFormatter simpleTimeFormatter;
-  SimpleTimeTickFormatter simpleTimeFormatterWithDateFormat;
+  late SimpleTimeTickFormatter simpleTimeFormatter;
+  late SimpleTimeTickFormatter simpleTimeFormatterWithDateFormat;
   DateFormat dateFormat;
 
   String testFormatter(DateTime dateTime) {
@@ -33,20 +33,25 @@ void main() {
   setUp(() {
     dateFormat = DateFormat.yMMMd();
     simpleTimeFormatter = SimpleTimeTickFormatter(formatter: testFormatter);
-    simpleTimeFormatterWithDateFormat =
-        SimpleTimeTickFormatter(formatter: dateFormat.format);
+    simpleTimeFormatterWithDateFormat = SimpleTimeTickFormatter(
+      formatter: dateFormat.format,
+    );
   });
 
   group(SimpleTimeTickFormatter, () {
     test('formatter with custom formatting function input', () {
-      final actualLabelFirstTick =
-          simpleTimeFormatter.formatFirstTick(testDate1);
-      final actualLabelSimpleTick =
-          simpleTimeFormatter.formatSimpleTick(testDate1);
-      final actualLabelTransitionTick =
-          simpleTimeFormatter.formatTransitionTick(testDate1);
-      final actualBoolIsTransition =
-          simpleTimeFormatter.isTransition(testDate2, testDate1);
+      final actualLabelFirstTick = simpleTimeFormatter.formatFirstTick(
+        testDate1,
+      );
+      final actualLabelSimpleTick = simpleTimeFormatter.formatSimpleTick(
+        testDate1,
+      );
+      final actualLabelTransitionTick = simpleTimeFormatter
+          .formatTransitionTick(testDate1);
+      final actualBoolIsTransition = simpleTimeFormatter.isTransition(
+        testDate2,
+        testDate1,
+      );
 
       expect(actualLabelFirstTick, equals(tickLabel));
       expect(actualLabelSimpleTick, equals(tickLabel));
@@ -57,14 +62,14 @@ void main() {
     test('formatter with DateFormat formatting function', () {
       final expectedLabel = 'Nov 11, 1984';
 
-      final actualLabelFirstTick =
-          simpleTimeFormatterWithDateFormat.formatFirstTick(testDate1);
-      final actualLabelSimpleTick =
-          simpleTimeFormatterWithDateFormat.formatSimpleTick(testDate1);
-      final actualLabelTransitionTick =
-          simpleTimeFormatterWithDateFormat.formatTransitionTick(testDate1);
-      final actualBoolIsTransition =
-          simpleTimeFormatterWithDateFormat.isTransition(testDate2, testDate1);
+      final actualLabelFirstTick = simpleTimeFormatterWithDateFormat
+          .formatFirstTick(testDate1);
+      final actualLabelSimpleTick = simpleTimeFormatterWithDateFormat
+          .formatSimpleTick(testDate1);
+      final actualLabelTransitionTick = simpleTimeFormatterWithDateFormat
+          .formatTransitionTick(testDate1);
+      final actualBoolIsTransition = simpleTimeFormatterWithDateFormat
+          .isTransition(testDate2, testDate1);
 
       expect(actualLabelFirstTick, equals(expectedLabel));
       expect(actualLabelSimpleTick, equals(expectedLabel));

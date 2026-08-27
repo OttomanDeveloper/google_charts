@@ -14,6 +14,8 @@
 // limitations under the License.
 
 /// Bar chart with series legend example
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -25,7 +27,7 @@ class SimpleSeriesLegend extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  SimpleSeriesLegend(this.seriesList, {this.animate = false});
+  const SimpleSeriesLegend(this.seriesList, {super.key, this.animate = false});
 
   factory SimpleSeriesLegend.withSampleData() {
     return SimpleSeriesLegend(

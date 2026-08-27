@@ -32,16 +32,22 @@ class PieChart<D> extends BaseChart<D> {
   );
 
   PieChart({LayoutConfig? layoutConfig})
-      : super(layoutConfig: layoutConfig ?? _defaultLayoutConfig);
+    : super(layoutConfig: layoutConfig ?? _defaultLayoutConfig);
 
   @override
-  void drawInternal(List<MutableSeries<D>> seriesList,
-      {bool? skipAnimation, bool? skipLayout}) {
+  void drawInternal(
+    List<MutableSeries<D>> seriesList, {
+    bool? skipAnimation,
+    bool? skipLayout,
+  }) {
     if (seriesList.length > 1) {
       throw ArgumentError('PieChart can only render a single series');
     }
-    super.drawInternal(seriesList,
-        skipAnimation: skipAnimation, skipLayout: skipLayout);
+    super.drawInternal(
+      seriesList,
+      skipAnimation: skipAnimation,
+      skipLayout: skipLayout,
+    );
   }
 
   @override

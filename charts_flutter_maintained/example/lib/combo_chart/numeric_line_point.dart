@@ -20,6 +20,8 @@
 /// different color from the main series color. The line renderer supports
 /// drawing points with the "includePoints" option, but those points will share
 /// the same color as the line.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -31,7 +33,8 @@ class NumericComboLinePointChart extends StatelessWidget {
   final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  NumericComboLinePointChart(this.seriesList, {this.animate = false});
+  const NumericComboLinePointChart(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [LineChart] with sample data and no transition.
   factory NumericComboLinePointChart.withSampleData() {

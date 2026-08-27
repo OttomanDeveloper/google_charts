@@ -81,36 +81,36 @@ List<GalleryScaffold> buildGallery() {
       childBuilder: () => StackedBarTargetLineChart.withRandomData(),
     ),
     GalleryScaffold(
-      listTileIcon: Transform.rotate(
-          angle: 1.5708, child: Icon(Icons.insert_chart)),
+      listTileIcon:
+          Transform.rotate(angle: 1.5708, child: Icon(Icons.insert_chart)),
       title: 'Horizontal Bar Chart',
       subtitle: 'Horizontal bar chart with a single series',
       childBuilder: () => HorizontalBarChart.withRandomData(),
     ),
     GalleryScaffold(
-      listTileIcon: Transform.rotate(
-          angle: 1.5708, child: Icon(Icons.insert_chart)),
+      listTileIcon:
+          Transform.rotate(angle: 1.5708, child: Icon(Icons.insert_chart)),
       title: 'Stacked Horizontal Bar Chart',
       subtitle: 'Stacked horizontal bar chart with multiple series',
       childBuilder: () => StackedHorizontalBarChart.withRandomData(),
     ),
     GalleryScaffold(
-      listTileIcon: Transform.rotate(
-          angle: 1.5708, child: Icon(Icons.insert_chart)),
+      listTileIcon:
+          Transform.rotate(angle: 1.5708, child: Icon(Icons.insert_chart)),
       title: 'Horizontal Bar Chart with Bar Labels',
       subtitle: 'Horizontal bar chart with a single series and bar labels',
       childBuilder: () => HorizontalBarLabelChart.withRandomData(),
     ),
     GalleryScaffold(
-      listTileIcon: Transform.rotate(
-          angle: 1.5708, child: Icon(Icons.insert_chart)),
+      listTileIcon:
+          Transform.rotate(angle: 1.5708, child: Icon(Icons.insert_chart)),
       title: 'Horizontal Bar Chart with Custom Bar Labels',
       subtitle: 'Bar labels with customized styling',
       childBuilder: () => HorizontalBarLabelCustomChart.withRandomData(),
     ),
     GalleryScaffold(
-      listTileIcon: Transform.rotate(
-          angle: 1.5708, child: Icon(Icons.insert_chart)),
+      listTileIcon:
+          Transform.rotate(angle: 1.5708, child: Icon(Icons.insert_chart)),
       title: 'Vertical Bar Chart with Bar Labels',
       subtitle: 'Vertical bar chart with a single series and bar labels',
       childBuilder: () => VerticalBarLabelChart.withRandomData(),
@@ -140,8 +140,8 @@ List<GalleryScaffold> buildGallery() {
       childBuilder: () => PatternForwardHatchBarChart.withRandomData(),
     ),
     GalleryScaffold(
-      listTileIcon: Transform.rotate(
-          angle: 1.5708, child: Icon(Icons.insert_chart)),
+      listTileIcon:
+          Transform.rotate(angle: 1.5708, child: Icon(Icons.insert_chart)),
       title: 'Horizontal Pattern Forward Hatch Bar Chart',
       subtitle: 'Horizontal Pattern Forward Hatch Bar Chart',
       childBuilder: () =>
@@ -151,8 +151,7 @@ List<GalleryScaffold> buildGallery() {
       listTileIcon: Icon(Icons.insert_chart),
       title: 'Weight Pattern Bar Chart',
       subtitle: 'Grouped and stacked bar chart with a weight pattern',
-      childBuilder: () =>
-          GroupedStackedWeightPatternBarChart.withRandomData(),
+      childBuilder: () => GroupedStackedWeightPatternBarChart.withRandomData(),
     ),
     GalleryScaffold(
       listTileIcon: Icon(Icons.insert_chart),

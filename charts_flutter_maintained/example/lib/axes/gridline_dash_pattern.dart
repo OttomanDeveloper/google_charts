@@ -14,6 +14,8 @@
 // limitations under the License.
 
 /// Example of timeseries chart with gridlines that have a dash pattern.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -25,7 +27,7 @@ class GridlineDashPattern extends StatelessWidget {
   final List<charts.Series<dynamic, DateTime>> seriesList;
   final bool animate;
 
-  GridlineDashPattern(this.seriesList, {this.animate = false});
+  const GridlineDashPattern(this.seriesList, {super.key, this.animate = false});
 
   /// Creates a [TimeSeriesChart] with sample data and no transition.
   factory GridlineDashPattern.withSampleData() {

@@ -1,3 +1,12 @@
+# 2.0.0
+
+- **Breaking:** Requires Dart SDK `>=3.9.0 <4.0.0` and Flutter `>=3.35.0`.
+- Updated deprecated Flutter APIs for current `Color`, `TextScaler`, and
+  multi-window accessibility announcements.
+- Fixed text-direction semantics rebuild behavior and modernized adapter tests.
+- The Flutter link canvas remains experimental because the common Sankey renderer
+  is not yet a complete production implementation.
+
 # 1.0.0
 
 - **Breaking:** Minimum SDK constraint raised to Dart 3.0.0 / Flutter 3.10.0.

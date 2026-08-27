@@ -54,24 +54,27 @@ class UserManagedSelectionModel<D> {
   /// [selectedSeriesConfig] and [selectedDataConfig] is set to null because the
   /// [_model] is returned when [getModel] is called.
   UserManagedSelectionModel({common.SelectionModel<D>? model})
-      : _model = model ?? common.SelectionModel(),
-        selectedSeriesConfig = null,
-        selectedDataConfig = null;
+    : _model = model ?? common.SelectionModel(),
+      selectedSeriesConfig = null,
+      selectedDataConfig = null;
 
   /// Creates a [UserManagedSelectionModel] with configuration that is converted
   /// to a [SelectionModel] when [getModel] provides a processed series list.
-  UserManagedSelectionModel.fromConfig(
-      {List<String>? selectedSeriesConfig,
-      List<common.SeriesDatumConfig<D>>? selectedDataConfig})
-      : this.selectedSeriesConfig = selectedSeriesConfig,
-        this.selectedDataConfig = selectedDataConfig;
+  UserManagedSelectionModel.fromConfig({
+    this.selectedSeriesConfig,
+    this.selectedDataConfig,
+  });
 
   /// Gets the selection model. If the model is null, create one from
   /// configuration and the processed [seriesList] passed in.
   common.SelectionModel<D> getModel(
-      List<common.ImmutableSeries<D>> seriesList) {
+    List<common.ImmutableSeries<D>> seriesList,
+  ) {
     _model ??= common.SelectionModel<D>.fromConfig(
-        selectedDataConfig, selectedSeriesConfig, seriesList);
+      selectedDataConfig,
+      selectedSeriesConfig,
+      seriesList,
+    );
 
     return _model!;
   }

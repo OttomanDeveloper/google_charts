@@ -19,5 +19,5 @@ import 'package:charts_common_maintained/charts_common_maintained.dart'
 abstract class TappableLegend<T, D> {
   /// Delegates handling of legend entry clicks according to the configured
   /// [LegendTapHandling] strategy.
-  onLegendEntryTapUp(LegendEntry detail);
+  void onLegendEntryTapUp(LegendEntry detail);
 }

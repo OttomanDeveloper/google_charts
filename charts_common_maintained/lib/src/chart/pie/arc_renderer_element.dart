@@ -74,13 +74,17 @@ class ArcRendererElement<D> {
     );
   }
 
-  void updateAnimationPercent(ArcRendererElement<D> previous,
-      ArcRendererElement<D> target, double animationPercent) {
+  void updateAnimationPercent(
+    ArcRendererElement<D> previous,
+    ArcRendererElement<D> target,
+    double animationPercent,
+  ) {
     startAngle =
         ((target.startAngle - previous.startAngle) * animationPercent) +
-            previous.startAngle;
+        previous.startAngle;
 
-    endAngle = ((target.endAngle - previous.endAngle) * animationPercent) +
+    endAngle =
+        ((target.endAngle - previous.endAngle) * animationPercent) +
         previous.endAngle;
 
     color = getAnimatedColor(previous.color!, target.color!, animationPercent);
@@ -148,8 +152,11 @@ class AnimatedArc<D> {
       return _currentArc!;
     }
 
-    _currentArc!
-        .updateAnimationPercent(_previousArc!, _targetArc, animationPercent);
+    _currentArc!.updateAnimationPercent(
+      _previousArc!,
+      _targetArc,
+      animationPercent,
+    );
 
     return _currentArc!;
   }

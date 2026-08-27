@@ -14,6 +14,8 @@
 // limitations under the License.
 
 /// Bar chart example
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -25,7 +27,8 @@ class GroupedBarTargetLineChart extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  GroupedBarTargetLineChart(this.seriesList, {this.animate = false});
+  const GroupedBarTargetLineChart(this.seriesList,
+      {super.key, this.animate = false});
 
   factory GroupedBarTargetLineChart.withSampleData() {
     return GroupedBarTargetLineChart(

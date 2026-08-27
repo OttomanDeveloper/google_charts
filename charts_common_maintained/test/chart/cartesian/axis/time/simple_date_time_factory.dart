@@ -22,21 +22,30 @@ class SimpleDateTimeFactory implements DateTimeFactory {
 
   @override
   DateTime createDateTimeFromMilliSecondsSinceEpoch(
-          int millisecondsSinceEpoch) =>
-      DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch);
+    int millisecondsSinceEpoch,
+  ) => DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch);
 
   @override
-  DateTime createDateTime(int year,
-          [int month = 1,
-          int day = 1,
-          int hour = 0,
-          int minute = 0,
-          int second = 0,
-          int millisecond = 0,
-          int microsecond = 0]) =>
-      DateTime(
-          year, month, day, hour, minute, second, millisecond, microsecond);
+  DateTime createDateTime(
+    int year, [
+    int month = 1,
+    int day = 1,
+    int hour = 0,
+    int minute = 0,
+    int second = 0,
+    int millisecond = 0,
+    int microsecond = 0,
+  ]) => DateTime(
+    year,
+    month,
+    day,
+    hour,
+    minute,
+    second,
+    millisecond,
+    microsecond,
+  );
 
   @override
-  DateFormat createDateFormat(String pattern) => DateFormat(pattern);
+  DateFormat createDateFormat(String? pattern) => DateFormat(pattern);
 }

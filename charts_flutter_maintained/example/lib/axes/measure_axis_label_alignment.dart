@@ -14,6 +14,8 @@
 // limitations under the License.
 
 /// Custom Tick Label Alignment Example
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -27,7 +29,8 @@ class MeasureAxisLabelAlignment extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  MeasureAxisLabelAlignment(this.seriesList, {this.animate = false});
+  const MeasureAxisLabelAlignment(this.seriesList,
+      {super.key, this.animate = false});
 
   factory MeasureAxisLabelAlignment.withSampleData() {
     return MeasureAxisLabelAlignment(

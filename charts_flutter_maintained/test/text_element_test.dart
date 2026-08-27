@@ -23,8 +23,9 @@ import 'package:charts_flutter_maintained/src/text_element.dart';
 // Can't use Mockito annotations with BuildContext yet? Fake it.
 class FakeBuildContext extends Fake implements BuildContext {
   @override
-  T? dependOnInheritedWidgetOfExactType<T extends InheritedWidget>(
-      {Object? aspect}) {
+  T? dependOnInheritedWidgetOfExactType<T extends InheritedWidget>({
+    Object? aspect,
+  }) {
     return null;
   }
 }
@@ -33,7 +34,7 @@ class FakeBuildContext extends Fake implements BuildContext {
 class FakeGraphicsFactoryHelper extends Fake implements GraphicsFactoryHelper {
   double textScaleFactor;
 
-  FakeGraphicsFactoryHelper(this.textScaleFactor) {}
+  FakeGraphicsFactoryHelper(this.textScaleFactor);
 
   @override
   double getTextScaleFactorOf(BuildContext context) => textScaleFactor;

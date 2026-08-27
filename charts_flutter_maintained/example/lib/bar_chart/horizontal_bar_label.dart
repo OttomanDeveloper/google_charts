@@ -14,6 +14,8 @@
 // limitations under the License.
 
 /// Horizontal bar chart with bar label renderer example and hidden domain axis.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -25,7 +27,8 @@ class HorizontalBarLabelChart extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  HorizontalBarLabelChart(this.seriesList, {this.animate = false});
+  const HorizontalBarLabelChart(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [BarChart] with sample data and no transition.
   factory HorizontalBarLabelChart.withSampleData() {
@@ -88,8 +91,7 @@ class HorizontalBarLabelChart extends StatelessWidget {
       //          outsideLabelStyleSpec: charts.TextStyleSpec(...)),
       barRendererDecorator: charts.BarLabelDecorator<String>(),
       // Hide domain axis.
-      domainAxis:
-          charts.OrdinalAxisSpec(renderSpec: charts.NoneRenderSpec()),
+      domainAxis: charts.OrdinalAxisSpec(renderSpec: charts.NoneRenderSpec()),
     );
   }
 

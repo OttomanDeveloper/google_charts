@@ -17,6 +17,8 @@
 ///
 /// The second series of bars is rendered with a pattern by defining a
 /// fillPatternFn mapping function.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -28,7 +30,8 @@ class PatternForwardHatchBarChart extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  PatternForwardHatchBarChart(this.seriesList, {this.animate = false});
+  const PatternForwardHatchBarChart(this.seriesList,
+      {super.key, this.animate = false});
 
   factory PatternForwardHatchBarChart.withSampleData() {
     return PatternForwardHatchBarChart(

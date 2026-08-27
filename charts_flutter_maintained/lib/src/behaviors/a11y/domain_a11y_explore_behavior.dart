@@ -27,6 +27,7 @@ class DomainA11yExploreBehavior<D> extends ChartBehavior<D> {
   /// Returns a string for a11y vocalization from a list of series datum.
   final common.VocalizationCallback? vocalizationCallback;
 
+  @override
   final Set<GestureType> desiredGestures;
 
   /// The gesture that activates explore mode. Defaults to long press.
@@ -46,13 +47,14 @@ class DomainA11yExploreBehavior<D> extends ChartBehavior<D> {
   /// Optionally notify the OS when explore mode is disabled.
   final String? exploreModeDisabledAnnouncement;
 
-  DomainA11yExploreBehavior._internal(
-      {this.vocalizationCallback,
-      this.exploreModeTrigger,
-      required this.desiredGestures,
-      this.minimumWidth,
-      this.exploreModeEnabledAnnouncement,
-      this.exploreModeDisabledAnnouncement});
+  DomainA11yExploreBehavior._internal({
+    this.vocalizationCallback,
+    this.exploreModeTrigger,
+    required this.desiredGestures,
+    this.minimumWidth,
+    this.exploreModeEnabledAnnouncement,
+    this.exploreModeDisabledAnnouncement,
+  });
 
   factory DomainA11yExploreBehavior({
     common.VocalizationCallback? vocalizationCallback,
@@ -61,15 +63,15 @@ class DomainA11yExploreBehavior<D> extends ChartBehavior<D> {
     String? exploreModeEnabledAnnouncement,
     String? exploreModeDisabledAnnouncement,
   }) {
-    final desiredGestures = Set<GestureType>();
+    final desiredGestures = <GestureType>{};
     exploreModeTrigger ??= common.ExploreModeTrigger.pressHold;
 
     switch (exploreModeTrigger) {
       case common.ExploreModeTrigger.pressHold:
-        desiredGestures..add(GestureType.onLongPress);
+        desiredGestures.add(GestureType.onLongPress);
         break;
       case common.ExploreModeTrigger.tap:
-        desiredGestures..add(GestureType.onTap);
+        desiredGestures.add(GestureType.onTap);
         break;
     }
 
@@ -85,12 +87,13 @@ class DomainA11yExploreBehavior<D> extends ChartBehavior<D> {
 
   @override
   common.DomainA11yExploreBehavior<D> createCommonBehavior() {
-    return new common.DomainA11yExploreBehavior<D>(
-        vocalizationCallback: vocalizationCallback,
-        exploreModeTrigger: exploreModeTrigger,
-        minimumWidth: minimumWidth,
-        exploreModeEnabledAnnouncement: exploreModeEnabledAnnouncement,
-        exploreModeDisabledAnnouncement: exploreModeDisabledAnnouncement);
+    return common.DomainA11yExploreBehavior<D>(
+      vocalizationCallback: vocalizationCallback,
+      exploreModeTrigger: exploreModeTrigger,
+      minimumWidth: minimumWidth,
+      exploreModeEnabledAnnouncement: exploreModeEnabledAnnouncement,
+      exploreModeDisabledAnnouncement: exploreModeDisabledAnnouncement,
+    );
   }
 
   @override

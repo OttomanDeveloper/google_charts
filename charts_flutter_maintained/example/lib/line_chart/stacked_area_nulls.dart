@@ -27,6 +27,8 @@
 /// This will also result in an isolated point being rendered for the domain
 /// value 3 in the Mobile series, because that series also contains a null at
 /// domain 4.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -38,7 +40,8 @@ class StackedAreaNullsLineChart extends StatelessWidget {
   final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  StackedAreaNullsLineChart(this.seriesList, {this.animate = false});
+  const StackedAreaNullsLineChart(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [LineChart] with sample data and no transition.
   factory StackedAreaNullsLineChart.withSampleData() {

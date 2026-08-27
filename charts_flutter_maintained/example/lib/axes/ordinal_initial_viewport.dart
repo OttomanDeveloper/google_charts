@@ -21,6 +21,7 @@
 /// In this example, the series list has ordinal data from year 2014 to 2030,
 /// but we want to show starting at 2018 and we only want to show 4 values.
 /// We can do this by specifying an [OrdinalViewport] in [OrdinalAxisSpec].
+library;
 
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
@@ -33,7 +34,8 @@ class OrdinalInitialViewport extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  OrdinalInitialViewport(this.seriesList, {this.animate = false});
+  const OrdinalInitialViewport(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [BarChart] with sample data and no transition.
   factory OrdinalInitialViewport.withSampleData() {

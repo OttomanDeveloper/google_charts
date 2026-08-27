@@ -14,6 +14,8 @@
 // limitations under the License.
 
 /// Donut chart example. This is a simple pie chart with a hole in the middle.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -25,7 +27,7 @@ class DonutPieChart extends StatelessWidget {
   final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  DonutPieChart(this.seriesList, {this.animate = false});
+  const DonutPieChart(this.seriesList, {super.key, this.animate = false});
 
   /// Creates a [PieChart] with sample data and no transition.
   factory DonutPieChart.withSampleData() {

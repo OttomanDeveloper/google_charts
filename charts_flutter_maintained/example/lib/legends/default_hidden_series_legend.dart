@@ -14,6 +14,8 @@
 // limitations under the License.
 
 /// Bar chart with default hidden series legend example
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -25,7 +27,8 @@ class DefaultHiddenSeriesLegend extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  DefaultHiddenSeriesLegend(this.seriesList, {this.animate = false});
+  const DefaultHiddenSeriesLegend(this.seriesList,
+      {super.key, this.animate = false});
 
   factory DefaultHiddenSeriesLegend.withSampleData() {
     return DefaultHiddenSeriesLegend(

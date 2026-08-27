@@ -23,7 +23,8 @@ class SelectionLineHighlightCustomShape extends StatelessWidget {
   final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  SelectionLineHighlightCustomShape(this.seriesList, {this.animate = false});
+  const SelectionLineHighlightCustomShape(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [LineChart] with sample data and no transition.
   factory SelectionLineHighlightCustomShape.withSampleData() {

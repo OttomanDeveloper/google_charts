@@ -36,7 +36,7 @@ class SliderLine extends StatefulWidget {
   final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  SliderLine(this.seriesList, {this.animate = false});
+  const SliderLine(this.seriesList, {super.key, this.animate = false});
 
   /// Creates a [LineChart] with sample data and no transition.
   factory SliderLine.withSampleData() {
@@ -108,12 +108,13 @@ class _SliderCallbackState extends State<SliderLine> {
   Point<int>? _sliderPosition;
 
   // Handles callbacks when the user drags the slider.
-  _onSliderChange(Point<int> point, dynamic domain, String roleId,
+  void _onSliderChange(Point<int> point, dynamic domain, String roleId,
       charts.SliderListenerDragState dragState) {
     // Request a build.
     void rebuild(_) {
       setState(() {
-        _sliderDomainValue = (domain * 10).round() / 10;
+        final domainValue = domain as num;
+        _sliderDomainValue = (domainValue * 10).round() / 10;
         _sliderDragState = dragState.toString();
         _sliderPosition = point;
       });

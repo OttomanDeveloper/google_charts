@@ -38,14 +38,15 @@ class AxisTicks<D> extends Tick<D> implements Comparable<AxisTicks<D>> {
   double? _targetOpacity;
 
   AxisTicks(Tick<D> tick)
-      : // Set the initial target for a new animated tick.
-        _markedForRemoval = false,
-        _targetLocation = tick.locationPx,
-        super(
-            value: tick.value,
-            textElement: tick.textElement,
-            locationPx: tick.locationPx,
-            labelOffsetPx: tick.labelOffsetPx);
+    : // Set the initial target for a new animated tick.
+      _markedForRemoval = false,
+      _targetLocation = tick.locationPx,
+      super(
+        value: tick.value,
+        textElement: tick.textElement,
+        locationPx: tick.locationPx,
+        labelOffsetPx: tick.labelOffsetPx,
+      );
 
   bool get markedForRemoval => _markedForRemoval;
 
@@ -85,10 +86,16 @@ class AxisTicks<D> extends Tick<D> implements Comparable<AxisTicks<D>> {
       _currentLocation = _targetLocation;
       _currentOpacity = 1.0;
     } else {
-      _currentLocation =
-          _lerpDouble(_previousLocation, _targetLocation, animationPercent);
-      _currentOpacity =
-          _lerpDouble(_previousOpacity, _targetOpacity, animationPercent);
+      _currentLocation = _lerpDouble(
+        _previousLocation,
+        _targetLocation,
+        animationPercent,
+      );
+      _currentOpacity = _lerpDouble(
+        _previousOpacity,
+        _targetOpacity,
+        animationPercent,
+      );
     }
 
     locationPx = _currentLocation;

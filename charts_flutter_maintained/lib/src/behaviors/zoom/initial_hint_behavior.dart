@@ -16,7 +16,8 @@
 import 'package:flutter/widgets.dart' show AnimationController;
 
 import 'package:charts_common_maintained/charts_common_maintained.dart'
-    as common show BaseChart, ChartBehavior, InitialHintBehavior;
+    as common
+    show BaseChart, ChartBehavior, InitialHintBehavior;
 import 'package:meta/meta.dart' show immutable;
 
 import '../../base_chart_state.dart' show BaseChartState;
@@ -25,14 +26,18 @@ import '../chart_behavior.dart'
 
 @immutable
 class InitialHintBehavior<D> extends ChartBehavior<D> {
-  final desiredGestures = Set<GestureType>();
+  @override
+  final desiredGestures = <GestureType>{};
 
   final Duration? hintDuration;
   final double? maxHintTranslate;
   final double? maxHintScaleFactor;
 
-  InitialHintBehavior(
-      {this.hintDuration, this.maxHintTranslate, this.maxHintScaleFactor});
+  InitialHintBehavior({
+    this.hintDuration,
+    this.maxHintTranslate,
+    this.maxHintScaleFactor,
+  });
 
   @override
   common.InitialHintBehavior<D> createCommonBehavior() {
@@ -47,7 +52,7 @@ class InitialHintBehavior<D> extends ChartBehavior<D> {
     }
 
     if (maxHintScaleFactor != null) {
-      behavior.maxHintScaleFactor = maxHintScaleFactor!;
+      behavior.maxHintScaleFactor = maxHintScaleFactor;
     }
 
     return behavior;
@@ -78,6 +83,7 @@ class FlutterInitialHintBehavior<D> extends common.InitialHintBehavior<D>
 
   BaseChartState? _chartState;
 
+  @override
   set chartState(BaseChartState? chartState) {
     assert(chartState != null);
 
@@ -125,7 +131,7 @@ class FlutterInitialHintBehavior<D> extends common.InitialHintBehavior<D>
   }
 
   @override
-  removeFrom(common.BaseChart<D> chart) {
+  void removeFrom(common.BaseChart<D> chart) {
     _chartState!.disposeAnimationController(this);
     _hintAnimator = null;
     super.removeFrom(chart);

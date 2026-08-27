@@ -66,15 +66,16 @@ class PointRendererConfig<D> extends LayoutViewConfig
   /// 3) Final fallback is to use the point radiusPx for the datum.
   final double? boundsLineRadiusPx;
 
-  PointRendererConfig(
-      {this.customRendererId,
-      this.layoutPaintOrder = LayoutViewPaintOrder.point,
-      this.pointRendererDecorators = const [],
-      this.radiusPx = 3.5,
-      this.boundsLineRadiusPx,
-      this.strokeWidthPx = 0.0,
-      this.symbolRenderer,
-      this.customSymbolRenderers});
+  PointRendererConfig({
+    this.customRendererId,
+    this.layoutPaintOrder = LayoutViewPaintOrder.point,
+    this.pointRendererDecorators = const [],
+    this.radiusPx = 3.5,
+    this.boundsLineRadiusPx,
+    this.strokeWidthPx = 0.0,
+    this.symbolRenderer,
+    this.customSymbolRenderers,
+  });
 
   @override
   PointRenderer<D> build() {

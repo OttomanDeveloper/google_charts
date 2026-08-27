@@ -25,6 +25,8 @@
 /// shape between the domainLowerBound and domainUpperBound positions along the
 /// chart's domain axis. Point annotations are drawn on top of range
 /// annotations.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -36,7 +38,8 @@ class TimeSeriesSymbolAnnotationChart extends StatelessWidget {
   final List<charts.Series<dynamic, DateTime>> seriesList;
   final bool animate;
 
-  TimeSeriesSymbolAnnotationChart(this.seriesList, {this.animate = false});
+  const TimeSeriesSymbolAnnotationChart(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [TimeSeriesChart] with sample data and no transition.
   factory TimeSeriesSymbolAnnotationChart.withSampleData() {

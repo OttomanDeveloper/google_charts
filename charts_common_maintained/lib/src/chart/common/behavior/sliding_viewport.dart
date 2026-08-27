@@ -42,14 +42,17 @@ class SlidingViewport<D> implements ChartBehavior<D> {
     // of translate pixels.
     final domainAxis = _chart.domainAxis!;
     final selectedDatum = selectionModel.selectedDatum.first;
-    final domainLocation = domainAxis
-        .getLocation(selectedDatum.series.domainFn(selectedDatum.index))!;
+    final domainLocation = domainAxis.getLocation(
+      selectedDatum.series.domainFn(selectedDatum.index),
+    )!;
     final viewportCenter =
         domainAxis.range!.start + (domainAxis.range!.width / 2);
     final translatePx =
         domainAxis.viewportTranslatePx + (viewportCenter - domainLocation);
     domainAxis.setViewportSettings(
-        domainAxis.viewportScalingFactor, translatePx);
+      domainAxis.viewportScalingFactor,
+      translatePx,
+    );
 
     _chart.redraw();
   }

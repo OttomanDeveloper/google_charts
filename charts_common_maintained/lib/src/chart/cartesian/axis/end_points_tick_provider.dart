@@ -49,21 +49,30 @@ class EndPointsTickProvider<D> extends BaseTickProvider<D> {
       final start = _getStartValue(tickHint, scale);
       final end = _getEndValue(tickHint, scale);
 
-      final labels = formatter.format([start, end], formatterValueCache,
-          stepSize: scale.domainStepSize);
+      final labels = formatter.format(
+        [start, end],
+        formatterValueCache,
+        stepSize: scale.domainStepSize,
+      );
 
       if (start != null) {
-        ticks.add(Tick(
+        ticks.add(
+          Tick(
             value: start,
             textElement: graphicsFactory.createTextElement(labels[0]),
-            locationPx: scale[start]?.toDouble()));
+            locationPx: scale[start]?.toDouble(),
+          ),
+        );
       }
 
       if (end != null) {
-        ticks.add(Tick(
+        ticks.add(
+          Tick(
             value: end,
             textElement: graphicsFactory.createTextElement(labels[1]),
-            locationPx: scale[end]?.toDouble()));
+            locationPx: scale[end]?.toDouble(),
+          ),
+        );
       }
 
       // Allow draw strategy to decorate the ticks.

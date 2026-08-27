@@ -14,8 +14,9 @@
 // limitations under the License.
 
 import 'package:charts_common_maintained/charts_common_maintained.dart';
-import 'package:charts_common_maintained/src/data/graph.dart' as graph_structure
-    show indexNotRelevant, Node;
+import 'package:charts_common_maintained/src/data/graph.dart'
+    as graph_structure
+    show indexNotRelevant, Link, Node;
 import 'package:charts_common_maintained/src/data/sankey_graph.dart';
 import 'package:test/test.dart';
 
@@ -59,11 +60,7 @@ class MyLink {
 }
 
 SankeyGraph<MyNode, MyLink, String> mockLinearGraph() {
-  var myNodes = [
-    MyNode('Node 1', 4),
-    MyNode('Node 2', 5),
-    MyNode('Node 3', 6),
-  ];
+  var myNodes = [MyNode('Node 1', 4), MyNode('Node 2', 5), MyNode('Node 3', 6)];
 
   var myLinks = [
     MyLink('Link A', myNodes[0], myNodes[1], 1),
@@ -71,32 +68,40 @@ SankeyGraph<MyNode, MyLink, String> mockLinearGraph() {
   ];
 
   SankeyGraph<MyNode, MyLink, String> myGraph = SankeyGraph(
-      id: 'MyGraph',
-      nodes: myNodes,
-      links: myLinks,
-      nodeDomainFn: (node, _) => node.domainId,
-      linkDomainFn: (link, _) => link.domainId,
-      sourceFn: (link, _) => link.sourceNode,
-      targetFn: (link, _) => link.targetNode,
-      nodeMeasureFn: (node, _) => node.measure,
-      linkMeasureFn: (link, _) => link.measure,
-      secondaryLinkMeasureFn: (link, _) => 1);
+    id: 'MyGraph',
+    nodes: myNodes,
+    links: myLinks,
+    nodeDomainFn: (node, _) => node.domainId,
+    linkDomainFn: (link, _) => link.domainId,
+    sourceFn: (link, _) => link.sourceNode,
+    targetFn: (link, _) => link.targetNode,
+    nodeMeasureFn: (node, _) => node.measure,
+    linkMeasureFn: (link, _) => link.measure,
+    secondaryLinkMeasureFn: (link, _) => 1,
+  );
 
   return myGraph;
 }
 
-String nodeDomain(Graph<MyNode, MyLink, String> myGraph,
-        graph_structure.Node<MyNode, MyLink> node) =>
-    myGraph.nodeDomainFn(node, graph_structure.indexNotRelevant);
+String nodeDomain(
+  Graph<MyNode, MyLink, String> myGraph,
+  graph_structure.Node<MyNode, MyLink> node,
+) => myGraph.nodeDomainFn(node, graph_structure.indexNotRelevant);
 
 void main() {
   group('GraphTopologyFunctions', () {
     test('sort a simple graph', () {
       var myGraph = mockLinearGraph();
       var simpleSort = topologicalNodeSort(
-          myGraph.nodes, myGraph.nodeDomainFn, myGraph.linkDomainFn);
-      expect(simpleSort.map((node) => nodeDomain(myGraph, node)).toList(),
-          [nodeIds[1], nodeIds[2], nodeIds[3]]);
+        myGraph.nodes,
+        myGraph.nodeDomainFn,
+        myGraph.linkDomainFn,
+      );
+      expect(simpleSort.map((node) => nodeDomain(myGraph, node)).toList(), [
+        nodeIds[1],
+        nodeIds[2],
+        nodeIds[3],
+      ]);
     });
 
     test('returns one of many valid topological sorts for complex graph', () {
@@ -119,31 +124,41 @@ void main() {
       ];
 
       var myGraph = Graph<MyNode, MyLink, String>(
-          id: 'MyGraph',
-          nodes: myNodes,
-          links: myLinks,
-          nodeDomainFn: (node, _) => node.domainId,
-          linkDomainFn: (link, _) => link.domainId,
-          sourceFn: (link, _) => link.sourceNode,
-          targetFn: (link, _) => link.targetNode,
-          nodeMeasureFn: (node, _) => node.measure,
-          linkMeasureFn: (link, _) => link.measure);
+        id: 'MyGraph',
+        nodes: myNodes,
+        links: myLinks,
+        nodeDomainFn: (node, _) => node.domainId,
+        linkDomainFn: (link, _) => link.domainId,
+        sourceFn: (link, _) => link.sourceNode,
+        targetFn: (link, _) => link.targetNode,
+        nodeMeasureFn: (node, _) => node.measure,
+        linkMeasureFn: (link, _) => link.measure,
+      );
 
       var multiSort = topologicalNodeSort(
-          myGraph.nodes, myGraph.nodeDomainFn, myGraph.linkDomainFn);
+        myGraph.nodes,
+        myGraph.nodeDomainFn,
+        myGraph.linkDomainFn,
+      );
 
-      var firstIndex = multiSort
-          .indexWhere((node) => nodeDomain(myGraph, node) == nodeIds[1]);
-      var secondIndex = multiSort
-          .indexWhere((node) => nodeDomain(myGraph, node) == nodeIds[2]);
-      var thirdIndex = multiSort
-          .indexWhere((node) => nodeDomain(myGraph, node) == nodeIds[3]);
-      var fourthIndex = multiSort
-          .indexWhere((node) => nodeDomain(myGraph, node) == nodeIds[4]);
-      var fifthIndex = multiSort
-          .indexWhere((node) => nodeDomain(myGraph, node) == nodeIds[5]);
-      var sixthIndex = multiSort
-          .indexWhere((node) => nodeDomain(myGraph, node) == nodeIds[6]);
+      var firstIndex = multiSort.indexWhere(
+        (node) => nodeDomain(myGraph, node) == nodeIds[1],
+      );
+      var secondIndex = multiSort.indexWhere(
+        (node) => nodeDomain(myGraph, node) == nodeIds[2],
+      );
+      var thirdIndex = multiSort.indexWhere(
+        (node) => nodeDomain(myGraph, node) == nodeIds[3],
+      );
+      var fourthIndex = multiSort.indexWhere(
+        (node) => nodeDomain(myGraph, node) == nodeIds[4],
+      );
+      var fifthIndex = multiSort.indexWhere(
+        (node) => nodeDomain(myGraph, node) == nodeIds[5],
+      );
+      var sixthIndex = multiSort.indexWhere(
+        (node) => nodeDomain(myGraph, node) == nodeIds[6],
+      );
 
       expect([
         firstIndex > sixthIndex,
@@ -151,7 +166,7 @@ void main() {
         thirdIndex > sixthIndex,
         fourthIndex > thirdIndex,
         secondIndex > fourthIndex,
-        secondIndex > fifthIndex
+        secondIndex > fifthIndex,
       ], everyElement(isTrue));
     });
 
@@ -169,20 +184,25 @@ void main() {
       ];
 
       var myGraph = Graph<MyNode, MyLink, String>(
-          id: 'MyGraph',
-          nodes: myNodes,
-          links: myLinks,
-          nodeDomainFn: (node, _) => node.domainId,
-          linkDomainFn: (link, _) => link.domainId,
-          sourceFn: (link, _) => link.sourceNode,
-          targetFn: (link, _) => link.targetNode,
-          nodeMeasureFn: (node, _) => node.measure,
-          linkMeasureFn: (link, _) => link.measure);
+        id: 'MyGraph',
+        nodes: myNodes,
+        links: myLinks,
+        nodeDomainFn: (node, _) => node.domainId,
+        linkDomainFn: (link, _) => link.domainId,
+        sourceFn: (link, _) => link.sourceNode,
+        targetFn: (link, _) => link.targetNode,
+        nodeMeasureFn: (node, _) => node.measure,
+        linkMeasureFn: (link, _) => link.measure,
+      );
 
       expect(
-          () => topologicalNodeSort(
-              myGraph.nodes, myGraph.nodeDomainFn, myGraph.linkDomainFn),
-          throwsUnsupportedError);
+        () => topologicalNodeSort(
+          myGraph.nodes,
+          myGraph.nodeDomainFn,
+          myGraph.linkDomainFn,
+        ),
+        throwsUnsupportedError,
+      );
     });
 
     test('throws UnsupportedError when graph contains long cycle', () {
@@ -207,20 +227,25 @@ void main() {
       ];
 
       var myGraph = Graph<MyNode, MyLink, String>(
-          id: 'MyGraph',
-          nodes: myNodes,
-          links: myLinks,
-          nodeDomainFn: (node, _) => node.domainId,
-          linkDomainFn: (link, _) => link.domainId,
-          sourceFn: (link, _) => link.sourceNode,
-          targetFn: (link, _) => link.targetNode,
-          nodeMeasureFn: (node, _) => node.measure,
-          linkMeasureFn: (link, _) => link.measure);
+        id: 'MyGraph',
+        nodes: myNodes,
+        links: myLinks,
+        nodeDomainFn: (node, _) => node.domainId,
+        linkDomainFn: (link, _) => link.domainId,
+        sourceFn: (link, _) => link.sourceNode,
+        targetFn: (link, _) => link.targetNode,
+        nodeMeasureFn: (node, _) => node.measure,
+        linkMeasureFn: (link, _) => link.measure,
+      );
 
       expect(
-          () => topologicalNodeSort(
-              myGraph.nodes, myGraph.nodeDomainFn, myGraph.linkDomainFn),
-          throwsUnsupportedError);
+        () => topologicalNodeSort(
+          myGraph.nodes,
+          myGraph.nodeDomainFn,
+          myGraph.linkDomainFn,
+        ),
+        throwsUnsupportedError,
+      );
     });
   });
 
@@ -238,41 +263,63 @@ void main() {
       var myGraph = mockLinearGraph();
 
       expect(
-          myGraph.nodeDomainFn(
-              myGraph.nodes[0], graph_structure.indexNotRelevant),
-          'Node 1');
+        myGraph.nodeDomainFn(
+          myGraph.nodes[0],
+          graph_structure.indexNotRelevant,
+        ),
+        'Node 1',
+      );
       expect(
-          myGraph.nodeMeasureFn(
-              myGraph.nodes[0], graph_structure.indexNotRelevant),
-          4);
+        myGraph.nodeMeasureFn(
+          myGraph.nodes[0],
+          graph_structure.indexNotRelevant,
+        ),
+        4,
+      );
     });
 
     test('executes accessor functions on a given link', () {
       var myGraph = mockLinearGraph();
 
       expect(
-          myGraph.linkDomainFn(
-              myGraph.links[1], graph_structure.indexNotRelevant),
-          'Link B');
+        myGraph.linkDomainFn(
+          myGraph.links[1],
+          graph_structure.indexNotRelevant,
+        ),
+        'Link B',
+      );
       expect(
-          myGraph.linkMeasureFn(
-              myGraph.links[0], graph_structure.indexNotRelevant),
-          1);
+        myGraph.linkMeasureFn(
+          myGraph.links[0],
+          graph_structure.indexNotRelevant,
+        ),
+        1,
+      );
     });
 
     test('converts generic link into sankey graph link', () {
       var myGraph = mockLinearGraph();
 
       expect(
-          myGraph.nodeDomainFn(
-              myGraph.links[0].source, graph_structure.indexNotRelevant),
-          myGraph.nodeDomainFn(
-              myGraph.nodes[0], graph_structure.indexNotRelevant));
+        myGraph.nodeDomainFn(
+          myGraph.links[0].source,
+          graph_structure.indexNotRelevant,
+        ),
+        myGraph.nodeDomainFn(
+          myGraph.nodes[0],
+          graph_structure.indexNotRelevant,
+        ),
+      );
       expect(
-          myGraph.nodeDomainFn(
-              myGraph.links[0].target, graph_structure.indexNotRelevant),
-          myGraph.nodeDomainFn(
-              myGraph.nodes[1], graph_structure.indexNotRelevant));
+        myGraph.nodeDomainFn(
+          myGraph.links[0].target,
+          graph_structure.indexNotRelevant,
+        ),
+        myGraph.nodeDomainFn(
+          myGraph.nodes[1],
+          graph_structure.indexNotRelevant,
+        ),
+      );
       expect(myGraph.links[0].secondaryLinkMeasure, 1);
     });
 
@@ -281,44 +328,55 @@ void main() {
 
       expect(myGraph.nodes[0].incomingLinks.length, 0);
       expect(
-          myGraph.linkDomainFn(myGraph.nodes[0].outgoingLinks[0],
-              graph_structure.indexNotRelevant),
-          myGraph.linkDomainFn(
-              myGraph.links[0], graph_structure.indexNotRelevant));
+        myGraph.linkDomainFn(
+          myGraph.nodes[0].outgoingLinks[0],
+          graph_structure.indexNotRelevant,
+        ),
+        myGraph.linkDomainFn(
+          myGraph.links[0],
+          graph_structure.indexNotRelevant,
+        ),
+      );
       expect(
-          myGraph.linkDomainFn(myGraph.nodes[1].incomingLinks[0],
-              graph_structure.indexNotRelevant),
-          myGraph.linkDomainFn(
-              myGraph.links[0], graph_structure.indexNotRelevant));
+        myGraph.linkDomainFn(
+          myGraph.nodes[1].incomingLinks[0],
+          graph_structure.indexNotRelevant,
+        ),
+        myGraph.linkDomainFn(
+          myGraph.links[0],
+          graph_structure.indexNotRelevant,
+        ),
+      );
       expect(
-          myGraph.linkDomainFn(myGraph.nodes[1].outgoingLinks[0],
-              graph_structure.indexNotRelevant),
-          myGraph.linkDomainFn(
-              myGraph.links[1], graph_structure.indexNotRelevant));
+        myGraph.linkDomainFn(
+          myGraph.nodes[1].outgoingLinks[0],
+          graph_structure.indexNotRelevant,
+        ),
+        myGraph.linkDomainFn(
+          myGraph.links[1],
+          graph_structure.indexNotRelevant,
+        ),
+      );
       expect(myGraph.nodes[2].outgoingLinks.length, 0);
     });
 
     test('converts sankey graph data to series data', () {
-      var myNodes = [
-        MyNode('Node 1', 4),
-        MyNode('Node 2', 5),
-      ];
+      var myNodes = [MyNode('Node 1', 4), MyNode('Node 2', 5)];
 
-      var myLinks = [
-        MyLink('Link A', myNodes[0], myNodes[1], 1),
-      ];
+      var myLinks = [MyLink('Link A', myNodes[0], myNodes[1], 1)];
 
       var myGraph = SankeyGraph<MyNode, MyLink, String>(
-          id: 'MyGraph',
-          nodes: myNodes,
-          links: myLinks,
-          nodeDomainFn: (node, _) => node.domainId,
-          linkDomainFn: (link, _) => link.domainId,
-          sourceFn: (link, _) => link.sourceNode,
-          targetFn: (link, _) => link.targetNode,
-          nodeMeasureFn: (node, _) => node.measure,
-          linkMeasureFn: (link, _) => link.measure,
-          secondaryLinkMeasureFn: (link, _) => 1);
+        id: 'MyGraph',
+        nodes: myNodes,
+        links: myLinks,
+        nodeDomainFn: (node, _) => node.domainId,
+        linkDomainFn: (link, _) => link.domainId,
+        sourceFn: (link, _) => link.sourceNode,
+        targetFn: (link, _) => link.targetNode,
+        nodeMeasureFn: (node, _) => node.measure,
+        linkMeasureFn: (link, _) => link.measure,
+        secondaryLinkMeasureFn: (link, _) => 1,
+      );
 
       List<Series<dynamic, String>> mySeriesList = myGraph.toSeriesList();
 
@@ -329,25 +387,45 @@ void main() {
       expect(mySeriesList[1].measureFn(0), 1);
       expect(mySeriesList[1].id, 'MyGraph_links');
       expect(
-          myGraph.nodeDomainFn(
-              mySeriesList[1].data[0].source, graph_structure.indexNotRelevant),
-          'Node 1');
+        myGraph.nodeDomainFn(
+          mySeriesList[1].data[0].source
+              as graph_structure.Node<MyNode, MyLink>,
+          graph_structure.indexNotRelevant,
+        ),
+        'Node 1',
+      );
       expect(
-          myGraph.nodeDomainFn(
-              mySeriesList[1].data[0].target, graph_structure.indexNotRelevant),
-          'Node 2');
+        myGraph.nodeDomainFn(
+          mySeriesList[1].data[0].target
+              as graph_structure.Node<MyNode, MyLink>,
+          graph_structure.indexNotRelevant,
+        ),
+        'Node 2',
+      );
       expect(mySeriesList[0].data[0].incomingLinks.length, 0);
       expect(mySeriesList[1].data[0].secondaryLinkMeasure, 1);
       expect(
-          myGraph.linkDomainFn(mySeriesList[0].data[0].outgoingLinks[0],
-              graph_structure.indexNotRelevant),
-          myGraph.linkDomainFn(
-              myGraph.links[0], graph_structure.indexNotRelevant));
+        myGraph.linkDomainFn(
+          mySeriesList[0].data[0].outgoingLinks[0]
+              as graph_structure.Link<MyNode, MyLink>,
+          graph_structure.indexNotRelevant,
+        ),
+        myGraph.linkDomainFn(
+          myGraph.links[0],
+          graph_structure.indexNotRelevant,
+        ),
+      );
       expect(
-          myGraph.linkDomainFn(mySeriesList[0].data[1].incomingLinks[0],
-              graph_structure.indexNotRelevant),
-          myGraph.linkDomainFn(
-              myGraph.links[0], graph_structure.indexNotRelevant));
+        myGraph.linkDomainFn(
+          mySeriesList[0].data[1].incomingLinks[0]
+              as graph_structure.Link<MyNode, MyLink>,
+          graph_structure.indexNotRelevant,
+        ),
+        myGraph.linkDomainFn(
+          myGraph.links[0],
+          graph_structure.indexNotRelevant,
+        ),
+      );
       expect(mySeriesList[0].data[1].outgoingLinks.length, 0);
     });
   });

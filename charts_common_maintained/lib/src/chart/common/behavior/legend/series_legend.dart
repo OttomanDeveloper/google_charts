@@ -49,12 +49,12 @@ class SeriesLegend<D> extends Legend<D> {
     MeasureFormatter? secondaryMeasureFormatter,
     bool? showMeasures,
     LegendDefaultMeasure? legendDefaultMeasure,
-    TextStyleSpec? entryTextStyle,
+    super.entryTextStyle,
   }) : super(
-            selectionModelType: selectionModelType ?? SelectionModelType.info,
-            legendEntryGenerator:
-                legendEntryGenerator ?? PerSeriesLegendEntryGenerator(),
-            entryTextStyle: entryTextStyle) {
+         selectionModelType: selectionModelType ?? SelectionModelType.info,
+         legendEntryGenerator:
+             legendEntryGenerator ?? PerSeriesLegendEntryGenerator(),
+       ) {
     // Calling the setters will automatically use non-null default values.
     this.showMeasures = showMeasures;
     this.legendDefaultMeasure = legendDefaultMeasure;

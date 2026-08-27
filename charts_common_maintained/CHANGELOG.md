@@ -1,3 +1,12 @@
+# 2.0.0
+
+- **Breaking:** Requires Dart SDK `>=3.9.0 <4.0.0`.
+- Modernized the package for Dart 3 null safety and current analyzer rules.
+- Fixed iterator, typed-registry, nullable accessor, selection listener, and
+  Sunburst listener-detachment issues.
+- Added and migrated regression coverage for chart renderers, axes, behaviors,
+  annotations, graph data, and time formatting.
+
 # 1.0.0
 
 - **Breaking:** Minimum SDK constraint raised to Dart 3.0.0.

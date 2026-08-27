@@ -33,15 +33,41 @@ import 'package:charts_common_maintained/src/chart/cartesian/axis/numeric_extent
 import 'package:charts_common_maintained/src/chart/cartesian/axis/time/date_time_extents.dart';
 import 'package:charts_common_maintained/src/chart/cartesian/axis/time/date_time_scale.dart';
 import 'package:charts_common_maintained/src/chart/cartesian/axis/time/date_time_tick_formatter.dart';
-import 'package:meta/meta.dart' show required;
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import 'time/simple_date_time_factory.dart' show SimpleDateTimeFactory;
 
-class MockDateTimeScale extends Mock implements DateTimeScale {}
+class MockDateTimeScale extends Mock implements DateTimeScale {
+  DateTimeExtents? viewportDomainValue;
+  double domainStepSizeValue = double.infinity;
 
-class MockNumericScale extends Mock implements NumericScale {}
+  @override
+  DateTimeExtents get viewportDomain => viewportDomainValue!;
+
+  @override
+  int get rangeWidth => 1000;
+
+  @override
+  double get domainStepSize => domainStepSizeValue;
+
+  @override
+  num operator [](DateTime domainValue) => 0;
+}
+
+class MockNumericScale extends Mock implements NumericScale {
+  NumericExtents? viewportDomainValue;
+  double domainStepSizeValue = double.infinity;
+
+  @override
+  NumericExtents get viewportDomain => viewportDomainValue!;
+
+  @override
+  int get rangeWidth => 1000;
+
+  @override
+  double get domainStepSize => domainStepSizeValue;
+}
 
 class MockOrdinalScale extends Mock implements SimpleOrdinalScale {}
 
@@ -57,28 +83,38 @@ class FakeDrawStrategy<D> extends BaseTickDrawStrategy<D> {
   final int alternateRenderingAfterTickCount;
 
   FakeDrawStrategy(
-      this.collidesAfterTickCount, this.alternateRenderingAfterTickCount)
-      : super(null, FakeGraphicsFactory());
+    this.collidesAfterTickCount,
+    this.alternateRenderingAfterTickCount,
+  ) : super(MockChartContext(), FakeGraphicsFactory());
 
   @override
-  CollisionReport<D> collides(List<Tick<D>> ticks, _) {
-    final ticksCollide = ticks.length >= collidesAfterTickCount;
-    final alternateTicksUsed = ticks.length >= alternateRenderingAfterTickCount;
+  CollisionReport<D> collides(
+    List<Tick<D>>? ticks,
+    AxisOrientation? orientation,
+  ) {
+    final tickList = ticks ?? <Tick<D>>[];
+    final ticksCollide = tickList.length >= collidesAfterTickCount;
+    final alternateTicksUsed =
+        tickList.length >= alternateRenderingAfterTickCount;
 
     return CollisionReport(
-        ticksCollide: ticksCollide,
-        ticks: ticks,
-        alternateTicksUsed: alternateTicksUsed);
+      ticksCollide: ticksCollide,
+      ticks: tickList,
+      alternateTicksUsed: alternateTicksUsed,
+    );
   }
 
   @override
-  void draw(ChartCanvas canvas, Tick<D> tick,
-      {@required AxisOrientation orientation,
-      @required Rectangle<int> axisBounds,
-      @required Rectangle<int> drawAreaBounds,
-      @required bool isFirst,
-      @required bool isLast,
-      bool collision = false}) {}
+  void draw(
+    ChartCanvas canvas,
+    Tick<D> tick, {
+    required AxisOrientation orientation,
+    required Rectangle<int> axisBounds,
+    required Rectangle<int> drawAreaBounds,
+    required bool isFirst,
+    required bool isLast,
+    bool collision = false,
+  }) {}
 }
 
 /// A fake [GraphicsFactory] that returns [MockTextStyle] and [MockTextElement].
@@ -99,13 +135,19 @@ class MockTextElement extends Mock implements TextElement {}
 
 class MockLinePaint extends Mock implements LineStyle {}
 
-class MockChartContext extends Mock implements ChartContext {}
+class MockChartContext extends Mock implements ChartContext {
+  @override
+  bool get chartContainerIsRtl => false;
+
+  @override
+  bool get isRtl => false;
+}
 
 void main() {
   const dateTimeFactory = SimpleDateTimeFactory();
-  FakeGraphicsFactory graphicsFactory;
+  late FakeGraphicsFactory graphicsFactory;
   EndPointsTickProvider tickProvider;
-  ChartContext context;
+  late ChartContext context;
 
   setUp(() {
     graphicsFactory = FakeGraphicsFactory();
@@ -118,19 +160,22 @@ void main() {
     tickProvider = EndPointsTickProvider<DateTime>();
 
     final drawStrategy = FakeDrawStrategy<DateTime>(10, 10);
-    when(scale.viewportDomain).thenReturn(DateTimeExtents(
-        start: DateTime(2018, 8, 1), end: DateTime(2018, 8, 11)));
-    when(scale.rangeWidth).thenReturn(1000);
-    when(scale.domainStepSize).thenReturn(1000.0);
+    scale.viewportDomainValue = DateTimeExtents(
+      start: DateTime(2018, 8, 1),
+      end: DateTime(2018, 8, 11),
+    );
+
+    scale.domainStepSizeValue = 1000.0;
 
     final ticks = tickProvider.getTicks(
-        context: context,
-        graphicsFactory: graphicsFactory,
-        scale: scale,
-        formatter: formatter,
-        formatterValueCache: <DateTime, String>{},
-        tickDrawStrategy: drawStrategy,
-        orientation: null);
+      context: context,
+      graphicsFactory: graphicsFactory,
+      scale: scale,
+      formatter: formatter,
+      formatterValueCache: <DateTime, String>{},
+      tickDrawStrategy: drawStrategy,
+      orientation: null,
+    );
 
     expect(ticks, hasLength(2));
     expect(ticks[0].value, equals(DateTime(2018, 8, 1)));
@@ -143,18 +188,19 @@ void main() {
     tickProvider = EndPointsTickProvider<num>();
 
     final drawStrategy = FakeDrawStrategy<num>(10, 10);
-    when(scale.viewportDomain).thenReturn(NumericExtents(10.0, 70.0));
-    when(scale.rangeWidth).thenReturn(1000);
-    when(scale.domainStepSize).thenReturn(1000.0);
+    scale.viewportDomainValue = NumericExtents(10.0, 70.0);
+
+    scale.domainStepSizeValue = 1000.0;
 
     final ticks = tickProvider.getTicks(
-        context: context,
-        graphicsFactory: graphicsFactory,
-        scale: scale,
-        formatter: formatter,
-        formatterValueCache: <num, String>{},
-        tickDrawStrategy: drawStrategy,
-        orientation: null);
+      context: context,
+      graphicsFactory: graphicsFactory,
+      scale: scale,
+      formatter: formatter,
+      formatterValueCache: <num, String>{},
+      tickDrawStrategy: drawStrategy,
+      orientation: null,
+    );
 
     expect(ticks, hasLength(2));
     expect(ticks[0].value, equals(10));
@@ -173,13 +219,14 @@ void main() {
     final drawStrategy = FakeDrawStrategy<String>(10, 10);
 
     final ticks = tickProvider.getTicks(
-        context: context,
-        graphicsFactory: graphicsFactory,
-        scale: scale,
-        formatter: formatter,
-        formatterValueCache: <String, String>{},
-        tickDrawStrategy: drawStrategy,
-        orientation: null);
+      context: context,
+      graphicsFactory: graphicsFactory,
+      scale: scale,
+      formatter: formatter,
+      formatterValueCache: <String, String>{},
+      tickDrawStrategy: drawStrategy,
+      orientation: null,
+    );
 
     expect(ticks, hasLength(2));
     expect(ticks[0].value, equals('A'));
@@ -192,22 +239,23 @@ void main() {
     tickProvider = EndPointsTickProvider<DateTime>();
 
     final drawStrategy = FakeDrawStrategy<DateTime>(10, 10);
-    when(scale.viewportDomain).thenReturn(DateTimeExtents(
-        start: DateTime(2018, 8, 1), end: DateTime(2018, 8, 11)));
-    when(scale.rangeWidth).thenReturn(1000);
+    scale.viewportDomainValue = DateTimeExtents(
+      start: DateTime(2018, 8, 1),
+      end: DateTime(2018, 8, 11),
+    );
 
     // An un-configured axis has no domain step size, and its scale defaults to
     // infinity.
-    when(scale.domainStepSize).thenReturn(double.infinity);
 
     final ticks = tickProvider.getTicks(
-        context: context,
-        graphicsFactory: graphicsFactory,
-        scale: scale,
-        formatter: formatter,
-        formatterValueCache: <DateTime, String>{},
-        tickDrawStrategy: drawStrategy,
-        orientation: null);
+      context: context,
+      graphicsFactory: graphicsFactory,
+      scale: scale,
+      formatter: formatter,
+      formatterValueCache: <DateTime, String>{},
+      tickDrawStrategy: drawStrategy,
+      orientation: null,
+    );
 
     expect(ticks, hasLength(0));
   });
@@ -218,21 +266,20 @@ void main() {
     tickProvider = EndPointsTickProvider<num>();
 
     final drawStrategy = FakeDrawStrategy<num>(10, 10);
-    when(scale.viewportDomain).thenReturn(NumericExtents(10.0, 70.0));
-    when(scale.rangeWidth).thenReturn(1000);
+    scale.viewportDomainValue = NumericExtents(10.0, 70.0);
 
     // An un-configured axis has no domain step size, and its scale defaults to
     // infinity.
-    when(scale.domainStepSize).thenReturn(double.infinity);
 
     final ticks = tickProvider.getTicks(
-        context: context,
-        graphicsFactory: graphicsFactory,
-        scale: scale,
-        formatter: formatter,
-        formatterValueCache: <num, String>{},
-        tickDrawStrategy: drawStrategy,
-        orientation: null);
+      context: context,
+      graphicsFactory: graphicsFactory,
+      scale: scale,
+      formatter: formatter,
+      formatterValueCache: <num, String>{},
+      tickDrawStrategy: drawStrategy,
+      orientation: null,
+    );
 
     expect(ticks, hasLength(0));
   });

@@ -38,13 +38,15 @@ class OrdinalTickProvider extends BaseTickProvider<String> {
     bool viewportExtensionEnabled = false,
     TickHint<String>? tickHint,
   }) {
-    return createTicks(scale.domain.domains,
-        context: context,
-        graphicsFactory: graphicsFactory,
-        scale: scale,
-        formatter: formatter,
-        formatterValueCache: formatterValueCache,
-        tickDrawStrategy: tickDrawStrategy);
+    return createTicks(
+      scale.domain.domains,
+      context: context,
+      graphicsFactory: graphicsFactory,
+      scale: scale,
+      formatter: formatter,
+      formatterValueCache: formatterValueCache,
+      tickDrawStrategy: tickDrawStrategy,
+    );
   }
 
   @override

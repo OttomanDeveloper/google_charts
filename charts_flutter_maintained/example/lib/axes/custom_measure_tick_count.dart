@@ -18,6 +18,8 @@
 /// The tick count can be set by setting the [desiredMinTickCount] and
 /// [desiredMaxTickCount] for automatically adjusted tick counts (based on
 /// how 'nice' the ticks are) or [desiredTickCount] for a fixed tick count.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -29,7 +31,8 @@ class CustomMeasureTickCount extends StatelessWidget {
   final List<charts.Series<dynamic, DateTime>> seriesList;
   final bool animate;
 
-  CustomMeasureTickCount(this.seriesList, {this.animate = false});
+  const CustomMeasureTickCount(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [TimeSeriesChart] with sample data and no transition.
   factory CustomMeasureTickCount.withSampleData() {

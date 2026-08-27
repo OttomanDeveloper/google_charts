@@ -74,30 +74,30 @@ class TreeMapRendererElement<D> {
     required this.series,
     required this.domain,
     required this.measure,
-  })  : _boundingRect = boundingRect,
-        _area = area;
+  }) : _boundingRect = boundingRect,
+       _area = area;
 
   /// Clones a new renderer element with the same properties.
   TreeMapRendererElement<D> clone() => TreeMapRendererElement(
-        boundingRect: _boundingRect == null
-            ? null
-            : Rectangle.fromPoints(
-                boundingRect.topLeft, boundingRect.bottomRight),
-        area: area,
-        fillPattern: fillPattern,
-        fillColor:
-            fillColor == null ? null : Color.fromOther(color: fillColor!),
-        patternColor:
-            patternColor == null ? null : Color.fromOther(color: patternColor!),
-        strokeColor:
-            strokeColor == null ? null : Color.fromOther(color: strokeColor!),
-        strokeWidthPx: strokeWidthPx,
-        isLeaf: isLeaf,
-        index: index,
-        series: series,
-        domain: domain,
-        measure: measure,
-      );
+    boundingRect: _boundingRect == null
+        ? null
+        : Rectangle.fromPoints(boundingRect.topLeft, boundingRect.bottomRight),
+    area: area,
+    fillPattern: fillPattern,
+    fillColor: fillColor == null ? null : Color.fromOther(color: fillColor!),
+    patternColor: patternColor == null
+        ? null
+        : Color.fromOther(color: patternColor!),
+    strokeColor: strokeColor == null
+        ? null
+        : Color.fromOther(color: strokeColor!),
+    strokeWidthPx: strokeWidthPx,
+    isLeaf: isLeaf,
+    index: index,
+    series: series,
+    domain: domain,
+    measure: measure,
+  );
 
   /// Refreshes paint properties by invoking series accessor functions again.
   ///
@@ -116,8 +116,11 @@ class TreeMapRendererElement<D> {
   /// Updates properties of this element based on [animationPercent].
   ///
   /// Used when animation is in progress.
-  void updateAnimationPercent(TreeMapRendererElement<D> previous,
-      TreeMapRendererElement<D> target, double animationPercent) {
+  void updateAnimationPercent(
+    TreeMapRendererElement<D> previous,
+    TreeMapRendererElement<D> target,
+    double animationPercent,
+  ) {
     // TODO: Implements animation based on animationPercent.
     boundingRect = target.boundingRect;
     area = target.area;

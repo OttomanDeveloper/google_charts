@@ -51,6 +51,7 @@ import 'chart_behavior.dart' show ChartBehavior, GestureType;
 /// removed.
 @immutable
 class SelectNearest<D> extends ChartBehavior<D> {
+  @override
   final Set<GestureType> desiredGestures;
 
   final common.SelectionModelType selectionModelType;
@@ -60,39 +61,43 @@ class SelectNearest<D> extends ChartBehavior<D> {
   final bool selectClosestSeries;
   final int? maximumDomainDistancePx;
 
-  SelectNearest._internal(
-      {required this.selectionModelType,
-      this.selectionMode = common.SelectionMode.expandToDomain,
-      this.selectAcrossAllDrawAreaComponents = false,
-      this.selectClosestSeries = true,
-      required this.eventTrigger,
-      required this.desiredGestures,
-      this.maximumDomainDistancePx});
+  SelectNearest._internal({
+    required this.selectionModelType,
+    this.selectionMode = common.SelectionMode.expandToDomain,
+    this.selectAcrossAllDrawAreaComponents = false,
+    this.selectClosestSeries = true,
+    required this.eventTrigger,
+    required this.desiredGestures,
+    this.maximumDomainDistancePx,
+  });
 
-  factory SelectNearest(
-      {common.SelectionModelType selectionModelType =
-          common.SelectionModelType.info,
-      common.SelectionMode selectionMode = common.SelectionMode.expandToDomain,
-      bool selectAcrossAllDrawAreaComponents = false,
-      bool selectClosestSeries = true,
-      common.SelectionTrigger eventTrigger = common.SelectionTrigger.tap,
-      int? maximumDomainDistancePx}) {
+  factory SelectNearest({
+    common.SelectionModelType selectionModelType =
+        common.SelectionModelType.info,
+    common.SelectionMode selectionMode = common.SelectionMode.expandToDomain,
+    bool selectAcrossAllDrawAreaComponents = false,
+    bool selectClosestSeries = true,
+    common.SelectionTrigger eventTrigger = common.SelectionTrigger.tap,
+    int? maximumDomainDistancePx,
+  }) {
     return SelectNearest._internal(
-        selectionModelType: selectionModelType,
-        selectionMode: selectionMode,
-        selectAcrossAllDrawAreaComponents: selectAcrossAllDrawAreaComponents,
-        selectClosestSeries: selectClosestSeries,
-        eventTrigger: eventTrigger,
-        desiredGestures: SelectNearest._getDesiredGestures(eventTrigger),
-        maximumDomainDistancePx: maximumDomainDistancePx);
+      selectionModelType: selectionModelType,
+      selectionMode: selectionMode,
+      selectAcrossAllDrawAreaComponents: selectAcrossAllDrawAreaComponents,
+      selectClosestSeries: selectClosestSeries,
+      eventTrigger: eventTrigger,
+      desiredGestures: SelectNearest._getDesiredGestures(eventTrigger),
+      maximumDomainDistancePx: maximumDomainDistancePx,
+    );
   }
 
   static Set<GestureType> _getDesiredGestures(
-      common.SelectionTrigger eventTrigger) {
-    final desiredGestures = Set<GestureType>();
+    common.SelectionTrigger eventTrigger,
+  ) {
+    final desiredGestures = <GestureType>{};
     switch (eventTrigger) {
       case common.SelectionTrigger.tap:
-        desiredGestures..add(GestureType.onTap);
+        desiredGestures.add(GestureType.onTap);
         break;
       case common.SelectionTrigger.tapAndDrag:
         desiredGestures
@@ -107,8 +112,7 @@ class SelectNearest<D> extends ChartBehavior<D> {
           ..add(GestureType.onDrag);
         break;
       case common.SelectionTrigger.hover:
-      default:
-        desiredGestures..add(GestureType.onHover);
+        desiredGestures.add(GestureType.onHover);
         break;
     }
     return desiredGestures;
@@ -116,12 +120,13 @@ class SelectNearest<D> extends ChartBehavior<D> {
 
   @override
   common.SelectNearest<D> createCommonBehavior() {
-    return new common.SelectNearest<D>(
-        selectionModelType: selectionModelType,
-        eventTrigger: eventTrigger,
-        selectionMode: selectionMode,
-        selectClosestSeries: selectClosestSeries,
-        maximumDomainDistancePx: maximumDomainDistancePx);
+    return common.SelectNearest<D>(
+      selectionModelType: selectionModelType,
+      eventTrigger: eventTrigger,
+      selectionMode: selectionMode,
+      selectClosestSeries: selectClosestSeries,
+      maximumDomainDistancePx: maximumDomainDistancePx,
+    );
   }
 
   @override

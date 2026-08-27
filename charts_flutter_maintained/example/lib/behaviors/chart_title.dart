@@ -27,7 +27,7 @@ class ChartTitleLine extends StatelessWidget {
   final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  ChartTitleLine(this.seriesList, {this.animate = false});
+  const ChartTitleLine(this.seriesList, {super.key, this.animate = false});
 
   /// Creates a [LineChart] with sample data and no transition.
   factory ChartTitleLine.withSampleData() {

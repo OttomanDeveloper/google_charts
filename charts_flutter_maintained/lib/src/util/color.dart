@@ -14,7 +14,8 @@
 // limitations under the License.
 
 import 'package:charts_common_maintained/charts_common_maintained.dart'
-    as common show Color;
+    as common
+    show Color;
 import 'dart:ui' as ui;
 
 class ColorUtil {
@@ -24,11 +25,19 @@ class ColorUtil {
 
   static ui.Color toDartColorWithOpacity(common.Color color, double opacity) {
     return ui.Color.fromARGB(
-        (color.a * opacity).round(), color.r, color.g, color.b);
+      (color.a * opacity).round(),
+      color.r,
+      color.g,
+      color.b,
+    );
   }
 
   static common.Color fromDartColor(ui.Color color) {
     return common.Color(
-        r: color.red, g: color.green, b: color.blue, a: color.alpha);
+      r: (color.r * 255).round(),
+      g: (color.g * 255).round(),
+      b: (color.b * 255).round(),
+      a: (color.a * 255).round(),
+    );
   }
 }

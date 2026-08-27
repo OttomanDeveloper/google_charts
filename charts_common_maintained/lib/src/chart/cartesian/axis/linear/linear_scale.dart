@@ -60,15 +60,16 @@ class LinearScale implements NumericScale {
   bool _scaleReady = false;
 
   LinearScale()
-      : _domainInfo = LinearScaleDomainInfo(),
-        _viewportSettings = LinearScaleViewportSettings();
+    : _domainInfo = LinearScaleDomainInfo(),
+      _viewportSettings = LinearScaleViewportSettings();
 
   LinearScale._copy(LinearScale other)
-      : _domainInfo = LinearScaleDomainInfo.copy(other._domainInfo),
-        _viewportSettings =
-            LinearScaleViewportSettings.copy(other._viewportSettings),
-        rangeBandConfig = other.rangeBandConfig,
-        stepSizeConfig = other.stepSizeConfig;
+    : _domainInfo = LinearScaleDomainInfo.copy(other._domainInfo),
+      _viewportSettings = LinearScaleViewportSettings.copy(
+        other._viewportSettings,
+      ),
+      rangeBandConfig = other.rangeBandConfig,
+      stepSizeConfig = other.stepSizeConfig;
 
   @override
   LinearScale copy() => LinearScale._copy(this);
@@ -225,22 +226,33 @@ class LinearScale implements NumericScale {
     // Now that the viewport's scalingFactor is setup, set it on the scale
     // function.
     _scaleFunction.updateScaleFactor(
-        _viewportSettings, _domainInfo, rangeBandConfig, stepSizeConfig);
+      _viewportSettings,
+      _domainInfo,
+      rangeBandConfig,
+      stepSizeConfig,
+    );
 
     // If the viewport's domainExtent are set, then we can calculate the
     // viewport's translate now that the scaleFactor has been loaded.
     // The viewport also has a chance to correct the translate.
     _viewportSettings.updateViewportTranslatePx(
-        _domainInfo, _scaleFunction.scalingFactor);
+      _domainInfo,
+      _scaleFunction.scalingFactor,
+    );
     // Now that the viewport has a chance to update the translate, set it on the
     // scale function.
     _scaleFunction.updateTranslateAndRangeBand(
-        _viewportSettings, _domainInfo, rangeBandConfig);
+      _viewportSettings,
+      _domainInfo,
+      rangeBandConfig,
+    );
 
     // Now that the viewport's scaleFactor and translate have been updated
     // set the effective domainExtent of the viewport.
     _viewportSettings.updateViewportDomainExtent(
-        _domainInfo, _scaleFunction.scalingFactor);
+      _domainInfo,
+      _scaleFunction.scalingFactor,
+    );
 
     // Cached computed values are updated.
     _scaleReady = true;

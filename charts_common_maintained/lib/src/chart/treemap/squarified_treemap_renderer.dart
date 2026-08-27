@@ -26,12 +26,15 @@ class SquarifiedTreeMapRenderer<D> extends BaseTreeMapRenderer<D> {
   /// Golden ratio.
   final _ratio = .5 * (1 + math.sqrt(5));
 
-  SquarifiedTreeMapRenderer(
-      {String? rendererId, TreeMapRendererConfig<D>? config})
-      : super(
-            config: config ??
-                TreeMapRendererConfig(tileType: TreeMapTileType.squarified),
-            rendererId: rendererId ?? BaseTreeMapRenderer.defaultRendererId);
+  SquarifiedTreeMapRenderer({
+    String? rendererId,
+    TreeMapRendererConfig<D>? config,
+  }) : super(
+         config:
+             config ??
+             TreeMapRendererConfig(tileType: TreeMapTileType.squarified),
+         rendererId: rendererId ?? BaseTreeMapRenderer.defaultRendererId,
+       );
 
   /// Uses squarification as the tiling algorithm for this tree map.
   ///
@@ -133,8 +136,10 @@ class _SquarifyRatioAnalyzer {
     final sqWidth = _square(width);
     final sqArea = _square(_layoutArea);
     return sqArea > 0
-        ? math.max(sqWidth * rMax * _ratio / sqArea,
-            sqArea / (sqWidth * rMin * _ratio))
+        ? math.max(
+            sqWidth * rMax * _ratio / sqArea,
+            sqArea / (sqWidth * rMin * _ratio),
+          )
         : double.infinity;
   }
 

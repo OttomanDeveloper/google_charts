@@ -34,11 +34,11 @@ class SankeyRendererConfig<D> extends LayoutViewConfig
   /// The order to paint this renderer on the canvas.
   final int layoutPaintOrder;
 
-  SankeyRendererConfig(
-      {this.customRendererId,
-      this.layoutPaintOrder = LayoutViewPaintOrder.sankey,
-      SymbolRenderer? symbolRenderer})
-      : symbolRenderer = symbolRenderer ?? RectSymbolRenderer();
+  SankeyRendererConfig({
+    this.customRendererId,
+    this.layoutPaintOrder = LayoutViewPaintOrder.sankey,
+    SymbolRenderer? symbolRenderer,
+  }) : symbolRenderer = symbolRenderer ?? RectSymbolRenderer();
 
   @override
   SankeyRenderer<D> build() {

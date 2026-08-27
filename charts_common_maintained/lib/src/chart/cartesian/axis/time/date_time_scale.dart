@@ -30,8 +30,8 @@ class DateTimeScale extends MutableScale<DateTime> {
   DateTimeScale(this.dateTimeFactory) : _linearScale = LinearScale();
 
   DateTimeScale._copy(DateTimeScale other)
-      : dateTimeFactory = other.dateTimeFactory,
-        _linearScale = other._linearScale.copy();
+    : dateTimeFactory = other.dateTimeFactory,
+      _linearScale = other._linearScale.copy();
 
   @override
   num operator [](DateTime domainValue) =>
@@ -40,7 +40,8 @@ class DateTimeScale extends MutableScale<DateTime> {
   @override
   DateTime reverse(double pixelLocation) =>
       dateTimeFactory.createDateTimeFromMilliSecondsSinceEpoch(
-          _linearScale.reverse(pixelLocation).round());
+        _linearScale.reverse(pixelLocation).round(),
+      );
 
   @override
   void resetDomain() {
@@ -83,16 +84,20 @@ class DateTimeScale extends MutableScale<DateTime> {
   DateTimeExtents get viewportDomain {
     final extents = _linearScale.viewportDomain;
     return DateTimeExtents(
-        start: dateTimeFactory
-            .createDateTimeFromMilliSecondsSinceEpoch(extents.min.toInt()),
-        end: dateTimeFactory
-            .createDateTimeFromMilliSecondsSinceEpoch(extents.max.toInt()));
+      start: dateTimeFactory.createDateTimeFromMilliSecondsSinceEpoch(
+        extents.min.toInt(),
+      ),
+      end: dateTimeFactory.createDateTimeFromMilliSecondsSinceEpoch(
+        extents.max.toInt(),
+      ),
+    );
   }
 
   set viewportDomain(DateTimeExtents extents) {
     _linearScale.viewportDomain = NumericExtents(
-        extents.start.millisecondsSinceEpoch,
-        extents.end.millisecondsSinceEpoch);
+      extents.start.millisecondsSinceEpoch,
+      extents.end.millisecondsSinceEpoch,
+    );
   }
 
   @override

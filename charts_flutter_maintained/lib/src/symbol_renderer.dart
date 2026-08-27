@@ -15,7 +15,8 @@
 
 import 'dart:math' show Rectangle;
 import 'package:charts_common_maintained/charts_common_maintained.dart'
-    as common show ChartCanvas, Color, FillPatternType, SymbolRenderer;
+    as common
+    show ChartCanvas, Color, FillPatternType, SymbolRenderer;
 import 'package:flutter/widgets.dart';
 import 'chart_canvas.dart' show ChartCanvas;
 import 'graphics_factory.dart' show GraphicsFactory;
@@ -31,17 +32,27 @@ class SymbolRendererCanvas implements SymbolRendererBuilder {
   SymbolRendererCanvas(this.commonSymbolRenderer, this.dashPattern);
 
   @override
-  Widget build(BuildContext context,
-      {Color? color, required Size size, bool enabled = true}) {
+  Widget build(
+    BuildContext context, {
+    Color? color,
+    required Size size,
+    bool enabled = true,
+  }) {
     if (color != null && !enabled) {
-      color = color.withOpacity(0.26);
+      color = color.withValues(alpha: 0.26);
     }
 
     return SizedBox.fromSize(
-        size: size,
-        child: CustomPaint(
-            painter: _SymbolCustomPaint(
-                context, commonSymbolRenderer, color, dashPattern)));
+      size: size,
+      child: CustomPaint(
+        painter: _SymbolCustomPaint(
+          context,
+          commonSymbolRenderer,
+          color,
+          dashPattern,
+        ),
+      ),
+    );
   }
 }
 
@@ -57,16 +68,23 @@ abstract class CustomSymbolRenderer extends common.SymbolRenderer
   /// Must override this method to build the custom Widget with the given color
   /// as
   @override
-  Widget build(BuildContext context,
-      {Color? color, required Size size, bool enabled = true});
+  Widget build(
+    BuildContext context, {
+    Color? color,
+    required Size size,
+    bool enabled = true,
+  });
 
   @override
-  void paint(common.ChartCanvas canvas, Rectangle<num> bounds,
-      {List<int>? dashPattern,
-      common.Color? fillColor,
-      common.FillPatternType? fillPattern,
-      common.Color? strokeColor,
-      double? strokeWidthPx}) {
+  void paint(
+    common.ChartCanvas canvas,
+    Rectangle<num> bounds, {
+    List<int>? dashPattern,
+    common.Color? fillColor,
+    common.FillPatternType? fillPattern,
+    common.Color? strokeColor,
+    double? strokeWidthPx,
+  }) {
     // Intentionally ignored (never called).
   }
 
@@ -79,8 +97,12 @@ abstract class CustomSymbolRenderer extends common.SymbolRenderer
 /// Common interface for [CustomSymbolRenderer] & [SymbolRendererCanvas] for
 /// convenience for [LegendEntryLayout].
 abstract class SymbolRendererBuilder {
-  Widget build(BuildContext context,
-      {Color? color, required Size size, bool enabled});
+  Widget build(
+    BuildContext context, {
+    Color? color,
+    required Size size,
+    bool enabled,
+  });
 }
 
 /// The Widget which fulfills the guts of [SymbolRendererCanvas] actually
@@ -92,21 +114,35 @@ class _SymbolCustomPaint extends CustomPainter {
   final List<int>? dashPattern;
 
   _SymbolCustomPaint(
-      this.context, this.symbolRenderer, this.color, this.dashPattern);
+    this.context,
+    this.symbolRenderer,
+    this.color,
+    this.dashPattern,
+  );
 
   @override
   void paint(Canvas canvas, Size size) {
-    final bounds =
-        Rectangle<num>(0, 0, size.width.toInt(), size.height.toInt());
+    final bounds = Rectangle<num>(
+      0,
+      0,
+      size.width.toInt(),
+      size.height.toInt(),
+    );
     final commonColor = color == null
         ? null
         : common.Color(
-            r: color!.red, g: color!.green, b: color!.blue, a: color!.alpha);
+            r: (color!.r * 255).round(),
+            g: (color!.g * 255).round(),
+            b: (color!.b * 255).round(),
+            a: (color!.a * 255).round(),
+          );
     symbolRenderer.paint(
-        ChartCanvas(canvas, GraphicsFactory(context)), bounds,
-        fillColor: commonColor,
-        strokeColor: commonColor,
-        dashPattern: dashPattern);
+      ChartCanvas(canvas, GraphicsFactory(context)),
+      bounds,
+      fillColor: commonColor,
+      strokeColor: commonColor,
+      dashPattern: dashPattern,
+    );
   }
 
   @override

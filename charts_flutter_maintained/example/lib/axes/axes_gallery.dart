@@ -47,13 +47,12 @@ List<GalleryScaffold> buildGallery() {
       childBuilder: () => BarChartWithSecondaryAxisOnly.withRandomData(),
     ),
     GalleryScaffold(
-      listTileIcon: Transform.rotate(
-          angle: 1.5708, child: Icon(Icons.insert_chart)),
+      listTileIcon:
+          Transform.rotate(angle: 1.5708, child: Icon(Icons.insert_chart)),
       title: 'Horizontal bar chart with Secondary Measure Axis',
       subtitle:
           'Horizontal Bar chart with a series using secondary measure axis',
-      childBuilder: () =>
-          HorizontalBarChartWithSecondaryAxis.withRandomData(),
+      childBuilder: () => HorizontalBarChartWithSecondaryAxis.withRandomData(),
     ),
     GalleryScaffold(
       listTileIcon: Icon(Icons.insert_chart),

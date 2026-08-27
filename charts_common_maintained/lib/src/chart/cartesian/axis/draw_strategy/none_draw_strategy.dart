@@ -41,9 +41,13 @@ class NoneRenderSpec<D> extends RenderSpec<D> {
 
   @override
   TickDrawStrategy<D> createDrawStrategy(
-          ChartContext context, GraphicsFactory graphicFactory) =>
-      NoneDrawStrategy<D>(context, graphicFactory,
-          axisLineStyleSpec: axisLineStyle);
+    ChartContext context,
+    GraphicsFactory graphicFactory,
+  ) => NoneDrawStrategy<D>(
+    context,
+    graphicFactory,
+    axisLineStyleSpec: axisLineStyle,
+  );
 
   @override
   bool operator ==(Object other) =>
@@ -61,21 +65,28 @@ class NoneDrawStrategy<D> implements TickDrawStrategy<D> {
     ChartContext chartContext,
     GraphicsFactory graphicsFactory, {
     LineStyleSpec? axisLineStyleSpec,
-  })  : axisLineStyle = StyleFactory.style
-            .createAxisLineStyle(graphicsFactory, axisLineStyleSpec),
-        noneTextStyle = graphicsFactory.createTextPaint()
-          ..color = Color.transparent
-          ..fontSize = 0;
+  }) : axisLineStyle = StyleFactory.style.createAxisLineStyle(
+         graphicsFactory,
+         axisLineStyleSpec,
+       ),
+       noneTextStyle = graphicsFactory.createTextPaint()
+         ..color = Color.transparent
+         ..fontSize = 0;
 
   @override
-  void updateTickWidth(List<Tick<D>> ticks, int maxWidth, int maxHeight,
-      AxisOrientation orientation,
-      {bool collision = false}) {}
+  void updateTickWidth(
+    List<Tick<D>> ticks,
+    int maxWidth,
+    int maxHeight,
+    AxisOrientation orientation, {
+    bool collision = false,
+  }) {}
 
   @override
   CollisionReport<D> collides(
-          List<Tick<D>>? ticks, AxisOrientation? orientation) =>
-      CollisionReport(ticksCollide: false, ticks: ticks);
+    List<Tick<D>>? ticks,
+    AxisOrientation? orientation,
+  ) => CollisionReport(ticksCollide: false, ticks: ticks);
 
   @override
   void decorateTicks(List<Tick<D>> ticks) {
@@ -87,8 +98,11 @@ class NoneDrawStrategy<D> implements TickDrawStrategy<D> {
   }
 
   @override
-  void drawAxisLine(ChartCanvas canvas, AxisOrientation orientation,
-      Rectangle<int> axisBounds) {
+  void drawAxisLine(
+    ChartCanvas canvas,
+    AxisOrientation orientation,
+    Rectangle<int> axisBounds,
+  ) {
     Point<num> start;
     Point<num> end;
 
@@ -122,25 +136,34 @@ class NoneDrawStrategy<D> implements TickDrawStrategy<D> {
   }
 
   @override
-  void draw(ChartCanvas canvas, Tick<D> tick,
-      {required AxisOrientation orientation,
-      required Rectangle<int> axisBounds,
-      required Rectangle<int> drawAreaBounds,
-      required bool isFirst,
-      required bool isLast,
-      bool collision = false}) {}
+  void draw(
+    ChartCanvas canvas,
+    Tick<D> tick, {
+    required AxisOrientation orientation,
+    required Rectangle<int> axisBounds,
+    required Rectangle<int> drawAreaBounds,
+    required bool isFirst,
+    required bool isLast,
+    bool collision = false,
+  }) {}
 
   @override
   ViewMeasuredSizes measureHorizontallyDrawnTicks(
-      List<Tick<D>> ticks, int maxWidth, int maxHeight,
-      {bool collision = false}) {
+    List<Tick<D>> ticks,
+    int maxWidth,
+    int maxHeight, {
+    bool collision = false,
+  }) {
     return ViewMeasuredSizes(preferredWidth: 0, preferredHeight: 0);
   }
 
   @override
   ViewMeasuredSizes measureVerticallyDrawnTicks(
-      List<Tick<D>> ticks, int maxWidth, int maxHeight,
-      {bool collision = false}) {
+    List<Tick<D>> ticks,
+    int maxWidth,
+    int maxHeight, {
+    bool collision = false,
+  }) {
     return ViewMeasuredSizes(preferredWidth: 0, preferredHeight: 0);
   }
 }

@@ -25,7 +25,8 @@ class GalleryScaffold extends StatefulWidget {
   final String subtitle;
   final GalleryWidgetBuilder childBuilder;
 
-  GalleryScaffold({
+  const GalleryScaffold({
+    super.key,
     required this.listTileIcon,
     required this.title,
     required this.subtitle,

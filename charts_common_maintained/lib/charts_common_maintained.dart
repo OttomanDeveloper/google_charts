@@ -308,6 +308,7 @@ export 'src/data/series.dart' show AttributeKey, Series, TypedAccessorFn;
 export 'src/data/tree.dart' show Tree, TreeNode;
 export 'src/data/graph.dart' show Graph;
 export 'src/data/sankey_graph.dart' show SankeyGraph;
+
 //
 // DO NOT ADD ANYTHING BELOW THIS. IT WILL BREAK OPENSOURCE.
 //

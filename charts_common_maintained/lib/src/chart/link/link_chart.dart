@@ -23,7 +23,7 @@ import 'package:charts_common_maintained/src/chart/link/link_renderer.dart';
 
 class LinkChart<D> extends BaseChart<D> {
   LinkChart({LayoutConfig? layoutConfig})
-      : super(layoutConfig: layoutConfig ?? LayoutConfig());
+    : super(layoutConfig: layoutConfig ?? LayoutConfig());
 
   /// Uses LinkRenderer as the default renderer.
   @override

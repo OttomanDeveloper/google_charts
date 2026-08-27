@@ -14,6 +14,8 @@
 // limitations under the License.
 
 /// Spark Bar Example
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -26,7 +28,7 @@ class SparkBar extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  SparkBar(this.seriesList, {this.animate = false});
+  const SparkBar(this.seriesList, {super.key, this.animate = false});
 
   factory SparkBar.withSampleData() {
     return SparkBar(

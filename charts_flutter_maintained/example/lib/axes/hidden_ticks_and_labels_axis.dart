@@ -14,6 +14,8 @@
 // limitations under the License.
 
 /// No Axis Example
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -26,7 +28,8 @@ class HiddenTicksAndLabelsAxis extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  HiddenTicksAndLabelsAxis(this.seriesList, {this.animate = false});
+  const HiddenTicksAndLabelsAxis(this.seriesList,
+      {super.key, this.animate = false});
 
   factory HiddenTicksAndLabelsAxis.withSampleData() {
     return HiddenTicksAndLabelsAxis(

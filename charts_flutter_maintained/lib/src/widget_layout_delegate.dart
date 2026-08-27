@@ -17,7 +17,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:charts_common_maintained/charts_common_maintained.dart'
-    as common show BehaviorPosition, InsideJustification, OutsideJustification;
+    as common
+    show BehaviorPosition, InsideJustification, OutsideJustification;
 
 import 'behaviors/chart_behavior.dart' show BuildableBehavior;
 
@@ -27,7 +28,7 @@ class WidgetLayoutDelegate extends MultiChildLayoutDelegate {
   final String chartID;
 
   /// Directionality of the widget.
-  final isRTL;
+  final bool isRTL;
 
   /// ID and [BuildableBehavior] of the widgets for calculating offset.
   final Map<String, BuildableBehavior> idAndBehavior;
@@ -47,15 +48,18 @@ class WidgetLayoutDelegate extends MultiChildLayoutDelegate {
     var chartOffset = Offset.zero;
 
     // Measure the first buildable behavior.
-    final behaviorID =
-        idAndBehavior.keys.isNotEmpty ? idAndBehavior.keys.first : null;
+    final behaviorID = idAndBehavior.keys.isNotEmpty
+        ? idAndBehavior.keys.first
+        : null;
     var behaviorSize = Size.zero;
     if (behaviorID != null) {
       if (hasChild(behaviorID)) {
-        final leftPosition =
-            isRTL ? common.BehaviorPosition.end : common.BehaviorPosition.start;
-        final rightPosition =
-            isRTL ? common.BehaviorPosition.start : common.BehaviorPosition.end;
+        final leftPosition = isRTL
+            ? common.BehaviorPosition.end
+            : common.BehaviorPosition.start;
+        final rightPosition = isRTL
+            ? common.BehaviorPosition.start
+            : common.BehaviorPosition.end;
         final behaviorPosition = idAndBehavior[behaviorID]!.position;
 
         behaviorSize = layoutChild(behaviorID, BoxConstraints.loose(size));
@@ -85,8 +89,12 @@ class WidgetLayoutDelegate extends MultiChildLayoutDelegate {
       // TODO: Unable to relayout with new smaller width.
       // In the delegate, all children are required to have layout called
       // exactly once.
-      final behaviorOffset = _getBehaviorOffset(idAndBehavior[behaviorID]!,
-          behaviorSize: behaviorSize, chartSize: chartSize, isRTL: isRTL);
+      final behaviorOffset = _getBehaviorOffset(
+        idAndBehavior[behaviorID]!,
+        behaviorSize: behaviorSize,
+        chartSize: chartSize,
+        isRTL: isRTL,
+      );
 
       positionChild(behaviorID, behaviorOffset);
     }
@@ -100,10 +108,12 @@ class WidgetLayoutDelegate extends MultiChildLayoutDelegate {
   }
 
   // Calculate buildable behavior's offset.
-  Offset _getBehaviorOffset(BuildableBehavior behavior,
-      {required Size behaviorSize,
-      required Size chartSize,
-      required bool isRTL}) {
+  Offset _getBehaviorOffset(
+    BuildableBehavior behavior, {
+    required Size behaviorSize,
+    required Size chartSize,
+    required bool isRTL,
+  }) {
     late Offset behaviorOffset;
 
     final behaviorPosition = behavior.position;
@@ -116,38 +126,50 @@ class WidgetLayoutDelegate extends MultiChildLayoutDelegate {
           ? chartSize.height
           : 0.0;
 
-      final horizontalJustification =
-          getOutsideJustification(outsideJustification, isRTL);
+      final horizontalJustification = getOutsideJustification(
+        outsideJustification,
+        isRTL,
+      );
 
       behaviorOffset = switch (horizontalJustification) {
-        _HorizontalJustification.leftDrawArea =>
-          Offset(behavior.drawAreaBounds!.left.toDouble(), heightOffset),
+        _HorizontalJustification.leftDrawArea => Offset(
+          behavior.drawAreaBounds!.left.toDouble(),
+          heightOffset,
+        ),
         _HorizontalJustification.left => Offset(0.0, heightOffset),
         _HorizontalJustification.rightDrawArea => Offset(
-            behavior.drawAreaBounds!.right - behaviorSize.width, heightOffset),
-        _HorizontalJustification.right =>
-          Offset(chartSize.width - behaviorSize.width, heightOffset),
+          behavior.drawAreaBounds!.right - behaviorSize.width,
+          heightOffset,
+        ),
+        _HorizontalJustification.right => Offset(
+          chartSize.width - behaviorSize.width,
+          heightOffset,
+        ),
       };
     } else if (behaviorPosition == common.BehaviorPosition.start ||
         behaviorPosition == common.BehaviorPosition.end) {
       final widthOffset =
           (isRTL && behaviorPosition == common.BehaviorPosition.start) ||
-                  (!isRTL && behaviorPosition == common.BehaviorPosition.end)
-              ? chartSize.width
-              : 0.0;
+              (!isRTL && behaviorPosition == common.BehaviorPosition.end)
+          ? chartSize.width
+          : 0.0;
 
       behaviorOffset = switch (outsideJustification) {
         common.OutsideJustification.startDrawArea ||
-        common.OutsideJustification.middleDrawArea =>
-          Offset(widthOffset, behavior.drawAreaBounds!.top.toDouble()),
+        common.OutsideJustification.middleDrawArea => Offset(
+          widthOffset,
+          behavior.drawAreaBounds!.top.toDouble(),
+        ),
         common.OutsideJustification.start ||
-        common.OutsideJustification.middle =>
-          Offset(widthOffset, 0.0),
+        common.OutsideJustification.middle => Offset(widthOffset, 0.0),
         common.OutsideJustification.endDrawArea => Offset(
-            widthOffset,
-            behavior.drawAreaBounds!.bottom - behaviorSize.height),
-        common.OutsideJustification.end =>
-          Offset(widthOffset, chartSize.height - behaviorSize.height),
+          widthOffset,
+          behavior.drawAreaBounds!.bottom - behaviorSize.height,
+        ),
+        common.OutsideJustification.end => Offset(
+          widthOffset,
+          chartSize.height - behaviorSize.height,
+        ),
       };
     } else if (behaviorPosition == common.BehaviorPosition.inside) {
       var rightOffset = Offset(chartSize.width - behaviorSize.width, 0.0);
@@ -155,8 +177,7 @@ class WidgetLayoutDelegate extends MultiChildLayoutDelegate {
       behaviorOffset = switch (insideJustification) {
         common.InsideJustification.topStart =>
           isRTL ? rightOffset : Offset.zero,
-        common.InsideJustification.topEnd =>
-          isRTL ? Offset.zero : rightOffset,
+        common.InsideJustification.topEnd => isRTL ? Offset.zero : rightOffset,
       };
     }
 
@@ -164,30 +185,23 @@ class WidgetLayoutDelegate extends MultiChildLayoutDelegate {
   }
 
   _HorizontalJustification getOutsideJustification(
-          common.OutsideJustification justification, bool isRTL) =>
-      switch (justification) {
-        common.OutsideJustification.startDrawArea ||
-        common.OutsideJustification.middleDrawArea =>
-          isRTL
-              ? _HorizontalJustification.rightDrawArea
-              : _HorizontalJustification.leftDrawArea,
-        common.OutsideJustification.start ||
-        common.OutsideJustification.middle =>
-          isRTL
-              ? _HorizontalJustification.right
-              : _HorizontalJustification.left,
-        common.OutsideJustification.endDrawArea => isRTL
-            ? _HorizontalJustification.leftDrawArea
-            : _HorizontalJustification.rightDrawArea,
-        common.OutsideJustification.end => isRTL
-            ? _HorizontalJustification.left
-            : _HorizontalJustification.right,
-      };
+    common.OutsideJustification justification,
+    bool isRTL,
+  ) => switch (justification) {
+    common.OutsideJustification.startDrawArea ||
+    common.OutsideJustification.middleDrawArea =>
+      isRTL
+          ? _HorizontalJustification.rightDrawArea
+          : _HorizontalJustification.leftDrawArea,
+    common.OutsideJustification.start || common.OutsideJustification.middle =>
+      isRTL ? _HorizontalJustification.right : _HorizontalJustification.left,
+    common.OutsideJustification.endDrawArea =>
+      isRTL
+          ? _HorizontalJustification.leftDrawArea
+          : _HorizontalJustification.rightDrawArea,
+    common.OutsideJustification.end =>
+      isRTL ? _HorizontalJustification.left : _HorizontalJustification.right,
+  };
 }
 
-enum _HorizontalJustification {
-  leftDrawArea,
-  left,
-  rightDrawArea,
-  right,
-}
+enum _HorizontalJustification { leftDrawArea, left, rightDrawArea, right }

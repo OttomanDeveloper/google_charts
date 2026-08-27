@@ -67,14 +67,7 @@ abstract class TextElement {
   }
 }
 
-enum TextDirection {
-  ltr,
-  rtl,
-  center,
-}
+enum TextDirection { ltr, rtl, center }
 
 /// The strategy to use if a [TextElement] exceeds the [maxWidth].
-enum MaxWidthStrategy {
-  truncate,
-  ellipsize,
-}
+enum MaxWidthStrategy { truncate, ellipsize }

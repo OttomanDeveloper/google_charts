@@ -26,7 +26,7 @@ Material Design charting library for [Flutter](https://flutter.dev), supporting 
 - Combo charts (line + bar)
 - Sunburst charts
 - Treemap charts
-- Sankey charts
+- Sankey charts (the common Sankey renderer and Flutter link canvas remain experimental)
 
 ## Getting Started
 
@@ -34,15 +34,15 @@ Add the dependency to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  charts_flutter_maintained: ^1.0.0
+  charts_flutter_maintained: ^2.0.0
 ```
 
 See the [example app](charts_flutter_maintained/example) for usage of all chart types.
 
 ## Requirements
 
-- Dart SDK >= 3.0.0
-- Flutter >= 3.10.0 (for charts_flutter_maintained)
+- Dart SDK >= 3.9.0
+- Flutter >= 3.35.0 (for charts_flutter_maintained)
 
 ## Contributing
 

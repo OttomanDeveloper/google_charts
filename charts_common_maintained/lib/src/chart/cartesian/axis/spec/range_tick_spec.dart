@@ -31,10 +31,10 @@ class RangeTickSpec<D> extends TickSpec<D> {
   /// A [rangeStartValue] represents value of this range tick's starting point.
   /// A [rangeEndValue] represents the value of this range tick's ending point.
   const RangeTickSpec(
-    D value, {
-    String? label,
-    TextStyleSpec? style,
+    super.value, {
+    super.label,
+    super.style,
     required this.rangeStartValue,
     required this.rangeEndValue,
-  }) : super(value, label: label, style: style);
+  });
 }

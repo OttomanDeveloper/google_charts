@@ -138,8 +138,9 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
       _currentIndex = 0;
     } else {
       // Set to NO_SELECTION when the next index would outreach the domains.
-      _currentIndex =
-          _currentIndex == domainsLength - 1 ? NO_SELECTION : _currentIndex + 1;
+      _currentIndex = _currentIndex == domainsLength - 1
+          ? NO_SELECTION
+          : _currentIndex + 1;
     }
 
     _doNavigate(_currentIndex);
@@ -167,7 +168,9 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
   /// no-op.
   @protected
   bool _selectDomainIndex(
-      SelectionModelType selectionModelType, int domainIndex) {
+    SelectionModelType selectionModelType,
+    int domainIndex,
+  ) {
     final selectionModel = _chart.getSelectionModel(selectionModelType);
     if (selectionModel == null) {
       return false;
@@ -182,8 +185,9 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
       final seriesList = <MutableSeries<D>>[];
 
       for (final seriesDatum in datumPairs) {
-        seriesDatumList
-            .add(SeriesDatum<D>(seriesDatum.series, seriesDatum.datum));
+        seriesDatumList.add(
+          SeriesDatum<D>(seriesDatum.series, seriesDatum.datum),
+        );
 
         if (!seriesList.contains(seriesDatum.series)) {
           seriesList.add(seriesDatum.series as MutableSeries<D>);
@@ -272,8 +276,9 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
           detailsByDomain[domain] = [];
         }
 
-        detailsByDomain[domain]!
-            .add(SeriesDatum<D>(datumDetails.series!, datumDetails.datum));
+        detailsByDomain[domain]!.add(
+          SeriesDatum<D>(datumDetails.series!, datumDetails.datum),
+        );
       }
       // LINT.ThenChange(//depot/google3/third_party/dart/charts_web/lib/src/common/behaviors/hovercard/hovercard.dart)
     }

@@ -16,7 +16,8 @@
 import 'dart:math' show cos, sin, Point;
 import 'package:flutter/material.dart';
 import 'package:charts_common_maintained/charts_common_maintained.dart'
-    as common show CanvasPie;
+    as common
+    show CanvasPie;
 import 'circle_sector_painter.dart' show CircleSectorPainter;
 
 /// Draws a pie chart, with an optional hole in the center.
@@ -29,23 +30,26 @@ class PiePainter {
 
     for (var slice in canvasPie.slices) {
       CircleSectorPainter.draw(
-          canvas: canvas,
-          paint: paint,
-          center: center,
-          radius: radius,
-          innerRadius: innerRadius,
-          startAngle: slice.startAngle,
-          endAngle: slice.endAngle,
-          fill: slice.fill);
+        canvas: canvas,
+        paint: paint,
+        center: center,
+        radius: radius,
+        innerRadius: innerRadius,
+        startAngle: slice.startAngle,
+        endAngle: slice.endAngle,
+        fill: slice.fill,
+      );
     }
 
     // Draw stroke lines between pie slices. This is done after the slices are
     // drawn to ensure that they appear on top.
-    if (canvasPie.stroke != null &&
-        canvasPie.strokeWidthPx != null &&
-        canvasPie.slices.length > 1) {
-      paint.color = Color.fromARGB(canvasPie.stroke!.a, canvasPie.stroke!.r,
-          canvasPie.stroke!.g, canvasPie.stroke!.b);
+    if (canvasPie.stroke != null && canvasPie.slices.length > 1) {
+      paint.color = Color.fromARGB(
+        canvasPie.stroke!.a,
+        canvasPie.stroke!.r,
+        canvasPie.stroke!.g,
+        canvasPie.stroke!.b,
+      );
 
       paint.strokeWidth = canvasPie.strokeWidthPx;
       paint.strokeJoin = StrokeJoin.bevel;
@@ -55,20 +59,24 @@ class PiePainter {
 
       for (var slice in canvasPie.slices) {
         final innerRadiusStartPoint = Point<double>(
-            innerRadius * cos(slice.startAngle) + center.x,
-            innerRadius * sin(slice.startAngle) + center.y);
+          innerRadius * cos(slice.startAngle) + center.x,
+          innerRadius * sin(slice.startAngle) + center.y,
+        );
 
         final innerRadiusEndPoint = Point<double>(
-            innerRadius * cos(slice.endAngle) + center.x,
-            innerRadius * sin(slice.endAngle) + center.y);
+          innerRadius * cos(slice.endAngle) + center.x,
+          innerRadius * sin(slice.endAngle) + center.y,
+        );
 
         final radiusStartPoint = Point<double>(
-            radius * cos(slice.startAngle) + center.x,
-            radius * sin(slice.startAngle) + center.y);
+          radius * cos(slice.startAngle) + center.x,
+          radius * sin(slice.startAngle) + center.y,
+        );
 
         final radiusEndPoint = Point<double>(
-            radius * cos(slice.endAngle) + center.x,
-            radius * sin(slice.endAngle) + center.y);
+          radius * cos(slice.endAngle) + center.x,
+          radius * sin(slice.endAngle) + center.y,
+        );
 
         path.moveTo(innerRadiusStartPoint.x, innerRadiusStartPoint.y);
 

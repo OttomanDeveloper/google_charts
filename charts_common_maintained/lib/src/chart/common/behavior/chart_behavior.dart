@@ -41,13 +41,7 @@ abstract class ChartBehavior<D> {
 /// [end] component is positioned at the right of the chart (or the left if
 /// RTL), the chart's width is reduced by the width of the component.
 /// [inside] component is layered on top of the chart.
-enum BehaviorPosition {
-  top,
-  bottom,
-  start,
-  end,
-  inside,
-}
+enum BehaviorPosition { top, bottom, start, end, inside }
 
 /// Justification for components positioned outside [BehaviorPosition].
 enum OutsideJustification {
@@ -60,7 +54,4 @@ enum OutsideJustification {
 }
 
 /// Justification for components positioned [BehaviorPosition.inside].
-enum InsideJustification {
-  topStart,
-  topEnd,
-}
+enum InsideJustification { topStart, topEnd }

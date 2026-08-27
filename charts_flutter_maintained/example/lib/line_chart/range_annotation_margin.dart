@@ -15,6 +15,8 @@
 
 /// Example of a line chart with range annotations configured to render labels
 /// in the chart margin area.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -26,7 +28,8 @@ class LineRangeAnnotationMarginChart extends StatelessWidget {
   final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  LineRangeAnnotationMarginChart(this.seriesList, {this.animate = false});
+  const LineRangeAnnotationMarginChart(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [LineChart] with sample data and range annotations.
   ///

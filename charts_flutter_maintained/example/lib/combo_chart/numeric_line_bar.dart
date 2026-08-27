@@ -15,6 +15,8 @@
 
 /// Example of a numeric combo chart with two series rendered as bars, and a
 /// third rendered as a line.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -26,7 +28,8 @@ class NumericComboLineBarChart extends StatelessWidget {
   final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  NumericComboLineBarChart(this.seriesList, {this.animate = false});
+  const NumericComboLineBarChart(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [LineChart] with sample data and no transition.
   factory NumericComboLineBarChart.withSampleData() {

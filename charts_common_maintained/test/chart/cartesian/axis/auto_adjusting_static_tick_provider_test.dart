@@ -14,6 +14,8 @@
 // limitations under the License.
 
 import 'package:charts_common_maintained/src/chart/cartesian/axis/auto_adjusting_static_tick_provider.dart';
+import 'package:charts_common_maintained/src/chart/cartesian/axis/axis.dart';
+import 'package:charts_common_maintained/src/chart/cartesian/axis/tick.dart';
 import 'package:charts_common_maintained/src/chart/cartesian/axis/linear/linear_scale.dart';
 import 'package:charts_common_maintained/src/chart/cartesian/axis/draw_strategy/base_tick_draw_strategy.dart';
 import 'package:charts_common_maintained/src/common/graphics_factory.dart';
@@ -29,7 +31,10 @@ import 'package:test/test.dart';
 
 class MockChartContext extends Mock implements ChartContext {}
 
-class MockGraphicsFactory extends Mock implements GraphicsFactory {}
+class MockGraphicsFactory extends Mock implements GraphicsFactory {
+  @override
+  TextElement createTextElement(String text) => MockTextElement();
+}
 
 class MockTextElement extends Mock implements TextElement {}
 
@@ -39,22 +44,37 @@ class FakeNumericTickFormatter implements TickFormatter<num> {
   int calledTimes = 0;
 
   @override
-  List<String> format(List<num> tickValues, Map<num, String> cache,
-      {num stepSize}) {
+  List<String> format(
+    List<num> tickValues,
+    Map<num, String> cache, {
+    num? stepSize,
+  }) {
     calledTimes += 1;
 
     return tickValues.map((value) => value.toString()).toList();
   }
 }
 
-class MockDrawStrategy<D> extends Mock implements BaseTickDrawStrategy<D> {}
+class MockDrawStrategy<D> extends Mock implements BaseTickDrawStrategy<D> {
+  CollisionReport<D> Function(
+    List<Tick<D>>? ticks,
+    AxisOrientation? orientation,
+  )?
+  collidesCallback;
+
+  @override
+  CollisionReport<D> collides(
+    List<Tick<D>>? ticks,
+    AxisOrientation? orientation,
+  ) => collidesCallback?.call(ticks, orientation) ?? CollisionReport.empty();
+}
 
 void main() {
-  ChartContext context;
-  GraphicsFactory graphicsFactory;
-  TickFormatter<num> formatter;
-  BaseTickDrawStrategy<num> drawStrategy;
-  LinearScale scale;
+  late ChartContext context;
+  late GraphicsFactory graphicsFactory;
+  late TickFormatter<num> formatter;
+  late MockDrawStrategy<num> drawStrategy;
+  late LinearScale scale;
 
   setUp(() {
     context = MockChartContext();
@@ -62,56 +82,55 @@ void main() {
     formatter = MockNumericTickFormatter();
     drawStrategy = MockDrawStrategy<num>();
     scale = LinearScale()..range = ScaleOutputExtent(0, 300);
-
-    when(graphicsFactory.createTextElement(any)).thenReturn(MockTextElement());
   });
 
   group('with tick increment', () {
     test('returns the first increment if there is no collision', () {
-      final tickProvider = AutoAdjustingStaticTickProvider<num>([
-        TickSpec<num>(1, label: '1'),
-        TickSpec<num>(2, label: '2'),
-        TickSpec<num>(3, label: '3')
-      ], [
-        1,
-        2
-      ]);
-      when(drawStrategy.collides(any, any)).thenReturn(CollisionReport.empty());
+      final tickProvider = AutoAdjustingStaticTickProvider<num>(
+        [
+          TickSpec<num>(1, label: '1'),
+          TickSpec<num>(2, label: '2'),
+          TickSpec<num>(3, label: '3'),
+        ],
+        [1, 2],
+      );
+      drawStrategy.collidesCallback = (_, _) => CollisionReport.empty();
 
       final ticks = tickProvider.getTicks(
-          context: context,
-          graphicsFactory: graphicsFactory,
-          scale: scale,
-          formatter: formatter,
-          formatterValueCache: <num, String>{},
-          tickDrawStrategy: drawStrategy,
-          orientation: null);
+        context: context,
+        graphicsFactory: graphicsFactory,
+        scale: scale,
+        formatter: formatter,
+        formatterValueCache: <num, String>{},
+        tickDrawStrategy: drawStrategy,
+        orientation: null,
+      );
 
       expect(ticks.map((tick) => tick.value).toList(), [1, 2, 3]);
     });
 
     test('returns the first non colliding increment', () {
-      final tickProvider = AutoAdjustingStaticTickProvider<num>([
-        TickSpec<num>(1, label: '1'),
-        TickSpec<num>(2, label: '2'),
-        TickSpec<num>(3, label: '3')
-      ], [
-        1,
-        2
-      ]);
-      when(drawStrategy.collides(any, any)).thenAnswer((invocation) =>
-          (invocation.positionalArguments.first as List).length == 3
-              ? CollisionReport(ticksCollide: true, ticks: [])
-              : CollisionReport.empty());
+      final tickProvider = AutoAdjustingStaticTickProvider<num>(
+        [
+          TickSpec<num>(1, label: '1'),
+          TickSpec<num>(2, label: '2'),
+          TickSpec<num>(3, label: '3'),
+        ],
+        [1, 2],
+      );
+      drawStrategy.collidesCallback = (ticks, _) => ticks?.length == 3
+          ? CollisionReport(ticksCollide: true, ticks: [])
+          : CollisionReport.empty();
 
       final ticks = tickProvider.getTicks(
-          context: context,
-          graphicsFactory: graphicsFactory,
-          scale: scale,
-          formatter: formatter,
-          formatterValueCache: <num, String>{},
-          tickDrawStrategy: drawStrategy,
-          orientation: null);
+        context: context,
+        graphicsFactory: graphicsFactory,
+        scale: scale,
+        formatter: formatter,
+        formatterValueCache: <num, String>{},
+        tickDrawStrategy: drawStrategy,
+        orientation: null,
+      );
 
       expect(ticks.map((tick) => tick.value).toList(), [1, 3]);
     });

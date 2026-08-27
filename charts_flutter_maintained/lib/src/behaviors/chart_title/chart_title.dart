@@ -30,7 +30,8 @@ import '../chart_behavior.dart' show ChartBehavior, GestureType;
 /// Chart behavior that adds a ChartTitle widget to a chart.
 @immutable
 class ChartTitle<D> extends ChartBehavior<D> {
-  final desiredGestures = Set<GestureType>();
+  @override
+  final desiredGestures = <GestureType>{};
 
   final common.BehaviorPosition? behaviorPosition;
 
@@ -144,19 +145,21 @@ class ChartTitle<D> extends ChartBehavior<D> {
   });
 
   @override
-  common.ChartTitle<D> createCommonBehavior() => new common.ChartTitle<D>(title,
-      behaviorPosition: behaviorPosition,
-      innerPadding: innerPadding,
-      layoutMinSize: layoutMinSize,
-      layoutPreferredSize: layoutPreferredSize,
-      outerPadding: outerPadding,
-      maxWidthStrategy: maxWidthStrategy,
-      titleDirection: titleDirection,
-      titleOutsideJustification: titleOutsideJustification,
-      titlePadding: titlePadding,
-      titleStyleSpec: titleStyleSpec,
-      subTitle: subTitle,
-      subTitleStyleSpec: subTitleStyleSpec);
+  common.ChartTitle<D> createCommonBehavior() => common.ChartTitle<D>(
+    title,
+    behaviorPosition: behaviorPosition,
+    innerPadding: innerPadding,
+    layoutMinSize: layoutMinSize,
+    layoutPreferredSize: layoutPreferredSize,
+    outerPadding: outerPadding,
+    maxWidthStrategy: maxWidthStrategy,
+    titleDirection: titleDirection,
+    titleOutsideJustification: titleOutsideJustification,
+    titlePadding: titlePadding,
+    titleStyleSpec: titleStyleSpec,
+    subTitle: subTitle,
+    subTitleStyleSpec: subTitleStyleSpec,
+  );
 
   @override
   void updateCommonBehavior(common.ChartBehavior commonBehavior) {}
@@ -185,18 +188,19 @@ class ChartTitle<D> extends ChartBehavior<D> {
   @override
   int get hashCode {
     return Object.hash(
-        behaviorPosition,
-        layoutMinSize,
-        layoutPreferredSize,
-        maxWidthStrategy,
-        title,
-        titleDirection,
-        titleOutsideJustification,
-        titleStyleSpec,
-        subTitle,
-        subTitleStyleSpec,
-        innerPadding,
-        titlePadding,
-        outerPadding);
+      behaviorPosition,
+      layoutMinSize,
+      layoutPreferredSize,
+      maxWidthStrategy,
+      title,
+      titleDirection,
+      titleOutsideJustification,
+      titleStyleSpec,
+      subTitle,
+      subTitleStyleSpec,
+      innerPadding,
+      titlePadding,
+      outerPadding,
+    );
   }
 }

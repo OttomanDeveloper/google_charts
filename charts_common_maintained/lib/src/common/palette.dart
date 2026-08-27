@@ -35,16 +35,28 @@ abstract class Palette {
 
     // Divide the space between 255 and c500 evenly according to the colorCnt.
     for (var i = 1; i < colorCnt; i++) {
-      colors.add(_getSteppedColor(shadeDefault, i, colorCnt,
-          darker: shadeDefault.darker, lighter: lighterColor));
+      colors.add(
+        _getSteppedColor(
+          shadeDefault,
+          i,
+          colorCnt,
+          darker: shadeDefault.darker,
+          lighter: lighterColor,
+        ),
+      );
     }
 
     colors.add(Color.fromOther(color: shadeDefault, lighter: lighterColor));
     return colors;
   }
 
-  Color _getSteppedColor(Color color, int index, int steps,
-      {Color? darker, Color? lighter}) {
+  Color _getSteppedColor(
+    Color color,
+    int index,
+    int steps, {
+    Color? darker,
+    Color? lighter,
+  }) {
     final fraction = index / steps;
     return Color(
       r: color.r + ((255 - color.r) * fraction).round(),

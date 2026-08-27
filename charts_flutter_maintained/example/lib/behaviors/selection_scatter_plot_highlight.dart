@@ -31,6 +31,8 @@
 /// defined. Configuring a separate fillColor will cause the center of the shape
 /// to be filled in, with white in these examples. The border of the shape will
 /// be color with the color of the data.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -42,7 +44,8 @@ class SelectionScatterPlotHighlight extends StatelessWidget {
   final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  SelectionScatterPlotHighlight(this.seriesList, {this.animate = false});
+  const SelectionScatterPlotHighlight(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [ScatterPlotChart] with sample data and no transition.
   factory SelectionScatterPlotHighlight.withSampleData() {
@@ -65,36 +68,36 @@ class SelectionScatterPlotHighlight extends StatelessWidget {
   static List<charts.Series<LinearSales, num>> _createRandomData() {
     final random = Random();
 
-    final makeRadius = (int value) => (random.nextInt(value) + 2).toDouble();
+    double makeRadius(int value) => (random.nextInt(value) + 2).toDouble();
 
     final data = [
       LinearSales(random.nextInt(100), random.nextInt(100), makeRadius(6),
           'circle', null, null),
-      LinearSales(random.nextInt(100), random.nextInt(100), makeRadius(6),
-          null, null, null),
-      LinearSales(random.nextInt(100), random.nextInt(100), makeRadius(6),
-          null, null, null),
+      LinearSales(random.nextInt(100), random.nextInt(100), makeRadius(6), null,
+          null, null),
+      LinearSales(random.nextInt(100), random.nextInt(100), makeRadius(6), null,
+          null, null),
       // Render a hollow circle, filled in with white.
-      LinearSales(random.nextInt(100), random.nextInt(100),
-          makeRadius(4) + 4, 'circle', charts.MaterialPalette.white, 2.0),
-      LinearSales(random.nextInt(100), random.nextInt(100), makeRadius(6),
-          null, null, null),
-      LinearSales(random.nextInt(100), random.nextInt(100), makeRadius(6),
-          null, null, null),
+      LinearSales(random.nextInt(100), random.nextInt(100), makeRadius(4) + 4,
+          'circle', charts.MaterialPalette.white, 2.0),
+      LinearSales(random.nextInt(100), random.nextInt(100), makeRadius(6), null,
+          null, null),
+      LinearSales(random.nextInt(100), random.nextInt(100), makeRadius(6), null,
+          null, null),
       LinearSales(random.nextInt(100), random.nextInt(100), makeRadius(6),
           'circle', null, null),
-      LinearSales(random.nextInt(100), random.nextInt(100), makeRadius(6),
-          null, null, null),
-      LinearSales(random.nextInt(100), random.nextInt(100), makeRadius(6),
-          null, null, null),
+      LinearSales(random.nextInt(100), random.nextInt(100), makeRadius(6), null,
+          null, null),
+      LinearSales(random.nextInt(100), random.nextInt(100), makeRadius(6), null,
+          null, null),
       // Render a hollow circle, filled in with white.
-      LinearSales(random.nextInt(100), random.nextInt(100),
-          makeRadius(4) + 4, 'circle', charts.MaterialPalette.white, 2.0),
-      LinearSales(random.nextInt(100), random.nextInt(100), makeRadius(6),
-          null, null, null),
+      LinearSales(random.nextInt(100), random.nextInt(100), makeRadius(4) + 4,
+          'circle', charts.MaterialPalette.white, 2.0),
+      LinearSales(random.nextInt(100), random.nextInt(100), makeRadius(6), null,
+          null, null),
       // Render a hollow square, filled in with white.
-      LinearSales(random.nextInt(100), random.nextInt(100),
-          makeRadius(4) + 4, null, charts.MaterialPalette.white, 2.0),
+      LinearSales(random.nextInt(100), random.nextInt(100), makeRadius(4) + 4,
+          null, charts.MaterialPalette.white, 2.0),
     ];
 
     final maxMeasure = 100;
@@ -173,16 +176,14 @@ class SelectionScatterPlotHighlight extends StatelessWidget {
       LinearSales(10, 25, 5.0, null, null, null),
       LinearSales(12, 75, 4.0, null, null, null),
       // Render a hollow circle, filled in with white.
-      LinearSales(
-          13, 225, 5.0, 'circle', charts.MaterialPalette.white, 2.0),
+      LinearSales(13, 225, 5.0, 'circle', charts.MaterialPalette.white, 2.0),
       LinearSales(16, 50, 4.0, null, null, null),
       LinearSales(24, 75, 3.0, null, null, null),
       LinearSales(25, 100, 3.0, 'circle', null, null),
       LinearSales(34, 150, 5.0, null, null, null),
       LinearSales(37, 10, 4.5, null, null, null),
       // Render a hollow circle, filled in with white.
-      LinearSales(
-          45, 300, 8.0, 'circle', charts.MaterialPalette.white, 2.0),
+      LinearSales(45, 300, 8.0, 'circle', charts.MaterialPalette.white, 2.0),
       LinearSales(52, 15, 4.0, null, null, null),
       // Render a hollow square, filled in with white.
       LinearSales(56, 200, 7.0, null, charts.MaterialPalette.white, 2.0),

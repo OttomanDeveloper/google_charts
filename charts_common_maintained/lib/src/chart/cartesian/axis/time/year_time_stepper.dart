@@ -22,13 +22,13 @@ class YearTimeStepper extends BaseTimeStepper {
 
   final List<int> _allowedTickIncrements;
 
-  YearTimeStepper._internal(
-      DateTimeFactory dateTimeFactory, List<int> increments)
-      : _allowedTickIncrements = increments,
-        super(dateTimeFactory);
+  YearTimeStepper._internal(super.dateTimeFactory, List<int> increments)
+    : _allowedTickIncrements = increments;
 
-  factory YearTimeStepper(DateTimeFactory dateTimeFactory,
-      {List<int>? allowedTickIncrements}) {
+  factory YearTimeStepper(
+    DateTimeFactory dateTimeFactory, {
+    List<int>? allowedTickIncrements,
+  }) {
     // Set the default increments if null.
     allowedTickIncrements ??= _defaultIncrements;
 

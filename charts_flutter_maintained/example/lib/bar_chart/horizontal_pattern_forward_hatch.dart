@@ -14,6 +14,8 @@
 // limitations under the License.
 
 /// Forward pattern hatch bar chart example
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -29,8 +31,8 @@ class HorizontalPatternForwardHatchBarChart extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  HorizontalPatternForwardHatchBarChart(this.seriesList,
-      {this.animate = false});
+  const HorizontalPatternForwardHatchBarChart(this.seriesList,
+      {super.key, this.animate = false});
 
   factory HorizontalPatternForwardHatchBarChart.withSampleData() {
     return HorizontalPatternForwardHatchBarChart(

@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import 'dart:ui' show FontWeight, TextAlign, TextDirection;
+
 import 'package:charts_common_maintained/charts_common_maintained.dart'
     as common
     show
@@ -22,6 +23,7 @@ import 'package:charts_common_maintained/charts_common_maintained.dart'
         TextDirection,
         TextMeasurement,
         TextStyle;
+import 'package:flutter/painting.dart' show TextScaler;
 import 'package:flutter/rendering.dart'
     show Color, TextBaseline, TextPainter, TextSpan, TextStyle;
 
@@ -48,7 +50,7 @@ class TextElement implements common.TextElement {
   double? _opacity;
 
   TextElement(this.text, {common.TextStyle? style, this.textScaleFactor})
-      : _textStyle = style;
+    : _textStyle = style;
 
   @override
   common.TextStyle? get textStyle => _textStyle;
@@ -146,23 +148,27 @@ class TextElement implements common.TextElement {
             textStyle!.color!.b,
           );
 
-    _textPainter = TextPainter(
-        text: TextSpan(
-            text: text,
-            style: TextStyle(
+    _textPainter =
+        TextPainter(
+            text: TextSpan(
+              text: text,
+              style: TextStyle(
                 color: color,
                 fontSize: textStyle?.fontSize?.toDouble(),
                 fontFamily: textStyle?.fontFamily,
                 fontWeight: transFontWeight(textStyle?.fontWeight),
-                height: textStyle?.lineHeight)))
-      ..textDirection = TextDirection.ltr
-      // TODO Flip once textAlign works
-      ..textAlign = TextAlign.left
-      // ..textAlign = _textDirection == common.TextDirection.rtl ?
-      //     TextAlign.right : TextAlign.left
-      ..ellipsis = maxWidthStrategy == common.MaxWidthStrategy.ellipsize
-          ? ellipsis
-          : null;
+                height: textStyle?.lineHeight,
+              ),
+            ),
+          )
+          ..textDirection = TextDirection.ltr
+          // TODO Flip once textAlign works
+          ..textAlign = TextAlign.left
+          // ..textAlign = _textDirection == common.TextDirection.rtl ?
+          //     TextAlign.right : TextAlign.left
+          ..ellipsis = maxWidthStrategy == common.MaxWidthStrategy.ellipsize
+              ? ellipsis
+              : null;
 
     if (textScaleFactor != null) {
       _textPainter.textScaler = TextScaler.linear(textScaleFactor!);
@@ -170,32 +176,34 @@ class TextElement implements common.TextElement {
 
     _textPainter.layout(maxWidth: maxWidth?.toDouble() ?? double.infinity);
 
-    final baseline =
-        _textPainter.computeDistanceToActualBaseline(TextBaseline.alphabetic);
+    final baseline = _textPainter.computeDistanceToActualBaseline(
+      TextBaseline.alphabetic,
+    );
 
     // Estimating the actual draw height to 70% of measures size.
     //
     // The font reports a size larger than the drawn size, which makes it
     // difficult to shift the text around to get it to visually line up
     // vertically with other components.
-    _measurement = new common.TextMeasurement(
-        horizontalSliceWidth: _textPainter.width,
-        verticalSliceWidth: _textPainter.height * 0.70,
-        baseline: baseline);
+    _measurement = common.TextMeasurement(
+      horizontalSliceWidth: _textPainter.width,
+      verticalSliceWidth: _textPainter.height * 0.70,
+      baseline: baseline,
+    );
 
     _painterReady = true;
   }
 
   FontWeight transFontWeight(String? weight) => switch (weight) {
-        "100" => FontWeight.w100,
-        "200" => FontWeight.w200,
-        "300" => FontWeight.w300,
-        "400" => FontWeight.w400,
-        "500" => FontWeight.w500,
-        "600" => FontWeight.w600,
-        "700" => FontWeight.w700,
-        "800" => FontWeight.w800,
-        "900" => FontWeight.w900,
-        _ => FontWeight.w400,
-      };
+    "100" => FontWeight.w100,
+    "200" => FontWeight.w200,
+    "300" => FontWeight.w300,
+    "400" => FontWeight.w400,
+    "500" => FontWeight.w500,
+    "600" => FontWeight.w600,
+    "700" => FontWeight.w700,
+    "800" => FontWeight.w800,
+    "900" => FontWeight.w900,
+    _ => FontWeight.w400,
+  };
 }

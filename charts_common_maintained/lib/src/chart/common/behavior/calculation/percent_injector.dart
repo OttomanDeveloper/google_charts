@@ -18,8 +18,9 @@ import '../../base_chart.dart' show BaseChart, LifecycleListener;
 import '../../behavior/chart_behavior.dart' show ChartBehavior;
 import '../../processed_series.dart' show MutableSeries;
 
-const percentInjectedKey =
-    AttributeKey<bool>('PercentInjector.percentInjected');
+const percentInjectedKey = AttributeKey<bool>(
+  'PercentInjector.percentInjected',
+);
 
 /// Chart behavior that can inject series or domain percentages into each datum.
 ///
@@ -48,8 +49,10 @@ class PercentInjector<D> implements ChartBehavior<D> {
   /// [totalType] configures the type of data total to be calculated.
   PercentInjector({this.totalType = PercentInjectorTotalType.domain}) {
     // Set up chart draw cycle listeners.
-    _lifecycleListener =
-        LifecycleListener<D>(onPreprocess: _preProcess, onData: _onData);
+    _lifecycleListener = LifecycleListener<D>(
+      onPreprocess: _preProcess,
+      onData: _onData,
+    );
   }
 
   @override
@@ -104,8 +107,9 @@ class PercentInjector<D> implements ChartBehavior<D> {
             final domain = domainFn(index);
             var measure = rawMeasureFn(index) ?? 0.0;
 
-            final key =
-                useSeriesCategory ? '${seriesCategory}__$domain' : '$domain';
+            final key = useSeriesCategory
+                ? '${seriesCategory}__$domain'
+                : '$domain';
 
             totalsByDomain[key] = (totalsByDomain[key] ?? 0.0) + measure;
           }

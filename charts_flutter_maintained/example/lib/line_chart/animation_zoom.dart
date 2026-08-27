@@ -15,6 +15,8 @@
 
 /// Example of a line chart with pan and zoom enabled via
 /// [Charts.PanAndZoomBehavior].
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -26,7 +28,8 @@ class LineAnimationZoomChart extends StatelessWidget {
   final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  LineAnimationZoomChart(this.seriesList, {this.animate = false});
+  const LineAnimationZoomChart(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [LineChart] with sample data and no transition.
   factory LineAnimationZoomChart.withSampleData() {

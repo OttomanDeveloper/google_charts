@@ -65,9 +65,4 @@ abstract class BuildableBehavior<B extends common.ChartBehavior> {
 }
 
 /// Types of gestures accepted by a chart.
-enum GestureType {
-  onLongPress,
-  onTap,
-  onHover,
-  onDrag,
-}
+enum GestureType { onLongPress, onTap, onHover, onDrag }

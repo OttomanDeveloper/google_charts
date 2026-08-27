@@ -33,10 +33,14 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
   static const _defaultHorizontalLabelAnchor = BarLabelAnchor.start;
   static const _defaultVerticalLabelAnchor = BarLabelAnchor.end;
   static const _defaultlabelVerticalPosition = BarLabelVerticalPosition.middle;
-  static final _defaultInsideLabelStyle =
-      TextStyleSpec(fontSize: 12, color: Color.white);
-  static final _defaultOutsideLabelStyle =
-      TextStyleSpec(fontSize: 12, color: Color.black);
+  static final _defaultInsideLabelStyle = TextStyleSpec(
+    fontSize: 12,
+    color: Color.white,
+  );
+  static final _defaultOutsideLabelStyle = TextStyleSpec(
+    fontSize: 12,
+    color: Color.black,
+  );
   static final _labelSplitPattern = '\n';
   static final _defaultMultiLineLabelPadding = 2;
 
@@ -66,23 +70,26 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
   BarLabelDecorator({
     TextStyleSpec? insideLabelStyleSpec,
     TextStyleSpec? outsideLabelStyleSpec,
-    this.limitTextWidth = false,
+    this.limitTextWidth = true,
     this.labelAnchor,
     this.labelPosition = _defaultLabelPosition,
     this.labelPlacement = _defaultLabelPlacement,
     this.labelPadding = _defaultLabelPadding,
     this.labelVerticalPosition = _defaultlabelVerticalPosition,
-  })  : insideLabelStyleSpec = insideLabelStyleSpec ?? _defaultInsideLabelStyle,
-        outsideLabelStyleSpec =
-            outsideLabelStyleSpec ?? _defaultOutsideLabelStyle;
+  }) : insideLabelStyleSpec = insideLabelStyleSpec ?? _defaultInsideLabelStyle,
+       outsideLabelStyleSpec =
+           outsideLabelStyleSpec ?? _defaultOutsideLabelStyle;
 
   @override
-  void decorate(Iterable<ImmutableBarRendererElement<D>> barElements,
-      ChartCanvas canvas, GraphicsFactory graphicsFactory,
-      {required Rectangle<int> drawBounds,
-      required double animationPercent,
-      required bool renderingVertically,
-      bool rtl = false}) {
+  void decorate(
+    Iterable<ImmutableBarRendererElement<D>> barElements,
+    ChartCanvas canvas,
+    GraphicsFactory graphicsFactory, {
+    required Rectangle<int> drawBounds,
+    required double animationPercent,
+    required bool renderingVertically,
+    bool rtl = false,
+  }) {
     // Only decorate the bars when animation is at 100%.
     if (animationPercent != 1.0) {
       return;
@@ -90,25 +97,40 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
 
     if (renderingVertically) {
       _decorateVerticalBars(
-          barElements, canvas, graphicsFactory, drawBounds, rtl);
+        barElements,
+        canvas,
+        graphicsFactory,
+        drawBounds,
+        rtl,
+      );
     } else {
       _decorateHorizontalBars(
-          barElements, canvas, graphicsFactory, drawBounds, rtl);
+        barElements,
+        canvas,
+        graphicsFactory,
+        drawBounds,
+        rtl,
+      );
     }
   }
 
   void _decorateVerticalBars(
-      Iterable<ImmutableBarRendererElement<D>> barElements,
-      ChartCanvas canvas,
-      GraphicsFactory graphicsFactory,
-      Rectangle<int> drawBounds,
-      bool rtl) {
+    Iterable<ImmutableBarRendererElement<D>> barElements,
+    ChartCanvas canvas,
+    GraphicsFactory graphicsFactory,
+    Rectangle<int> drawBounds,
+    bool rtl,
+  ) {
     // Create [TextStyle] from [TextStyleSpec] to be used by all the elements.
     // The [GraphicsFactory] is needed so it can't be created earlier.
-    final insideLabelStyle =
-        _getTextStyle(graphicsFactory, insideLabelStyleSpec);
-    final outsideLabelStyle =
-        _getTextStyle(graphicsFactory, outsideLabelStyleSpec);
+    final insideLabelStyle = _getTextStyle(
+      graphicsFactory,
+      insideLabelStyleSpec,
+    );
+    final outsideLabelStyle = _getTextStyle(
+      graphicsFactory,
+      outsideLabelStyleSpec,
+    );
 
     for (var element in barElements) {
       final labelFn = element.series!.labelAccessorFn;
@@ -120,15 +142,17 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
       // If there are custom styles, use that instead of the default or the
       // style defined for the entire decorator.
       final datumInsideLabelStyle = _getDatumStyle(
-          element.series!.insideLabelStyleAccessorFn,
-          datumIndex,
-          graphicsFactory,
-          defaultStyle: insideLabelStyle);
+        element.series!.insideLabelStyleAccessorFn,
+        datumIndex,
+        graphicsFactory,
+        defaultStyle: insideLabelStyle,
+      );
       final datumOutsideLabelStyle = _getDatumStyle(
-          element.series!.outsideLabelStyleAccessorFn,
-          datumIndex,
-          graphicsFactory,
-          defaultStyle: outsideLabelStyle);
+        element.series!.outsideLabelStyleAccessorFn,
+        datumIndex,
+        graphicsFactory,
+        defaultStyle: outsideLabelStyle,
+      );
 
       // Skip calculation and drawing for this element if no label.
       if (label == null || label.isEmpty) {
@@ -149,11 +173,13 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
       if (calculatedLabelPosition == BarLabelPosition.auto) {
         // For auto, first try to fit the text inside the bar.
         labelElements = labelElements.map(
-            (labelElement) => labelElement..textStyle = datumInsideLabelStyle);
+          (labelElement) => labelElement..textStyle = datumInsideLabelStyle,
+        );
 
         final labelMaxWidth = labelElements
             .map(
-                (labelElement) => labelElement.measurement.horizontalSliceWidth)
+              (labelElement) => labelElement.measurement.horizontalSliceWidth,
+            )
             .fold<double>(0, (max, current) => max > current ? max : current);
 
         // Total label height depends on the label element's text style.
@@ -162,17 +188,19 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
         // A label fits if the length and width of the text fits.
         calculatedLabelPosition =
             totalLabelHeight < insideBarHeight && labelMaxWidth < bounds.width
-                ? BarLabelPosition.inside
-                : BarLabelPosition.outside;
+            ? BarLabelPosition.inside
+            : BarLabelPosition.outside;
       }
 
       // Set the max width, text style, and text direction.
-      labelElements = labelElements.map((labelElement) => labelElement
-        ..textStyle = calculatedLabelPosition == BarLabelPosition.inside
-            ? datumInsideLabelStyle
-            : datumOutsideLabelStyle
-        ..maxWidth = limitTextWidth ? bounds.width : null
-        ..textDirection = rtl ? TextDirection.rtl : TextDirection.ltr);
+      labelElements = labelElements.map(
+        (labelElement) => labelElement
+          ..textStyle = calculatedLabelPosition == BarLabelPosition.inside
+              ? datumInsideLabelStyle
+              : datumOutsideLabelStyle
+          ..maxWidth = limitTextWidth ? bounds.width : null
+          ..textDirection = rtl ? TextDirection.rtl : TextDirection.ltr,
+      );
 
       // Total label height depends on the label element's text style.
       final totalLabelHeight = _getTotalLabelHeight(labelElements);
@@ -187,18 +215,19 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
 
         if (calculatedLabelPosition == BarLabelPosition.inside) {
           final anchor = _resolveLabelAnchor(
-              measure, labelAnchor ?? _defaultVerticalLabelAnchor);
+            measure,
+            labelAnchor ?? _defaultVerticalLabelAnchor,
+          );
           labelY = switch (anchor) {
             BarLabelAnchor.end => bounds.top + labelPadding + offsetHeight,
-            BarLabelAnchor.middle => (bounds.bottom -
-                    bounds.height / 2 -
-                    totalLabelHeight / 2 +
-                    offsetHeight)
-                .round(),
-            BarLabelAnchor.start => bounds.bottom -
-                labelPadding -
-                totalLabelHeight +
-                offsetHeight,
+            BarLabelAnchor.middle =>
+              (bounds.bottom -
+                      bounds.height / 2 -
+                      totalLabelHeight / 2 +
+                      offsetHeight)
+                  .round(),
+            BarLabelAnchor.start =>
+              bounds.bottom - labelPadding - totalLabelHeight + offsetHeight,
           };
         } else {
           // calculatedLabelPosition == LabelPosition.outside
@@ -212,10 +241,11 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
         }
 
         // Center the label inside the bar.
-        final labelX = (bounds.left +
-                bounds.width / 2 -
-                labelElement.measurement.horizontalSliceWidth / 2)
-            .round();
+        final labelX =
+            (bounds.left +
+                    bounds.width / 2 -
+                    labelElement.measurement.horizontalSliceWidth / 2)
+                .round();
 
         canvas.drawText(labelElement, labelX, labelY);
         labelsDrawn += 1;
@@ -224,17 +254,22 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
   }
 
   void _decorateHorizontalBars(
-      Iterable<ImmutableBarRendererElement<D>> barElements,
-      ChartCanvas canvas,
-      GraphicsFactory graphicsFactory,
-      Rectangle<int> drawBounds,
-      bool rtl) {
+    Iterable<ImmutableBarRendererElement<D>> barElements,
+    ChartCanvas canvas,
+    GraphicsFactory graphicsFactory,
+    Rectangle<int> drawBounds,
+    bool rtl,
+  ) {
     // Create [TextStyle] from [TextStyleSpec] to be used by all the elements.
     // The [GraphicsFactory] is needed so it can't be created earlier.
-    final insideLabelStyle =
-        _getTextStyle(graphicsFactory, insideLabelStyleSpec);
-    final outsideLabelStyle =
-        _getTextStyle(graphicsFactory, outsideLabelStyleSpec);
+    final insideLabelStyle = _getTextStyle(
+      graphicsFactory,
+      insideLabelStyleSpec,
+    );
+    final outsideLabelStyle = _getTextStyle(
+      graphicsFactory,
+      outsideLabelStyleSpec,
+    );
 
     for (var element in barElements) {
       final labelFn = element.series!.labelAccessorFn;
@@ -246,15 +281,17 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
       // If there are custom styles, use that instead of the default or the
       // style defined for the entire decorator.
       final datumInsideLabelStyle = _getDatumStyle(
-          element.series!.insideLabelStyleAccessorFn,
-          datumIndex,
-          graphicsFactory,
-          defaultStyle: insideLabelStyle);
+        element.series!.insideLabelStyleAccessorFn,
+        datumIndex,
+        graphicsFactory,
+        defaultStyle: insideLabelStyle,
+      );
       final datumOutsideLabelStyle = _getDatumStyle(
-          element.series!.outsideLabelStyleAccessorFn,
-          datumIndex,
-          graphicsFactory,
-          defaultStyle: outsideLabelStyle);
+        element.series!.outsideLabelStyleAccessorFn,
+        datumIndex,
+        graphicsFactory,
+        defaultStyle: outsideLabelStyle,
+      );
 
       // Skip calculation and drawing for this element if no label.
       if (label == null || label.isEmpty) {
@@ -278,7 +315,8 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
         // length of the text fits and the space. This is because if the bar has
         // more space than the outside, it makes more sense to place the label
         // inside the bar, even if the entire label does not fit.
-        calculatedLabelPosition = (insideBarWidth >= outsideBarWidth ||
+        calculatedLabelPosition =
+            (insideBarWidth >= outsideBarWidth ||
                 labelElement.measurement.horizontalSliceWidth < insideBarWidth)
             ? BarLabelPosition.inside
             : BarLabelPosition.outside;
@@ -293,7 +331,7 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
         // calculatedLabelPosition == LabelPosition.outside ||
         // calculatedLabelPosition == LabelPosition.right
         labelElement.textStyle = datumOutsideLabelStyle;
-        labelElement.maxWidth = limitTextWidth?outsideBarWidth:111111;
+        labelElement.maxWidth = limitTextWidth ? outsideBarWidth : 111111;
       }
 
       // Only calculate and draw label if there's actually space for the label.
@@ -309,16 +347,20 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
       final int labelX;
       if (calculatedLabelPosition == BarLabelPosition.inside) {
         final anchor = _resolveLabelAnchor(
-            measure, labelAnchor ?? _defaultHorizontalLabelAnchor);
+          measure,
+          labelAnchor ?? _defaultHorizontalLabelAnchor,
+        );
 
         switch (anchor) {
           case BarLabelAnchor.middle:
-            labelX = (bounds.left +
-                    bounds.width / 2 -
-                    labelElement.measurement.horizontalSliceWidth / 2)
-                .round();
-            labelElement.textDirection =
-                rtl ? TextDirection.rtl : TextDirection.ltr;
+            labelX =
+                (bounds.left +
+                        bounds.width / 2 -
+                        labelElement.measurement.horizontalSliceWidth / 2)
+                    .round();
+            labelElement.textDirection = rtl
+                ? TextDirection.rtl
+                : TextDirection.ltr;
             break;
 
           case BarLabelAnchor.end:
@@ -352,10 +394,11 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
               (bounds.right - labelElement.measurement.horizontalSliceWidth)
                   .round();
         } else {
-          labelX = (bounds.left +
-                  drawBounds.width -
-                  labelElement.measurement.horizontalSliceWidth)
-              .round();
+          labelX =
+              (bounds.left +
+                      drawBounds.width -
+                      labelElement.measurement.horizontalSliceWidth)
+                  .round();
         }
       }
 
@@ -363,16 +406,18 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
       final int labelY;
       if (labelVerticalPosition == BarLabelVerticalPosition.middle) {
         // Center the label inside the bar.
-        labelY = (bounds.top +
-                (bounds.bottom - bounds.top) / 2 -
-                labelElement.measurement.verticalSliceWidth / 2)
-            .round();
+        labelY =
+            (bounds.top +
+                    (bounds.bottom - bounds.top) / 2 -
+                    labelElement.measurement.verticalSliceWidth / 2)
+                .round();
       } else {
         /// labelVerticalPosition == BarLabelVerticalPosition.top
-        labelY = (bounds.top -
-                labelElement.measurement.verticalSliceWidth -
-                labelPadding)
-            .round();
+        labelY =
+            (bounds.top -
+                    labelElement.measurement.verticalSliceWidth -
+                    labelPadding)
+                .round();
       }
 
       canvas.drawText(labelElement, labelX, labelY);
@@ -389,7 +434,9 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
 
   // Helper function that converts [TextStyleSpec] to [TextStyle].
   TextStyle _getTextStyle(
-      GraphicsFactory graphicsFactory, TextStyleSpec? labelSpec) {
+    GraphicsFactory graphicsFactory,
+    TextStyleSpec? labelSpec,
+  ) {
     return graphicsFactory.createTextPaint()
       ..color = labelSpec?.color ?? Color.black
       ..fontFamily = labelSpec?.fontFamily

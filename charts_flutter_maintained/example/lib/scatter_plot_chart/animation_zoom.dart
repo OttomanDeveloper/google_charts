@@ -15,6 +15,8 @@
 
 /// Example of a line chart with pan and zoom enabled via
 /// [Charts.PanAndZoomBehavior].
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -26,7 +28,8 @@ class ScatterPlotAnimationZoomChart extends StatelessWidget {
   final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  ScatterPlotAnimationZoomChart(this.seriesList, {this.animate = false});
+  const ScatterPlotAnimationZoomChart(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [ScatterPlotChart] with sample data and no transition.
   factory ScatterPlotAnimationZoomChart.withSampleData() {
@@ -51,7 +54,7 @@ class ScatterPlotAnimationZoomChart extends StatelessWidget {
 
     final data = <LinearSales>[];
 
-    final makeRadius = (int value) => (random.nextInt(value) + 2).toDouble();
+    double makeRadius(int value) => (random.nextInt(value) + 2).toDouble();
 
     for (var i = 0; i < 100; i++) {
       data.add(LinearSales(i, random.nextInt(100), makeRadius(4)));
@@ -85,11 +88,9 @@ class ScatterPlotAnimationZoomChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return charts.ScatterPlotChart(seriesList,
-        animate: animate,
-        behaviors: [
-          charts.PanAndZoomBehavior(),
-        ]);
+    return charts.ScatterPlotChart(seriesList, animate: animate, behaviors: [
+      charts.PanAndZoomBehavior(),
+    ]);
   }
 
   /// Create one series with sample hard coded data.

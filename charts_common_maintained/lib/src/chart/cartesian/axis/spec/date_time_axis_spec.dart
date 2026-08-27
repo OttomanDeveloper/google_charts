@@ -60,20 +60,19 @@ class DateTimeAxisSpec extends AxisSpec<DateTime> {
   /// [showAxisLine] override to force the axis to draw the axis
   ///     line.
   const DateTimeAxisSpec({
-    RenderSpec<DateTime>? renderSpec,
-    DateTimeTickProviderSpec? tickProviderSpec,
-    DateTimeTickFormatterSpec? tickFormatterSpec,
-    bool? showAxisLine,
+    super.renderSpec,
+    DateTimeTickProviderSpec? super.tickProviderSpec,
+    DateTimeTickFormatterSpec? super.tickFormatterSpec,
+    super.showAxisLine,
     this.viewport,
-  }) : super(
-            renderSpec: renderSpec,
-            tickProviderSpec: tickProviderSpec,
-            tickFormatterSpec: tickFormatterSpec,
-            showAxisLine: showAxisLine);
+  });
 
   @override
-  void configure(Axis<DateTime> axis, ChartContext context,
-      GraphicsFactory graphicsFactory) {
+  void configure(
+    Axis<DateTime> axis,
+    ChartContext context,
+    GraphicsFactory graphicsFactory,
+  ) {
     super.configure(axis, context, graphicsFactory);
 
     if (axis is DateTimeAxis && viewport != null) {
@@ -124,10 +123,12 @@ class AutoDateTimeTickProviderSpec implements DateTimeTickProviderSpec {
   AutoAdjustingDateTimeTickProvider createTickProvider(ChartContext context) {
     if (includeTime) {
       return AutoAdjustingDateTimeTickProvider.createDefault(
-          context.dateTimeFactory);
+        context.dateTimeFactory,
+      );
     } else {
       return AutoAdjustingDateTimeTickProvider.createWithoutTime(
-          context.dateTimeFactory);
+        context.dateTimeFactory,
+      );
     }
   }
 
@@ -154,8 +155,12 @@ class DayTickProviderSpec implements DateTimeTickProviderSpec {
   @override
   AutoAdjustingDateTimeTickProvider createTickProvider(ChartContext context) {
     return AutoAdjustingDateTimeTickProvider.createWith([
-      TimeRangeTickProviderImpl(DayTimeStepper(context.dateTimeFactory,
-          allowedTickIncrements: increments))
+      TimeRangeTickProviderImpl(
+        DayTimeStepper(
+          context.dateTimeFactory,
+          allowedTickIncrements: increments,
+        ),
+      ),
     ]);
   }
 
@@ -223,8 +228,11 @@ class TimeFormatterSpec {
   /// [noonFormat] [DateFormat] format string used only for formatting hours
   ///     in the event that you want to format noon differently than other
   ///     hours (ie: [10, 11, 12p, 1, 2, 3]).
-  const TimeFormatterSpec(
-      {this.format, this.transitionFormat, this.noonFormat});
+  const TimeFormatterSpec({
+    this.format,
+    this.transitionFormat,
+    this.noonFormat,
+  });
 
   @override
   bool operator ==(Object other) =>
@@ -250,12 +258,12 @@ class BasicDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
   final DateFormat? dateFormat;
 
   const BasicDateTimeTickFormatterSpec(DateTimeFormatterFunction formatter)
-      : formatter = formatter,
-        dateFormat = null;
+    : formatter = formatter,
+      dateFormat = null;
 
   const BasicDateTimeTickFormatterSpec.fromDateFormat(DateFormat dateFormat)
-      : formatter = null,
-        dateFormat = dateFormat;
+    : formatter = null,
+      dateFormat = dateFormat;
 
   /// A formatter will be created with the [DateFormat] if it is not null.
   /// Otherwise, it will create one with the provided
@@ -263,8 +271,11 @@ class BasicDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
   @override
   DateTimeTickFormatter createTickFormatter(ChartContext context) {
     assert(dateFormat != null || formatter != null);
-    return DateTimeTickFormatter.uniform(SimpleTimeTickFormatter(
-        formatter: dateFormat != null ? dateFormat!.format : formatter!));
+    return DateTimeTickFormatter.uniform(
+      SimpleTimeTickFormatter(
+        formatter: dateFormat != null ? dateFormat!.format : formatter!,
+      ),
+    );
   }
 
   @override
@@ -301,51 +312,76 @@ class AutoDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
   /// There is a default formatter for each level that is configurable, but
   /// by specifying a level here it replaces the default for that particular
   /// granularity. This is useful for swapping out one or all of the formatters.
-  const AutoDateTimeTickFormatterSpec(
-      {this.minute, this.hour, this.day, this.month, this.year});
+  const AutoDateTimeTickFormatterSpec({
+    this.minute,
+    this.hour,
+    this.day,
+    this.month,
+    this.year,
+  });
 
   @override
   DateTimeTickFormatter createTickFormatter(ChartContext context) {
     final map = <int, TimeTickFormatter>{};
 
     if (minute != null) {
-      map[DateTimeTickFormatter.MINUTE] =
-          _makeFormatter(minute!, CalendarField.hourOfDay, context);
+      map[DateTimeTickFormatter.MINUTE] = _makeFormatter(
+        minute!,
+        CalendarField.hourOfDay,
+        context,
+      );
     }
     if (hour != null) {
-      map[DateTimeTickFormatter.HOUR] =
-          _makeFormatter(hour!, CalendarField.date, context);
+      map[DateTimeTickFormatter.HOUR] = _makeFormatter(
+        hour!,
+        CalendarField.date,
+        context,
+      );
     }
     if (day != null) {
-      map[23 * DateTimeTickFormatter.HOUR] =
-          _makeFormatter(day!, CalendarField.month, context);
+      map[23 * DateTimeTickFormatter.HOUR] = _makeFormatter(
+        day!,
+        CalendarField.month,
+        context,
+      );
     }
     if (month != null) {
-      map[28 * DateTimeTickFormatter.DAY] =
-          _makeFormatter(month!, CalendarField.year, context);
+      map[28 * DateTimeTickFormatter.DAY] = _makeFormatter(
+        month!,
+        CalendarField.year,
+        context,
+      );
     }
     if (year != null) {
-      map[364 * DateTimeTickFormatter.DAY] =
-          _makeFormatter(year!, CalendarField.year, context);
+      map[364 * DateTimeTickFormatter.DAY] = _makeFormatter(
+        year!,
+        CalendarField.year,
+        context,
+      );
     }
 
     return DateTimeTickFormatter(context.dateTimeFactory, overrides: map);
   }
 
-  TimeTickFormatterImpl _makeFormatter(TimeFormatterSpec spec,
-      CalendarField transitionField, ChartContext context) {
+  TimeTickFormatterImpl _makeFormatter(
+    TimeFormatterSpec spec,
+    CalendarField transitionField,
+    ChartContext context,
+  ) {
     if (spec.noonFormat != null) {
       return HourTickFormatter(
-          dateTimeFactory: context.dateTimeFactory,
-          simpleFormat: spec.format,
-          transitionFormat: spec.transitionFormat,
-          noonFormat: spec.noonFormat);
+        dateTimeFactory: context.dateTimeFactory,
+        simpleFormat: spec.format,
+        transitionFormat: spec.transitionFormat,
+        noonFormat: spec.noonFormat,
+      );
     } else {
       return TimeTickFormatterImpl(
-          dateTimeFactory: context.dateTimeFactory,
-          simpleFormat: spec.format,
-          transitionFormat: spec.transitionFormat,
-          transitionField: transitionField);
+        dateTimeFactory: context.dateTimeFactory,
+        simpleFormat: spec.format,
+        transitionFormat: spec.transitionFormat,
+        transitionField: transitionField,
+      );
     }
   }
 

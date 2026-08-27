@@ -29,10 +29,9 @@ class RangeAxisTicks<D> extends AxisTicks<D> {
   /// Position of the range tick ending point.
   double rangeEndLocationPx;
 
-  RangeAxisTicks(RangeTick<D> tick)
-      : rangeStartValue = tick.rangeStartValue,
-        rangeStartLocationPx = tick.rangeStartLocationPx,
-        rangeEndValue = tick.rangeEndValue,
-        rangeEndLocationPx = tick.rangeEndLocationPx,
-        super(tick);
+  RangeAxisTicks(RangeTick<D> super.tick)
+    : rangeStartValue = tick.rangeStartValue,
+      rangeStartLocationPx = tick.rangeStartLocationPx,
+      rangeEndValue = tick.rangeEndValue,
+      rangeEndLocationPx = tick.rangeEndLocationPx;
 }

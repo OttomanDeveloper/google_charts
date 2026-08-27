@@ -15,6 +15,8 @@
 
 /// Example of an ordinal combo chart with two series rendered as bars, and a
 /// third rendered as a line.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -26,7 +28,8 @@ class OrdinalComboBarLineChart extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  OrdinalComboBarLineChart(this.seriesList, {this.animate = false});
+  const OrdinalComboBarLineChart(this.seriesList,
+      {super.key, this.animate = false});
 
   factory OrdinalComboBarLineChart.withSampleData() {
     return OrdinalComboBarLineChart(

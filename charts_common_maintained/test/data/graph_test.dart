@@ -14,7 +14,8 @@
 // limitations under the License.
 
 import 'package:charts_common_maintained/charts_common_maintained.dart';
-import 'package:charts_common_maintained/src/data/graph.dart' as graph_structure
+import 'package:charts_common_maintained/src/data/graph.dart'
+    as graph_structure
     show indexNotRelevant, Link, Node;
 import 'package:test/test.dart';
 
@@ -70,34 +71,39 @@ var myMockLinks = [
 
 Graph<MyNode, MyLink, String> mockLinearGraph() {
   var myGraph = Graph<MyNode, MyLink, String>(
-      id: 'MyGraph',
-      nodes: myMockNodes,
-      links: myMockLinks,
-      nodeDomainFn: (node, _) => node.domainId,
-      linkDomainFn: (link, _) => link.domainId,
-      sourceFn: (link, _) => link.sourceNode,
-      targetFn: (link, _) => link.targetNode,
-      nodeMeasureFn: (node, _) => node.measure,
-      linkMeasureFn: (link, _) => link.measure);
+    id: 'MyGraph',
+    nodes: myMockNodes,
+    links: myMockLinks,
+    nodeDomainFn: (node, _) => node.domainId,
+    linkDomainFn: (link, _) => link.domainId,
+    sourceFn: (link, _) => link.sourceNode,
+    targetFn: (link, _) => link.targetNode,
+    nodeMeasureFn: (node, _) => node.measure,
+    linkMeasureFn: (link, _) => link.measure,
+  );
 
   return myGraph;
 }
 
-String nodeDomain(Graph<MyNode, MyLink, String> myGraph,
-        graph_structure.Node<MyNode, MyLink> node) =>
-    myGraph.nodeDomainFn(node, graph_structure.indexNotRelevant);
+String nodeDomain(
+  Graph<MyNode, MyLink, String> myGraph,
+  graph_structure.Node<MyNode, MyLink> node,
+) => myGraph.nodeDomainFn(node, graph_structure.indexNotRelevant);
 
-String linkDomain(Graph<MyNode, MyLink, String> myGraph,
-        graph_structure.Link<MyNode, MyLink> link) =>
-    myGraph.linkDomainFn(link, graph_structure.indexNotRelevant);
+String linkDomain(
+  Graph<MyNode, MyLink, String> myGraph,
+  graph_structure.Link<MyNode, MyLink> link,
+) => myGraph.linkDomainFn(link, graph_structure.indexNotRelevant);
 
-num nodeMeasure(Graph<MyNode, MyLink, String> myGraph,
-        graph_structure.Node<MyNode, MyLink> node) =>
-    myGraph.nodeMeasureFn(node, graph_structure.indexNotRelevant)!;
+num nodeMeasure(
+  Graph<MyNode, MyLink, String> myGraph,
+  graph_structure.Node<MyNode, MyLink> node,
+) => myGraph.nodeMeasureFn(node, graph_structure.indexNotRelevant)!;
 
-num linkMeasure(Graph<MyNode, MyLink, String> myGraph,
-        graph_structure.Link<MyNode, MyLink> link) =>
-    myGraph.linkMeasureFn(link, graph_structure.indexNotRelevant)!;
+num linkMeasure(
+  Graph<MyNode, MyLink, String> myGraph,
+  graph_structure.Link<MyNode, MyLink> link,
+) => myGraph.linkMeasureFn(link, graph_structure.indexNotRelevant)!;
 
 void main() {
   group('GraphDataClass', () {
@@ -112,11 +118,17 @@ void main() {
 
     test('converts generic node into standard graph node', () {
       var myGraph = mockLinearGraph();
-      expect(myGraph.nodes.map((node) => nodeDomain(myGraph, node)).toList(),
-          [nodeIds[1], nodeIds[2], nodeIds[3]]);
+      expect(myGraph.nodes.map((node) => nodeDomain(myGraph, node)).toList(), [
+        nodeIds[1],
+        nodeIds[2],
+        nodeIds[3],
+      ]);
       expect(myGraph.nodes.length, 3);
-      expect(myGraph.nodes.map((node) => nodeMeasure(myGraph, node)).toList(),
-          [4, 5, 6]);
+      expect(myGraph.nodes.map((node) => nodeMeasure(myGraph, node)).toList(), [
+        4,
+        5,
+        6,
+      ]);
     });
 
     test('executes accessor functions on a given link', () {
@@ -129,10 +141,14 @@ void main() {
     test('converts generic link into standard graph link', () {
       var myGraph = mockLinearGraph();
 
-      expect(nodeDomain(myGraph, myGraph.links[0].source),
-          nodeDomain(myGraph, myGraph.nodes[0]));
-      expect(nodeDomain(myGraph, myGraph.links[0].target),
-          nodeDomain(myGraph, myGraph.nodes[1]));
+      expect(
+        nodeDomain(myGraph, myGraph.links[0].source),
+        nodeDomain(myGraph, myGraph.nodes[0]),
+      );
+      expect(
+        nodeDomain(myGraph, myGraph.links[0].target),
+        nodeDomain(myGraph, myGraph.nodes[1]),
+      );
       expect(linkDomain(myGraph, myGraph.links[0]), linkIds[1]);
       expect(linkDomain(myGraph, myGraph.links[1]), linkIds[2]);
       expect(linkMeasure(myGraph, myGraph.links[0]), 1);
@@ -143,34 +159,36 @@ void main() {
       var myGraph = mockLinearGraph();
 
       expect(myGraph.nodes[0].incomingLinks.length, 0);
-      expect(linkDomain(myGraph, myGraph.nodes[0].outgoingLinks[0]),
-          linkDomain(myGraph, myGraph.links[0]));
-      expect(linkDomain(myGraph, myGraph.nodes[1].incomingLinks[0]),
-          linkDomain(myGraph, myGraph.links[0]));
-      expect(linkDomain(myGraph, myGraph.nodes[1].outgoingLinks[0]),
-          linkDomain(myGraph, myGraph.links[1]));
+      expect(
+        linkDomain(myGraph, myGraph.nodes[0].outgoingLinks[0]),
+        linkDomain(myGraph, myGraph.links[0]),
+      );
+      expect(
+        linkDomain(myGraph, myGraph.nodes[1].incomingLinks[0]),
+        linkDomain(myGraph, myGraph.links[0]),
+      );
+      expect(
+        linkDomain(myGraph, myGraph.nodes[1].outgoingLinks[0]),
+        linkDomain(myGraph, myGraph.links[1]),
+      );
       expect(myGraph.nodes[2].outgoingLinks.length, 0);
     });
     test('preserves graph specific data when converting to series', () {
-      var myNodes = [
-        MyNode(nodeIds[1], 4),
-        MyNode(nodeIds[2], 5),
-      ];
+      var myNodes = [MyNode(nodeIds[1], 4), MyNode(nodeIds[2], 5)];
 
-      var myLinks = [
-        MyLink(linkIds[1], myNodes[0], myNodes[1], 1),
-      ];
+      var myLinks = [MyLink(linkIds[1], myNodes[0], myNodes[1], 1)];
 
       var myGraph = Graph<MyNode, MyLink, String>(
-          id: 'MyGraph',
-          nodes: myNodes,
-          links: myLinks,
-          nodeDomainFn: (node, _) => node.domainId,
-          linkDomainFn: (link, _) => link.domainId,
-          sourceFn: (link, _) => link.sourceNode,
-          targetFn: (link, _) => link.targetNode,
-          nodeMeasureFn: (node, _) => node.measure,
-          linkMeasureFn: (link, _) => link.measure);
+        id: 'MyGraph',
+        nodes: myNodes,
+        links: myLinks,
+        nodeDomainFn: (node, _) => node.domainId,
+        linkDomainFn: (link, _) => link.domainId,
+        sourceFn: (link, _) => link.sourceNode,
+        targetFn: (link, _) => link.targetNode,
+        nodeMeasureFn: (node, _) => node.measure,
+        linkMeasureFn: (link, _) => link.measure,
+      );
 
       List<Series<dynamic, String>> mySeriesList = myGraph.toSeriesList();
 
@@ -180,13 +198,39 @@ void main() {
       expect(mySeriesList[1].domainFn(0), linkIds[1]);
       expect(mySeriesList[1].measureFn(0), 1);
       expect(mySeriesList[1].id, 'MyGraph_links');
-      expect(nodeDomain(myGraph, mySeriesList[1].data[0].source), nodeIds[1]);
-      expect(nodeDomain(myGraph, mySeriesList[1].data[0].target), nodeIds[2]);
+      expect(
+        nodeDomain(
+          myGraph,
+          mySeriesList[1].data[0].source
+              as graph_structure.Node<MyNode, MyLink>,
+        ),
+        nodeIds[1],
+      );
+      expect(
+        nodeDomain(
+          myGraph,
+          mySeriesList[1].data[0].target
+              as graph_structure.Node<MyNode, MyLink>,
+        ),
+        nodeIds[2],
+      );
       expect(mySeriesList[0].data[0].incomingLinks.length, 0);
-      expect(linkDomain(myGraph, mySeriesList[0].data[0].outgoingLinks[0]),
-          linkDomain(myGraph, myGraph.links[0]));
-      expect(linkDomain(myGraph, mySeriesList[0].data[1].incomingLinks[0]),
-          linkDomain(myGraph, myGraph.links[0]));
+      expect(
+        linkDomain(
+          myGraph,
+          mySeriesList[0].data[0].outgoingLinks[0]
+              as graph_structure.Link<MyNode, MyLink>,
+        ),
+        linkDomain(myGraph, myGraph.links[0]),
+      );
+      expect(
+        linkDomain(
+          myGraph,
+          mySeriesList[0].data[1].incomingLinks[0]
+              as graph_structure.Link<MyNode, MyLink>,
+        ),
+        linkDomain(myGraph, myGraph.links[0]),
+      );
       expect(mySeriesList[0].data[1].outgoingLinks.length, 0);
     });
   });

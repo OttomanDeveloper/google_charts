@@ -38,7 +38,8 @@ import 'chart_behavior.dart' show ChartBehavior, GestureType;
 /// range.
 @immutable
 class RangeAnnotation<D> extends ChartBehavior<D> {
-  final desiredGestures = Set<GestureType>();
+  @override
+  final desiredGestures = <GestureType>{};
 
   /// List of annotations to render on the chart.
   final List<common.AnnotationSegment<Object>> annotations;
@@ -70,29 +71,30 @@ class RangeAnnotation<D> extends ChartBehavior<D> {
   /// (e.g. LayoutViewPaintOrder.rangeAnnotation + 1)
   final int? layoutPaintOrder;
 
-  RangeAnnotation(this.annotations,
-      {common.Color? defaultColor,
-      this.defaultLabelAnchor,
-      this.defaultLabelDirection,
-      this.defaultLabelPosition,
-      this.defaultLabelStyleSpec,
-      this.extendAxis,
-      this.labelPadding,
-      this.layoutPaintOrder})
-      : this.defaultColor =
-            defaultColor ?? common.MaterialPalette.gray.shade100;
+  RangeAnnotation(
+    this.annotations, {
+    common.Color? defaultColor,
+    this.defaultLabelAnchor,
+    this.defaultLabelDirection,
+    this.defaultLabelPosition,
+    this.defaultLabelStyleSpec,
+    this.extendAxis,
+    this.labelPadding,
+    this.layoutPaintOrder,
+  }) : defaultColor = defaultColor ?? common.MaterialPalette.gray.shade100;
 
   @override
-  common.RangeAnnotation<D> createCommonBehavior() =>
-      common.RangeAnnotation<D>(annotations,
-          defaultColor: defaultColor,
-          defaultLabelAnchor: defaultLabelAnchor,
-          defaultLabelDirection: defaultLabelDirection,
-          defaultLabelPosition: defaultLabelPosition,
-          defaultLabelStyleSpec: defaultLabelStyleSpec,
-          extendAxis: extendAxis,
-          labelPadding: labelPadding,
-          layoutPaintOrder: layoutPaintOrder);
+  common.RangeAnnotation<D> createCommonBehavior() => common.RangeAnnotation<D>(
+    annotations,
+    defaultColor: defaultColor,
+    defaultLabelAnchor: defaultLabelAnchor,
+    defaultLabelDirection: defaultLabelDirection,
+    defaultLabelPosition: defaultLabelPosition,
+    defaultLabelStyleSpec: defaultLabelStyleSpec,
+    extendAxis: extendAxis,
+    labelPadding: labelPadding,
+    layoutPaintOrder: layoutPaintOrder,
+  );
 
   @override
   void updateCommonBehavior(common.ChartBehavior commonBehavior) {}
@@ -116,13 +118,14 @@ class RangeAnnotation<D> extends ChartBehavior<D> {
 
   @override
   int get hashCode => Object.hash(
-      annotations,
-      defaultColor,
-      extendAxis,
-      defaultLabelAnchor,
-      defaultLabelDirection,
-      defaultLabelPosition,
-      defaultLabelStyleSpec,
-      labelPadding,
-      layoutPaintOrder);
+    annotations,
+    defaultColor,
+    extendAxis,
+    defaultLabelAnchor,
+    defaultLabelDirection,
+    defaultLabelPosition,
+    defaultLabelStyleSpec,
+    labelPadding,
+    layoutPaintOrder,
+  );
 }

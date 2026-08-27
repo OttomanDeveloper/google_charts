@@ -20,6 +20,8 @@
 ///
 /// Disjoint measure axes will be used to scale the series associated with them,
 /// but they will not render any tick elements on either side of the chart.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:collection' show LinkedHashMap;
 import 'dart:math';
@@ -32,7 +34,8 @@ class DisjointMeasureAxisLineChart extends StatelessWidget {
   final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  DisjointMeasureAxisLineChart(this.seriesList, {this.animate = false});
+  const DisjointMeasureAxisLineChart(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [LineChart] with sample data and no transition.
   factory DisjointMeasureAxisLineChart.withSampleData() {

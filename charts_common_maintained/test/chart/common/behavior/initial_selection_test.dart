@@ -32,19 +32,20 @@ class FakeRenderer<D> extends BaseSeriesRenderer<D> {
 
   @override
   DatumDetails<D> addPositionToDetailsForSeriesDatum(
-      DatumDetails<D> details, SeriesDatum<D> seriesDatum) {
-    return null;
+    DatumDetails<D> details,
+    SeriesDatum<D> seriesDatum,
+  ) {
+    return details;
   }
 
   @override
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
     Point<double> chartPoint,
     bool byDomain,
-    Rectangle<int> boundsOverride, {
-    selectOverlappingPoints = false,
-    selectExactEventLocation = false,
-  }) =>
-      null;
+    Rectangle<int>? boundsOverride, {
+    bool selectOverlappingPoints = false,
+    bool selectExactEventLocation = false,
+  }) => <DatumDetails<D>>[];
 
   @override
   void paint(ChartCanvas canvas, double animationPercent) {}
@@ -66,19 +67,23 @@ class FakeChart extends BaseChart {
 }
 
 void main() {
-  FakeChart _chart;
-  MutableSeries _series1;
-  MutableSeries _series2;
-  MutableSeries _series3;
-  MutableSeries _series4;
+  late FakeChart _chart;
+  late MutableSeries _series1;
+  late MutableSeries _series2;
+  late MutableSeries _series3;
+  late MutableSeries _series4;
   final infoSelectionType = SelectionModelType.info;
 
-  InitialSelection _makeBehavior(SelectionModelType selectionModelType,
-      {List<String> selectedSeries, List<SeriesDatumConfig> selectedData}) {
+  InitialSelection _makeBehavior(
+    SelectionModelType selectionModelType, {
+    List<String>? selectedSeries,
+    List<SeriesDatumConfig>? selectedData,
+  }) {
     InitialSelection behavior = InitialSelection(
-        selectionModelType: selectionModelType,
-        selectedSeriesConfig: selectedSeries,
-        selectedDataConfig: selectedData);
+      selectionModelType: selectionModelType,
+      selectedSeriesConfig: selectedSeries,
+      selectedDataConfig: selectedData,
+    );
 
     behavior.attachTo(_chart);
 
@@ -88,34 +93,48 @@ void main() {
   setUp(() {
     _chart = FakeChart();
 
-    _series1 = MutableSeries(Series(
+    _series1 = MutableSeries(
+      Series(
         id: 'mySeries1',
         data: ['A', 'B', 'C', 'D'],
-        domainFn: (dynamic datum, __) => datum,
-        measureFn: (_, __) => null));
+        domainFn: (dynamic datum, _) => datum,
+        measureFn: (_, _) => null,
+      ),
+    );
 
-    _series2 = MutableSeries(Series(
+    _series2 = MutableSeries(
+      Series(
         id: 'mySeries2',
         data: ['W', 'X', 'Y', 'Z'],
-        domainFn: (dynamic datum, __) => datum,
-        measureFn: (_, __) => null));
+        domainFn: (dynamic datum, _) => datum,
+        measureFn: (_, _) => null,
+      ),
+    );
 
-    _series3 = MutableSeries(Series(
+    _series3 = MutableSeries(
+      Series(
         id: 'mySeries3',
         data: ['W', 'X', 'Y', 'Z'],
-        domainFn: (dynamic datum, __) => datum,
-        measureFn: (_, __) => null));
+        domainFn: (dynamic datum, _) => datum,
+        measureFn: (_, _) => null,
+      ),
+    );
 
-    _series4 = MutableSeries(Series(
+    _series4 = MutableSeries(
+      Series(
         id: 'mySeries4',
         data: ['W', 'X', 'Y', 'Z'],
-        domainFn: (dynamic datum, __) => datum,
-        measureFn: (_, __) => null));
+        domainFn: (dynamic datum, _) => datum,
+        measureFn: (_, _) => null,
+      ),
+    );
   });
 
   test('selects initial datum', () {
-    _makeBehavior(infoSelectionType,
-        selectedData: [SeriesDatumConfig('mySeries1', 'C')]);
+    _makeBehavior(
+      infoSelectionType,
+      selectedData: [SeriesDatumConfig('mySeries1', 'C')],
+    );
 
     _chart.requestOnDraw([_series1, _series2]);
 
@@ -129,10 +148,13 @@ void main() {
   });
 
   test('selects multiple initial data', () {
-    _makeBehavior(infoSelectionType, selectedData: [
-      SeriesDatumConfig('mySeries1', 'C'),
-      SeriesDatumConfig('mySeries1', 'D')
-    ]);
+    _makeBehavior(
+      infoSelectionType,
+      selectedData: [
+        SeriesDatumConfig('mySeries1', 'C'),
+        SeriesDatumConfig('mySeries1', 'D'),
+      ],
+    );
 
     _chart.requestOnDraw([_series1, _series2]);
 
@@ -160,8 +182,10 @@ void main() {
   });
 
   test('selects multiple series', () {
-    _makeBehavior(infoSelectionType,
-        selectedSeries: ['mySeries2', 'mySeries4']);
+    _makeBehavior(
+      infoSelectionType,
+      selectedSeries: ['mySeries2', 'mySeries4'],
+    );
 
     _chart.requestOnDraw([_series1, _series2, _series3, _series4]);
 
@@ -174,9 +198,11 @@ void main() {
   });
 
   test('selects series and datum', () {
-    _makeBehavior(infoSelectionType,
-        selectedData: [SeriesDatumConfig('mySeries1', 'C')],
-        selectedSeries: ['mySeries4']);
+    _makeBehavior(
+      infoSelectionType,
+      selectedData: [SeriesDatumConfig('mySeries1', 'C')],
+      selectedSeries: ['mySeries4'],
+    );
 
     _chart.requestOnDraw([_series1, _series2, _series3, _series4]);
 
@@ -202,15 +228,14 @@ void main() {
     expect(model.selectedDatum, isEmpty);
 
     // Request a draw with a new series list.
-    _chart.draw(
-      [
-        Series(
-            id: 'mySeries2',
-            data: ['W', 'X', 'Y', 'Z'],
-            domainFn: (dynamic datum, __) => datum,
-            measureFn: (_, __) => null)
-      ],
-    );
+    _chart.draw([
+      Series(
+        id: 'mySeries2',
+        data: ['W', 'X', 'Y', 'Z'],
+        domainFn: (dynamic datum, _) => datum,
+        measureFn: (_, _) => null,
+      ),
+    ]);
 
     // Verify selection is cleared.
     expect(model.selectedSeries, isEmpty);

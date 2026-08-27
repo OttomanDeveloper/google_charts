@@ -14,6 +14,8 @@
 // limitations under the License.
 
 /// Custom Tick Style Example
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -31,7 +33,7 @@ class ShortTickLengthAxis extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  ShortTickLengthAxis(this.seriesList, {this.animate = false});
+  const ShortTickLengthAxis(this.seriesList, {super.key, this.animate = false});
 
   factory ShortTickLengthAxis.withSampleData() {
     return ShortTickLengthAxis(

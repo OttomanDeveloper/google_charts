@@ -18,6 +18,8 @@
 ///
 /// This is a pattern of weights used to calculate the width of bars within a
 /// bar group. If not specified, each bar in the group will have an equal width.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -29,7 +31,8 @@ class GroupedStackedWeightPatternBarChart extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  GroupedStackedWeightPatternBarChart(this.seriesList, {this.animate = false});
+  const GroupedStackedWeightPatternBarChart(this.seriesList,
+      {super.key, this.animate = false});
 
   factory GroupedStackedWeightPatternBarChart.withSampleData() {
     return GroupedStackedWeightPatternBarChart(

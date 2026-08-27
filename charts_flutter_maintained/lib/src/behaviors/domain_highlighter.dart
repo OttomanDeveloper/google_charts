@@ -14,7 +14,8 @@
 // limitations under the License.
 
 import 'package:charts_common_maintained/charts_common_maintained.dart'
-    as common show ChartBehavior, DomainHighlighter, SelectionModelType;
+    as common
+    show ChartBehavior, DomainHighlighter, SelectionModelType;
 
 import 'package:meta/meta.dart' show immutable;
 
@@ -29,7 +30,8 @@ import 'chart_behavior.dart' show ChartBehavior, GestureType;
 /// and expand selection out to the domain value.
 @immutable
 class DomainHighlighter<D> extends ChartBehavior<D> {
-  final desiredGestures = Set<GestureType>();
+  @override
+  final desiredGestures = <GestureType>{};
 
   final common.SelectionModelType selectionModelType;
 
@@ -37,7 +39,7 @@ class DomainHighlighter<D> extends ChartBehavior<D> {
 
   @override
   common.DomainHighlighter<D> createCommonBehavior() =>
-      new common.DomainHighlighter<D>(selectionModelType);
+      common.DomainHighlighter<D>(selectionModelType);
 
   @override
   void updateCommonBehavior(common.ChartBehavior commonBehavior) {}

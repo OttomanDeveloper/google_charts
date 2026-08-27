@@ -23,7 +23,8 @@ class SelectionLineHighlight extends StatelessWidget {
   final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  SelectionLineHighlight(this.seriesList, {this.animate = false});
+  const SelectionLineHighlight(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [LineChart] with sample data and no transition.
   factory SelectionLineHighlight.withSampleData() {

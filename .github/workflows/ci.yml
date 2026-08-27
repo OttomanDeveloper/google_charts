@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        sdk: ['3.0.0', 'stable']
+        sdk: ['3.9.0', 'stable']
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -22,8 +22,11 @@ jobs:
       - name: Install dependencies
         run: dart pub get
         working-directory: charts_common_maintained
-      - name: Analyze
-        run: dart analyze --fatal-infos
+      - name: Format check
+        run: dart format --output=none --set-exit-if-changed lib test
+        working-directory: charts_common_maintained
+      - name: Analyze tests
+        run: dart analyze test --fatal-infos
         working-directory: charts_common_maintained
       - name: Run tests
         run: dart test
@@ -41,11 +44,22 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: ${{ matrix.channel }}
+      - name: Use checked-out common package
+        run: |
+          printf 'dependency_overrides:\n  charts_common_maintained:\n    path: ../charts_common_maintained\n' > pubspec_overrides.yaml
+        working-directory: charts_flutter_maintained
+      - name: Use checked-out common package for example
+        run: |
+          printf 'dependency_overrides:\n  charts_common_maintained:\n    path: ../../charts_common_maintained\n' > pubspec_overrides.yaml
+        working-directory: charts_flutter_maintained/example
       - name: Install dependencies
         run: flutter pub get
         working-directory: charts_flutter_maintained
+      - name: Format check
+        run: dart format --output=none --set-exit-if-changed lib test
+        working-directory: charts_flutter_maintained
       - name: Analyze
-        run: flutter analyze
+        run: flutter analyze --fatal-infos
         working-directory: charts_flutter_maintained
       - name: Run tests
         run: flutter test

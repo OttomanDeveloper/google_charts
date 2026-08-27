@@ -14,7 +14,8 @@
 // limitations under the License.
 
 import 'package:charts_common_maintained/charts_common_maintained.dart'
-    as common show ChartBehavior, SelectionModelType, SlidingViewport;
+    as common
+    show ChartBehavior, SelectionModelType, SlidingViewport;
 
 import 'package:meta/meta.dart' show immutable;
 
@@ -28,7 +29,8 @@ import 'chart_behavior.dart' show ChartBehavior, GestureType;
 /// This behavior can only be used on [CartesianChart].
 @immutable
 class SlidingViewport<D> extends ChartBehavior<D> {
-  final desiredGestures = Set<GestureType>();
+  @override
+  final desiredGestures = <GestureType>{};
 
   final common.SelectionModelType selectionModelType;
 
@@ -36,7 +38,7 @@ class SlidingViewport<D> extends ChartBehavior<D> {
 
   @override
   common.SlidingViewport<D> createCommonBehavior() =>
-      new common.SlidingViewport<D>(selectionModelType);
+      common.SlidingViewport<D>(selectionModelType);
 
   @override
   void updateCommonBehavior(common.ChartBehavior<D> commonBehavior) {}

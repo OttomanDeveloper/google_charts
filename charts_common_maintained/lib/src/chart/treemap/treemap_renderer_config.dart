@@ -30,8 +30,12 @@ import 'treemap_label_decorator.dart';
 class TreeMapRendererConfig<D> extends LayoutViewConfig
     implements SeriesRendererConfig<D> {
   /// Default padding of a treemap rectangle.
-  static const _defaultRectPadding =
-      ViewMargin(topPx: 26, leftPx: 4, rightPx: 4, bottomPx: 4);
+  static const _defaultRectPadding = ViewMargin(
+    topPx: 26,
+    leftPx: 4,
+    rightPx: 4,
+    bottomPx: 4,
+  );
 
   @override
   final String? customRendererId;
@@ -64,30 +68,38 @@ class TreeMapRendererConfig<D> extends LayoutViewConfig
   /// Decorator for optionally decorating treemap rectangle label.
   final TreeMapLabelDecorator<D>? labelDecorator;
 
-  TreeMapRendererConfig(
-      {this.customRendererId,
-      this.patternStrokeWidthPx = 1.0,
-      this.strokeWidthPx = 1.0,
-      this.layoutPaintOrder = LayoutViewPaintOrder.treeMap,
-      this.rectPaddingPx = _defaultRectPadding,
-      this.tileType = TreeMapTileType.squarified,
-      this.labelDecorator,
-      Color? strokeColor,
-      SymbolRenderer? symbolRenderer})
-      : strokeColor = strokeColor ?? StyleFactory.style.black,
-        symbolRenderer = symbolRenderer ?? RectSymbolRenderer();
+  TreeMapRendererConfig({
+    this.customRendererId,
+    this.patternStrokeWidthPx = 1.0,
+    this.strokeWidthPx = 1.0,
+    this.layoutPaintOrder = LayoutViewPaintOrder.treeMap,
+    this.rectPaddingPx = _defaultRectPadding,
+    this.tileType = TreeMapTileType.squarified,
+    this.labelDecorator,
+    Color? strokeColor,
+    SymbolRenderer? symbolRenderer,
+  }) : strokeColor = strokeColor ?? StyleFactory.style.black,
+       symbolRenderer = symbolRenderer ?? RectSymbolRenderer();
 
   @override
   BaseTreeMapRenderer<D> build() => switch (tileType) {
-        TreeMapTileType.dice => DiceTreeMapRenderer<D>(
-            config: this, rendererId: customRendererId),
-        TreeMapTileType.slice => SliceTreeMapRenderer<D>(
-            config: this, rendererId: customRendererId),
-        TreeMapTileType.sliceDice => SliceDiceTreeMapRenderer<D>(
-            config: this, rendererId: customRendererId),
-        _ => SquarifiedTreeMapRenderer<D>(
-            config: this, rendererId: customRendererId),
-      };
+    TreeMapTileType.dice => DiceTreeMapRenderer<D>(
+      config: this,
+      rendererId: customRendererId,
+    ),
+    TreeMapTileType.slice => SliceTreeMapRenderer<D>(
+      config: this,
+      rendererId: customRendererId,
+    ),
+    TreeMapTileType.sliceDice => SliceDiceTreeMapRenderer<D>(
+      config: this,
+      rendererId: customRendererId,
+    ),
+    _ => SquarifiedTreeMapRenderer<D>(
+      config: this,
+      rendererId: customRendererId,
+    ),
+  };
 }
 
 /// Tiling algorithm, which is the way to divide a region into subregions of

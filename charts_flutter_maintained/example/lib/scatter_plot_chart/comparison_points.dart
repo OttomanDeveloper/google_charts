@@ -14,6 +14,8 @@
 // limitations under the License.
 
 /// Line chart example
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -25,7 +27,8 @@ class ComparisonPointsScatterPlotChart extends StatelessWidget {
   final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  ComparisonPointsScatterPlotChart(this.seriesList, {this.animate = false});
+  const ComparisonPointsScatterPlotChart(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [ScatterPlotChart] with sample data and no transition.
   factory ComparisonPointsScatterPlotChart.withSampleData() {
@@ -87,7 +90,7 @@ class ComparisonPointsScatterPlotChart extends StatelessWidget {
   }
 
   static LinearSales _makeRandomDatum(int max, Random random) {
-    final makeRadius = (int value) => (random.nextInt(value) + 6).toDouble();
+    double makeRadius(int value) => (random.nextInt(value) + 6).toDouble();
 
     final year = random.nextInt(max);
     final yearLower = (year * 0.8).round();
@@ -105,8 +108,7 @@ class ComparisonPointsScatterPlotChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return charts.ScatterPlotChart(seriesList,
         animate: animate,
-        defaultRenderer:
-            charts.PointRendererConfig(pointRendererDecorators: [
+        defaultRenderer: charts.PointRendererConfig(pointRendererDecorators: [
           charts.ComparisonPointsDecorator(
               symbolRenderer: charts.CylinderSymbolRenderer())
         ]));

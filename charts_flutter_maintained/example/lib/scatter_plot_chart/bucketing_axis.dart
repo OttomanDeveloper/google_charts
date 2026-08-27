@@ -19,6 +19,8 @@
 /// into a reserved space on the axis range. The label for the bucket line will
 /// be drawn in the middle of the bucket range, rather than aligned with the
 /// gridline for that value's position on the scale.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -30,7 +32,8 @@ class BucketingAxisScatterPlotChart extends StatelessWidget {
   final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  BucketingAxisScatterPlotChart(this.seriesList, {this.animate = false});
+  const BucketingAxisScatterPlotChart(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [ScatterPlotChart] with sample data and no transition.
   factory BucketingAxisScatterPlotChart.withSampleData() {
@@ -53,7 +56,7 @@ class BucketingAxisScatterPlotChart extends StatelessWidget {
   static List<charts.Series<LinearSales, num>> _createRandomData() {
     final random = Random();
 
-    final makeRadius = (int value) => (random.nextInt(value) + 6).toDouble();
+    double makeRadius(int value) => (random.nextInt(value) + 6).toDouble();
 
     // Make sure that the measure values for the first five series are well
     // above the threshold. This simulates the grouping of the small values into
@@ -85,18 +88,12 @@ class BucketingAxisScatterPlotChart extends StatelessWidget {
 
     // Make sure that the "Other" series values are smaller.
     final myFakeOtherData = [
-      LinearSales(
-          random.nextInt(100), random.nextInt(50) / 100, makeRadius(6)),
-      LinearSales(
-          random.nextInt(100), random.nextInt(50) / 100, makeRadius(6)),
-      LinearSales(
-          random.nextInt(100), random.nextInt(50) / 100, makeRadius(6)),
-      LinearSales(
-          random.nextInt(100), random.nextInt(50) / 100, makeRadius(6)),
-      LinearSales(
-          random.nextInt(100), random.nextInt(50) / 100, makeRadius(6)),
-      LinearSales(
-          random.nextInt(100), random.nextInt(50) / 100, makeRadius(6)),
+      LinearSales(random.nextInt(100), random.nextInt(50) / 100, makeRadius(6)),
+      LinearSales(random.nextInt(100), random.nextInt(50) / 100, makeRadius(6)),
+      LinearSales(random.nextInt(100), random.nextInt(50) / 100, makeRadius(6)),
+      LinearSales(random.nextInt(100), random.nextInt(50) / 100, makeRadius(6)),
+      LinearSales(random.nextInt(100), random.nextInt(50) / 100, makeRadius(6)),
+      LinearSales(random.nextInt(100), random.nextInt(50) / 100, makeRadius(6)),
     ];
 
     return [
@@ -162,8 +159,8 @@ class BucketingAxisScatterPlotChart extends StatelessWidget {
         // threshold.
         primaryMeasureAxis: charts.BucketingAxisSpec(
             threshold: 0.1,
-            tickProviderSpec: charts.BucketingNumericTickProviderSpec(
-                desiredTickCount: 3)),
+            tickProviderSpec:
+                charts.BucketingNumericTickProviderSpec(desiredTickCount: 3)),
         // Add a series legend to display the series names.
         behaviors: [
           charts.SeriesLegend(position: charts.BehaviorPosition.end),

@@ -20,10 +20,7 @@ import '../chart_behavior.dart' show ChartBehavior;
 import 'a11y_node.dart' show A11yNode;
 
 /// The gesture to use for triggering explore mode.
-enum ExploreModeTrigger {
-  pressHold,
-  tap,
-}
+enum ExploreModeTrigger { pressHold, tap }
 
 /// Chart behavior for adding A11y information.
 abstract class A11yExploreBehavior<D> implements ChartBehavior<D> {
@@ -53,8 +50,8 @@ abstract class A11yExploreBehavior<D> implements ChartBehavior<D> {
     double? minimumWidth,
     this.exploreModeEnabledAnnouncement,
     this.exploreModeDisabledAnnouncement,
-  })  : exploreModeTrigger = exploreModeTrigger ?? ExploreModeTrigger.pressHold,
-        minimumWidth = minimumWidth ?? 1.0 {
+  }) : exploreModeTrigger = exploreModeTrigger ?? ExploreModeTrigger.pressHold,
+       minimumWidth = minimumWidth ?? 1.0 {
     assert(this.minimumWidth >= 1.0);
 
     switch (this.exploreModeTrigger) {
@@ -72,12 +69,15 @@ abstract class A11yExploreBehavior<D> implements ChartBehavior<D> {
       _exploreModeOn = false;
       // Ask native platform to turn off explore mode.
       _chart!.context.disableA11yExploreMode(
-          announcement: exploreModeDisabledAnnouncement);
+        announcement: exploreModeDisabledAnnouncement,
+      );
     } else {
       _exploreModeOn = true;
       // Ask native platform to turn on explore mode.
-      _chart!.context.enableA11yExploreMode(createA11yNodes(),
-          announcement: exploreModeEnabledAnnouncement);
+      _chart!.context.enableA11yExploreMode(
+        createA11yNodes(),
+        announcement: exploreModeEnabledAnnouncement,
+      );
     }
 
     return true;

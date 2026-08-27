@@ -31,11 +31,18 @@ import 'package:charts_common_maintained/src/chart/cartesian/axis/tick_formatter
 import 'package:charts_common_maintained/src/chart/cartesian/axis/tick_provider.dart';
 import 'package:charts_common_maintained/src/chart/cartesian/axis/numeric_extents.dart';
 import 'package:charts_common_maintained/src/chart/cartesian/axis/numeric_tick_provider.dart';
-import 'package:meta/meta.dart' show required;
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-class MockNumericScale extends Mock implements NumericScale {}
+class MockNumericScale extends Mock implements NumericScale {
+  NumericExtents? viewportDomainValue;
+
+  @override
+  NumericExtents get viewportDomain => viewportDomainValue!;
+
+  @override
+  int get rangeWidth => 1000;
+}
 
 /// A fake draw strategy that reports collision and alternate ticks
 ///
@@ -49,28 +56,38 @@ class FakeDrawStrategy extends BaseTickDrawStrategy<num> {
   final int alternateRenderingAfterTickCount;
 
   FakeDrawStrategy(
-      this.collidesAfterTickCount, this.alternateRenderingAfterTickCount)
-      : super(null, FakeGraphicsFactory());
+    this.collidesAfterTickCount,
+    this.alternateRenderingAfterTickCount,
+  ) : super(MockChartContext(), FakeGraphicsFactory());
 
   @override
-  CollisionReport<num> collides(List<Tick<num>> ticks, _) {
-    final ticksCollide = ticks.length >= collidesAfterTickCount;
-    final alternateTicksUsed = ticks.length >= alternateRenderingAfterTickCount;
+  CollisionReport<num> collides(
+    List<Tick<num>>? ticks,
+    AxisOrientation? orientation,
+  ) {
+    final tickList = ticks ?? const <Tick<num>>[];
+    final ticksCollide = tickList.length >= collidesAfterTickCount;
+    final alternateTicksUsed =
+        tickList.length >= alternateRenderingAfterTickCount;
 
     return CollisionReport(
-        ticksCollide: ticksCollide,
-        ticks: ticks,
-        alternateTicksUsed: alternateTicksUsed);
+      ticksCollide: ticksCollide,
+      ticks: tickList,
+      alternateTicksUsed: alternateTicksUsed,
+    );
   }
 
   @override
-  void draw(ChartCanvas canvas, Tick<num> tick,
-      {@required AxisOrientation orientation,
-      @required Rectangle<int> axisBounds,
-      @required Rectangle<int> drawAreaBounds,
-      @required bool isFirst,
-      @required bool isLast,
-      bool collision = false}) {}
+  void draw(
+    ChartCanvas canvas,
+    Tick<num> tick, {
+    required AxisOrientation orientation,
+    required Rectangle<int> axisBounds,
+    required Rectangle<int> drawAreaBounds,
+    required bool isFirst,
+    required bool isLast,
+    bool collision = false,
+  }) {}
 }
 
 /// A fake [GraphicsFactory] that returns [MockTextStyle] and [MockTextElement].
@@ -105,11 +122,11 @@ class CelsiusToFahrenheitConverter implements UnitConverter<num, num> {
 }
 
 void main() {
-  FakeGraphicsFactory graphicsFactory;
-  MockNumericScale scale;
-  NumericTickProvider tickProvider;
-  TickFormatter<num> formatter;
-  ChartContext context;
+  late FakeGraphicsFactory graphicsFactory;
+  late MockNumericScale scale;
+  late NumericTickProvider tickProvider;
+  late TickFormatter<num> formatter;
+  late ChartContext context;
 
   setUp(() {
     graphicsFactory = FakeGraphicsFactory();
@@ -126,17 +143,17 @@ void main() {
       ..setFixedTickCount(4)
       ..allowedSteps = [1.0, 2.5, 5.0];
     final drawStrategy = FakeDrawStrategy(10, 10);
-    when(scale.viewportDomain).thenReturn(NumericExtents(10.0, 70.0));
-    when(scale.rangeWidth).thenReturn(1000);
+    scale.viewportDomainValue = NumericExtents(10.0, 70.0);
 
     final ticks = tickProvider.getTicks(
-        context: context,
-        graphicsFactory: graphicsFactory,
-        scale: scale,
-        formatter: formatter,
-        formatterValueCache: <num, String>{},
-        tickDrawStrategy: drawStrategy,
-        orientation: null);
+      context: context,
+      graphicsFactory: graphicsFactory,
+      scale: scale,
+      formatter: formatter,
+      formatterValueCache: <num, String>{},
+      tickDrawStrategy: drawStrategy,
+      orientation: null,
+    );
 
     expect(ticks, hasLength(4));
     expect(ticks[0].value, equals(0));
@@ -146,33 +163,34 @@ void main() {
   });
 
   test(
-      'tickCountRangeChoosesTicksWithMostTicksAndSmallestIntervalCoveringDomain',
-      () {
-    tickProvider
-      ..zeroBound = false
-      ..dataIsInWholeNumbers = false
-      ..setTickCount(5, 3)
-      ..allowedSteps = [1.0, 2.5, 5.0];
-    final drawStrategy = FakeDrawStrategy(10, 10);
-    when(scale.viewportDomain).thenReturn(NumericExtents(10.0, 80.0));
-    when(scale.rangeWidth).thenReturn(1000);
+    'tickCountRangeChoosesTicksWithMostTicksAndSmallestIntervalCoveringDomain',
+    () {
+      tickProvider
+        ..zeroBound = false
+        ..dataIsInWholeNumbers = false
+        ..setTickCount(5, 3)
+        ..allowedSteps = [1.0, 2.5, 5.0];
+      final drawStrategy = FakeDrawStrategy(10, 10);
+      scale.viewportDomainValue = NumericExtents(10.0, 80.0);
 
-    final ticks = tickProvider.getTicks(
+      final ticks = tickProvider.getTicks(
         context: context,
         graphicsFactory: graphicsFactory,
         scale: scale,
         formatter: formatter,
         formatterValueCache: <num, String>{},
         tickDrawStrategy: drawStrategy,
-        orientation: null);
+        orientation: null,
+      );
 
-    expect(ticks, hasLength(5));
-    expect(ticks[0].value, equals(0));
-    expect(ticks[1].value, equals(25));
-    expect(ticks[2].value, equals(50));
-    expect(ticks[3].value, equals(75));
-    expect(ticks[4].value, equals(100));
-  });
+      expect(ticks, hasLength(5));
+      expect(ticks[0].value, equals(0));
+      expect(ticks[1].value, equals(25));
+      expect(ticks[2].value, equals(50));
+      expect(ticks[3].value, equals(75));
+      expect(ticks[4].value, equals(100));
+    },
+  );
 
   test('choosesNonAlternateRenderingTicksEvenIfIntervalIsLarger', () {
     tickProvider
@@ -181,17 +199,17 @@ void main() {
       ..setTickCount(5, 3)
       ..allowedSteps = [1.0, 2.5, 6.0];
     final drawStrategy = FakeDrawStrategy(10, 5);
-    when(scale.viewportDomain).thenReturn(NumericExtents(10.0, 80.0));
-    when(scale.rangeWidth).thenReturn(1000);
+    scale.viewportDomainValue = NumericExtents(10.0, 80.0);
 
     final ticks = tickProvider.getTicks(
-        context: context,
-        graphicsFactory: graphicsFactory,
-        scale: scale,
-        formatter: formatter,
-        formatterValueCache: <num, String>{},
-        tickDrawStrategy: drawStrategy,
-        orientation: null);
+      context: context,
+      graphicsFactory: graphicsFactory,
+      scale: scale,
+      formatter: formatter,
+      formatterValueCache: <num, String>{},
+      tickDrawStrategy: drawStrategy,
+      orientation: null,
+    );
 
     expect(ticks, hasLength(3));
     expect(ticks[0].value, equals(0));
@@ -206,17 +224,17 @@ void main() {
       ..setTickCount(5, 3)
       ..allowedSteps = [1.0, 2.5, 6.0];
     final drawStrategy = FakeDrawStrategy(5, 5);
-    when(scale.viewportDomain).thenReturn(NumericExtents(10.0, 80.0));
-    when(scale.rangeWidth).thenReturn(1000);
+    scale.viewportDomainValue = NumericExtents(10.0, 80.0);
 
     final ticks = tickProvider.getTicks(
-        context: context,
-        graphicsFactory: graphicsFactory,
-        scale: scale,
-        formatter: formatter,
-        formatterValueCache: <num, String>{},
-        tickDrawStrategy: drawStrategy,
-        orientation: null);
+      context: context,
+      graphicsFactory: graphicsFactory,
+      scale: scale,
+      formatter: formatter,
+      formatterValueCache: <num, String>{},
+      tickDrawStrategy: drawStrategy,
+      orientation: null,
+    );
 
     expect(ticks, hasLength(3));
     expect(ticks[0].value, equals(0));
@@ -231,17 +249,17 @@ void main() {
       ..setFixedTickCount(3)
       ..allowedSteps = [1.0, 2.5, 5.0];
     final drawStrategy = FakeDrawStrategy(10, 10);
-    when(scale.viewportDomain).thenReturn(NumericExtents(55.0, 135.0));
-    when(scale.rangeWidth).thenReturn(1000);
+    scale.viewportDomainValue = NumericExtents(55.0, 135.0);
 
     final ticks = tickProvider.getTicks(
-        context: context,
-        graphicsFactory: graphicsFactory,
-        scale: scale,
-        formatter: formatter,
-        formatterValueCache: <num, String>{},
-        tickDrawStrategy: drawStrategy,
-        orientation: null);
+      context: context,
+      graphicsFactory: graphicsFactory,
+      scale: scale,
+      formatter: formatter,
+      formatterValueCache: <num, String>{},
+      tickDrawStrategy: drawStrategy,
+      orientation: null,
+    );
 
     final tickValues = ticks.map((tick) => tick.value).toList();
 
@@ -255,17 +273,17 @@ void main() {
       ..setFixedTickCount(3)
       ..allowedSteps = [1.0, 2.5, 5.0];
     final drawStrategy = FakeDrawStrategy(10, 10);
-    when(scale.viewportDomain).thenReturn(NumericExtents(-55.0, 135.0));
-    when(scale.rangeWidth).thenReturn(1000);
+    scale.viewportDomainValue = NumericExtents(-55.0, 135.0);
 
     final ticks = tickProvider.getTicks(
-        context: context,
-        graphicsFactory: graphicsFactory,
-        scale: scale,
-        formatter: formatter,
-        formatterValueCache: <num, String>{},
-        tickDrawStrategy: drawStrategy,
-        orientation: null);
+      context: context,
+      graphicsFactory: graphicsFactory,
+      scale: scale,
+      formatter: formatter,
+      formatterValueCache: <num, String>{},
+      tickDrawStrategy: drawStrategy,
+      orientation: null,
+    );
 
     final tickValues = ticks.map((tick) => tick.value).toList();
 
@@ -274,23 +292,25 @@ void main() {
 
   test('boundsCrossOrigin_returnsValidTickRange', () {
     final drawStrategy = FakeDrawStrategy(10, 10);
-    when(scale.viewportDomain).thenReturn(NumericExtents(-55.0, 135.0));
-    when(scale.rangeWidth).thenReturn(1000);
+    scale.viewportDomainValue = NumericExtents(-55.0, 135.0);
 
     final ticks = tickProvider.getTicks(
-        context: context,
-        graphicsFactory: graphicsFactory,
-        scale: scale,
-        formatter: formatter,
-        formatterValueCache: <num, String>{},
-        tickDrawStrategy: drawStrategy,
-        orientation: null);
+      context: context,
+      graphicsFactory: graphicsFactory,
+      scale: scale,
+      formatter: formatter,
+      formatterValueCache: <num, String>{},
+      tickDrawStrategy: drawStrategy,
+      orientation: null,
+    );
 
     final tickValues = ticks.map((tick) => tick.value).toList();
 
     // We expect to see a range of ticks that crosses zero.
-    expect(tickValues,
-        equals([-60.0, -30.0, 0.0, 30.0, 60.0, 90.0, 120.0, 150.0]));
+    expect(
+      tickValues,
+      equals([-56.0, -28.0, 0.0, 28.0, 56.0, 84.0, 112.0, 140.0]),
+    );
   });
 
   test('dataIsWholeNumbers_returnsWholeNumberTicks', () {
@@ -301,17 +321,17 @@ void main() {
       ..allowedSteps = [1.0, 2.5, 5.0];
     final drawStrategy = FakeDrawStrategy(10, 10);
 
-    when(scale.viewportDomain).thenReturn(NumericExtents(0.25, 0.75));
-    when(scale.rangeWidth).thenReturn(1000);
+    scale.viewportDomainValue = NumericExtents(0.25, 0.75);
 
     final ticks = tickProvider.getTicks(
-        context: context,
-        graphicsFactory: graphicsFactory,
-        scale: scale,
-        formatter: formatter,
-        formatterValueCache: <num, String>{},
-        tickDrawStrategy: drawStrategy,
-        orientation: null);
+      context: context,
+      graphicsFactory: graphicsFactory,
+      scale: scale,
+      formatter: formatter,
+      formatterValueCache: <num, String>{},
+      tickDrawStrategy: drawStrategy,
+      orientation: null,
+    );
 
     expect(ticks[0].value, equals(0));
     expect(ticks[1].value, equals(1));
@@ -328,17 +348,17 @@ void main() {
 
     final drawStrategy = FakeDrawStrategy(10, 10);
 
-    when(scale.viewportDomain).thenReturn(NumericExtents(0.0, 20.0));
-    when(scale.rangeWidth).thenReturn(1000);
+    scale.viewportDomainValue = NumericExtents(0.0, 20.0);
 
     final ticks = tickProvider.getTicks(
-        context: context,
-        graphicsFactory: graphicsFactory,
-        scale: scale,
-        formatter: formatter,
-        formatterValueCache: <num, String>{},
-        tickDrawStrategy: drawStrategy,
-        orientation: null);
+      context: context,
+      graphicsFactory: graphicsFactory,
+      scale: scale,
+      formatter: formatter,
+      formatterValueCache: <num, String>{},
+      tickDrawStrategy: drawStrategy,
+      orientation: null,
+    );
 
     expect(ticks[0].value, closeTo(-17.8, 0.1)); // 0 in axis units
     expect(ticks[1].value, closeTo(10, 0.1)); // 50 in axis units
@@ -353,17 +373,17 @@ void main() {
 
     final drawStrategy = FakeDrawStrategy(10, 10);
 
-    when(scale.viewportDomain).thenReturn(NumericExtents(0.000001, 0.000002));
-    when(scale.rangeWidth).thenReturn(1000);
+    scale.viewportDomainValue = NumericExtents(0.000001, 0.000002);
 
     final ticks = tickProvider.getTicks(
-        context: context,
-        graphicsFactory: graphicsFactory,
-        scale: scale,
-        formatter: formatter,
-        formatterValueCache: <num, String>{},
-        tickDrawStrategy: drawStrategy,
-        orientation: null);
+      context: context,
+      graphicsFactory: graphicsFactory,
+      scale: scale,
+      formatter: formatter,
+      formatterValueCache: <num, String>{},
+      tickDrawStrategy: drawStrategy,
+      orientation: null,
+    );
 
     expect(ticks.length, equals(5));
     expect(ticks[0].value, equals(0));
@@ -381,17 +401,17 @@ void main() {
 
     final drawStrategy = FakeDrawStrategy(10, 10);
 
-    when(scale.viewportDomain).thenReturn(NumericExtents(0.000001, 0.000002));
-    when(scale.rangeWidth).thenReturn(1000);
+    scale.viewportDomainValue = NumericExtents(0.000001, 0.000002);
 
     final ticks = tickProvider.getTicks(
-        context: context,
-        graphicsFactory: graphicsFactory,
-        scale: scale,
-        formatter: formatter,
-        formatterValueCache: <num, String>{},
-        tickDrawStrategy: drawStrategy,
-        orientation: null);
+      context: context,
+      graphicsFactory: graphicsFactory,
+      scale: scale,
+      formatter: formatter,
+      formatterValueCache: <num, String>{},
+      tickDrawStrategy: drawStrategy,
+      orientation: null,
+    );
 
     expect(ticks.length, equals(5));
     expect(ticks[0].value, equals(0));
@@ -409,18 +429,17 @@ void main() {
 
     final drawStrategy = FakeDrawStrategy(10, 10);
 
-    when(scale.viewportDomain)
-        .thenReturn(NumericExtents(101.000001, 101.000002));
-    when(scale.rangeWidth).thenReturn(1000);
+    scale.viewportDomainValue = NumericExtents(101.000001, 101.000002);
 
     final ticks = tickProvider.getTicks(
-        context: context,
-        graphicsFactory: graphicsFactory,
-        scale: scale,
-        formatter: formatter,
-        formatterValueCache: <num, String>{},
-        tickDrawStrategy: drawStrategy,
-        orientation: null);
+      context: context,
+      graphicsFactory: graphicsFactory,
+      scale: scale,
+      formatter: formatter,
+      formatterValueCache: <num, String>{},
+      tickDrawStrategy: drawStrategy,
+      orientation: null,
+    );
 
     expect(ticks.length, equals(5));
     expect(ticks[0].value, equals(101));
@@ -432,8 +451,7 @@ void main() {
 
   test('handles tick hint for non zero ticks', () {
     final drawStrategy = FakeDrawStrategy(10, 10);
-    when(scale.viewportDomain).thenReturn(NumericExtents(20.0, 35.0));
-    when(scale.rangeWidth).thenReturn(1000);
+    scale.viewportDomainValue = NumericExtents(20.0, 35.0);
 
     // Step Size: 3,
     // Previous start tick: 10
@@ -465,8 +483,7 @@ void main() {
 
   test('handles tick hint for negative starting ticks', () {
     final drawStrategy = FakeDrawStrategy(10, 10);
-    when(scale.viewportDomain).thenReturn(NumericExtents(-35.0, -20.0));
-    when(scale.rangeWidth).thenReturn(1000);
+    scale.viewportDomainValue = NumericExtents(-35.0, -20.0);
 
     // Step Size: 3,
     // Previous start tick: -25

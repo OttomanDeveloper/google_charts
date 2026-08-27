@@ -41,9 +41,16 @@ abstract class ChartCanvas {
   /// [fill] Fill color for the sector.
   /// [stroke] Stroke color of the arc and radius lines.
   /// [strokeWidthPx] Stroke width of the arc and radius lines.
-  void drawCircleSector(Point center, double radius, double innerRadius,
-      double startAngle, double endAngle,
-      {Color? fill, Color? stroke, double? strokeWidthPx});
+  void drawCircleSector(
+    Point center,
+    double radius,
+    double innerRadius,
+    double startAngle,
+    double endAngle, {
+    Color? fill,
+    Color? stroke,
+    double? strokeWidthPx,
+  });
 
   /// Draws a smooth link from source to target.
   ///
@@ -62,14 +69,15 @@ abstract class ChartCanvas {
   /// to stroke-dasharray in SVG path elements. An odd number of values in the
   /// pattern will be repeated to derive an even number of values. "1,2,3" is
   /// equivalent to "1,2,3,1,2,3."
-  void drawLine(
-      {required List<Point> points,
-      Rectangle<num>? clipBounds,
-      Color? fill,
-      Color? stroke,
-      bool? roundEndCaps,
-      double? strokeWidthPx,
-      List<int>? dashPattern});
+  void drawLine({
+    required List<Point> points,
+    Rectangle<num>? clipBounds,
+    Color? fill,
+    Color? stroke,
+    bool? roundEndCaps,
+    double? strokeWidthPx,
+    List<int>? dashPattern,
+  });
 
   /// Renders a pie, with an optional hole in the center.
   void drawPie(CanvasPie canvasPie);
@@ -87,13 +95,14 @@ abstract class ChartCanvas {
   /// appear.
   ///
   /// [blendMode] Blend mode to be used when drawing this point on canvas.
-  void drawPoint(
-      {required Point point,
-      required double radius,
-      Color? fill,
-      Color? stroke,
-      double? strokeWidthPx,
-      BlendMode? blendMode});
+  void drawPoint({
+    required Point point,
+    required double radius,
+    Color? fill,
+    Color? stroke,
+    double? strokeWidthPx,
+    BlendMode? blendMode,
+  });
 
   /// Renders a polygon shape described by a set of points.
   ///
@@ -105,12 +114,13 @@ abstract class ChartCanvas {
   ///
   /// [stroke] and [strokeWidthPx] configure the color and thickness of the
   /// edges of the polygon. Both must be provided together for a line to appear.
-  void drawPolygon(
-      {required List<Point> points,
-      Rectangle<num>? clipBounds,
-      Color? fill,
-      Color? stroke,
-      double? strokeWidthPx});
+  void drawPolygon({
+    required List<Point> points,
+    Rectangle<num>? clipBounds,
+    Color? fill,
+    Color? stroke,
+    double? strokeWidthPx,
+  });
 
   /// Renders a simple rectangle.
   ///
@@ -118,25 +128,29 @@ abstract class ChartCanvas {
   /// the draw area bounds on the top, the first x pixels (decided by the native
   /// platform) exceeding the draw area will apply a gradient to transparent
   /// with anything exceeding the x pixels to be transparent.
-  void drawRect(Rectangle<num> bounds,
-      {Color? fill,
-      Color? stroke,
-      double? strokeWidthPx,
-      Rectangle<num>? drawAreaBounds});
+  void drawRect(
+    Rectangle<num> bounds, {
+    Color? fill,
+    Color? stroke,
+    double? strokeWidthPx,
+    Rectangle<num>? drawAreaBounds,
+  });
 
   /// Renders a rounded rectangle.
-  void drawRRect(Rectangle<num> bounds,
-      {Color? fill,
-      Color? stroke,
-      Color? patternColor,
-      FillPatternType? fillPattern,
-      double? patternStrokeWidthPx,
-      double? strokeWidthPx,
-      num? radius,
-      bool roundTopLeft = false,
-      bool roundTopRight = false,
-      bool roundBottomLeft = false,
-      bool roundBottomRight = false});
+  void drawRRect(
+    Rectangle<num> bounds, {
+    Color? fill,
+    Color? stroke,
+    Color? patternColor,
+    FillPatternType? fillPattern,
+    double? patternStrokeWidthPx,
+    double? strokeWidthPx,
+    num? radius,
+    bool roundTopLeft = false,
+    bool roundTopRight = false,
+    bool roundBottomLeft = false,
+    bool roundBottomRight = false,
+  });
 
   /// Renders a stack of bars, rounding the last bar in the stack.
   ///
@@ -147,11 +161,17 @@ abstract class ChartCanvas {
   /// the draw area bounds on the top, the first x pixels (decided by the native
   /// platform) exceeding the draw area will apply a gradient to transparent
   /// with anything exceeding the x pixels to be transparent.
-  void drawBarStack(CanvasBarStack canvasBarStack,
-      {Rectangle<num>? drawAreaBounds});
+  void drawBarStack(
+    CanvasBarStack canvasBarStack, {
+    Rectangle<num>? drawAreaBounds,
+  });
 
-  void drawText(TextElement textElement, int offsetX, int offsetY,
-      {double rotation = 0.0});
+  void drawText(
+    TextElement textElement,
+    int offsetX,
+    int offsetY, {
+    double rotation = 0.0,
+  });
 
   /// Request the canvas to clip to [clipBounds].
   ///
@@ -207,7 +227,7 @@ enum BlendMode {
   sourceIn,
   sourceOut,
   sourceOver,
-  xor
+  xor,
 }
 
 /// Determines the orientation of a drawn link.

@@ -23,7 +23,7 @@ import 'package:charts_common_maintained/src/chart/sankey/sankey_renderer.dart';
 
 class SankeyChart<D> extends BaseChart<D> {
   SankeyChart({LayoutConfig? layoutConfig})
-      : super(layoutConfig: layoutConfig ?? LayoutConfig());
+    : super(layoutConfig: layoutConfig ?? LayoutConfig());
 
   /// Uses SankeyRenderer as the default renderer.
   @override

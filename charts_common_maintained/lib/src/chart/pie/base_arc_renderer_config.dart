@@ -74,18 +74,18 @@ abstract class BaseArcRendererConfig<D> extends LayoutViewConfig
   /// drawn.
   final Color noDataColor;
 
-  BaseArcRendererConfig(
-      {this.customRendererId,
-      this.arcLength = 2 * pi,
-      this.arcRendererDecorators = const [],
-      this.arcRatio,
-      this.arcWidth,
-      this.layoutPaintOrder = LayoutViewPaintOrder.arc,
-      this.minHoleWidthForCenterContent = 30,
-      this.startAngle = -pi / 2,
-      this.strokeWidthPx = 2.0,
-      SymbolRenderer? symbolRenderer})
-      : noDataColor = StyleFactory.style.noDataColor,
-        stroke = StyleFactory.style.arcStrokeColor,
-        symbolRenderer = symbolRenderer ?? CircleSymbolRenderer();
+  BaseArcRendererConfig({
+    this.customRendererId,
+    this.arcLength = 2 * pi,
+    this.arcRendererDecorators = const [],
+    this.arcRatio,
+    this.arcWidth,
+    this.layoutPaintOrder = LayoutViewPaintOrder.arc,
+    this.minHoleWidthForCenterContent = 30,
+    this.startAngle = -pi / 2,
+    this.strokeWidthPx = 2.0,
+    SymbolRenderer? symbolRenderer,
+  }) : noDataColor = StyleFactory.style.noDataColor,
+       stroke = StyleFactory.style.arcStrokeColor,
+       symbolRenderer = symbolRenderer ?? CircleSymbolRenderer();
 }

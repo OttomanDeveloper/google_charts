@@ -53,10 +53,11 @@ class LinearScaleFunction {
   /// Update the scale function's scaleFactor given the current state of the
   /// viewport.
   void updateScaleFactor(
-      LinearScaleViewportSettings viewportSettings,
-      LinearScaleDomainInfo domainInfo,
-      RangeBandConfig rangeBandConfig,
-      StepSizeConfig stepSizeConfig) {
+    LinearScaleViewportSettings viewportSettings,
+    LinearScaleDomainInfo domainInfo,
+    RangeBandConfig rangeBandConfig,
+    StepSizeConfig stepSizeConfig,
+  ) {
     final rangeDiff = viewportSettings.range!.diff.toDouble();
     // Note: if you provided a nicing function that extends the domain, we won't
     // muck with the extended side.
@@ -67,16 +68,26 @@ class LinearScaleFunction {
     // Determine the stepSize and reserved range values.
     // The percentage of the step reserved from the scale's range due to the
     // possible half step at the start and end.
-    final reservedRangePercentOfStep =
-        getStepReservationPercent(hasHalfStepAtStart, hasHalfStepAtEnd);
-    _updateStepSizeAndScaleFactor(viewportSettings, domainInfo, rangeDiff,
-        reservedRangePercentOfStep, rangeBandConfig, stepSizeConfig);
+    final reservedRangePercentOfStep = getStepReservationPercent(
+      hasHalfStepAtStart,
+      hasHalfStepAtEnd,
+    );
+    _updateStepSizeAndScaleFactor(
+      viewportSettings,
+      domainInfo,
+      rangeDiff,
+      reservedRangePercentOfStep,
+      rangeBandConfig,
+      stepSizeConfig,
+    );
   }
 
   /// Returns the percentage of the step reserved from the output range due to
   /// maybe having to hold half stepSizes on the start and end of the output.
   double getStepReservationPercent(
-      bool hasHalfStepAtStart, bool hasHalfStepAtEnd) {
+    bool hasHalfStepAtStart,
+    bool hasHalfStepAtEnd,
+  ) {
     if (!hasHalfStepAtStart && !hasHalfStepAtEnd) {
       return 0.0;
     }
@@ -88,8 +99,11 @@ class LinearScaleFunction {
 
   /// Updates the scale function's translate and rangeBand given the current
   /// state of the viewport.
-  void updateTranslateAndRangeBand(LinearScaleViewportSettings viewportSettings,
-      LinearScaleDomainInfo domainInfo, RangeBandConfig rangeBandConfig) {
+  void updateTranslateAndRangeBand(
+    LinearScaleViewportSettings viewportSettings,
+    LinearScaleDomainInfo domainInfo,
+    RangeBandConfig rangeBandConfig,
+  ) {
     // Assign the rangeTranslate using the current viewportSettings.translatePx
     // and diffs.
     if (domainInfo.domainDiff == 0) {
@@ -101,10 +115,12 @@ class LinearScaleFunction {
           domainInfo.extent.min == domainInfo.dataDomainStart;
       // The pixel shift of the scale function due to the half a step at the
       // beginning.
-      final reservedRangePixelShift =
-          hasHalfStepAtStart ? (stepSizePixels / 2.0) : 0.0;
+      final reservedRangePixelShift = hasHalfStepAtStart
+          ? (stepSizePixels / 2.0)
+          : 0.0;
 
-      rangeTranslate = viewportSettings.range!.start +
+      rangeTranslate =
+          viewportSettings.range!.start +
           viewportSettings.translatePx +
           reservedRangePixelShift;
     }
@@ -137,12 +153,13 @@ class LinearScaleFunction {
   /// <p>Scale factor and step size are related closely and should be calculated
   /// together so that we do not lose accuracy due to double arithmetic.
   void _updateStepSizeAndScaleFactor(
-      LinearScaleViewportSettings viewportSettings,
-      LinearScaleDomainInfo domainInfo,
-      double rangeDiff,
-      double reservedRangePercentOfStep,
-      RangeBandConfig rangeBandConfig,
-      StepSizeConfig stepSizeConfig) {
+    LinearScaleViewportSettings viewportSettings,
+    LinearScaleDomainInfo domainInfo,
+    double rangeDiff,
+    double reservedRangePercentOfStep,
+    RangeBandConfig rangeBandConfig,
+    StepSizeConfig stepSizeConfig,
+  ) {
     final domainDiff = domainInfo.domainDiff.toDouble();
 
     // If we are going to have any rangeBands, then ensure that we account for
@@ -150,11 +167,12 @@ class LinearScaleFunction {
     if (rangeBandConfig.type != RangeBandType.none) {
       switch (stepSizeConfig.type) {
         case StepSizeType.autoDetect:
-          final minimumDetectedDomainStep =
-              domainInfo.minimumDetectedDomainStep.toDouble();
+          final minimumDetectedDomainStep = domainInfo.minimumDetectedDomainStep
+              .toDouble();
           if (minimumDetectedDomainStep != null &&
               minimumDetectedDomainStep.isFinite) {
-            scalingFactor = viewportSettings.scalingFactor *
+            scalingFactor =
+                viewportSettings.scalingFactor *
                 (rangeDiff /
                     (domainDiff +
                         (minimumDetectedDomainStep *
@@ -172,8 +190,8 @@ class LinearScaleFunction {
           scalingFactor = domainDiff == 0
               ? 1.0
               : viewportSettings.scalingFactor *
-                  (rangeDiff - reservedRangeForStepPixels) /
-                  domainDiff;
+                    (rangeDiff - reservedRangeForStepPixels) /
+                    domainDiff;
           return;
         case StepSizeType.fixedDomain:
           final domainStepWidth = stepSizeConfig.size;

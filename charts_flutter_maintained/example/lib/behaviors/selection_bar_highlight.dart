@@ -23,7 +23,8 @@ class SelectionBarHighlight extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  SelectionBarHighlight(this.seriesList, {this.animate = false});
+  const SelectionBarHighlight(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [BarChart] with sample data and no transition.
   factory SelectionBarHighlight.withSampleData() {

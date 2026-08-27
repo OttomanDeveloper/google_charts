@@ -19,7 +19,7 @@ import 'home.dart';
 
 /// The main gallery app widget.
 class GalleryApp extends StatefulWidget {
-  GalleryApp({Key? key}) : super(key: key);
+  const GalleryApp({super.key});
 
   @override
   GalleryAppState createState() => GalleryAppState();

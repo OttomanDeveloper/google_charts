@@ -15,6 +15,8 @@
 
 /// Donut chart with labels example. This is a simple pie chart with a hole in
 /// the middle.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -26,7 +28,7 @@ class DonutAutoLabelChart extends StatelessWidget {
   final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  DonutAutoLabelChart(this.seriesList, {this.animate = false});
+  const DonutAutoLabelChart(this.seriesList, {super.key, this.animate = false});
 
   /// Creates a [PieChart] with sample data and no transition.
   factory DonutAutoLabelChart.withSampleData() {
@@ -89,8 +91,7 @@ class DonutAutoLabelChart extends StatelessWidget {
         //          insideLabelStyleSpec: charts.TextStyleSpec(...),
         //          outsideLabelStyleSpec: charts.TextStyleSpec(...)),
         defaultRenderer: charts.ArcRendererConfig(
-            arcWidth: 60,
-            arcRendererDecorators: [charts.ArcLabelDecorator()]));
+            arcWidth: 60, arcRendererDecorators: [charts.ArcLabelDecorator()]));
   }
 
   /// Create one series with sample hard coded data.

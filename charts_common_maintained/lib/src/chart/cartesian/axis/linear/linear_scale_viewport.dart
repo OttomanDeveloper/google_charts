@@ -105,7 +105,9 @@ class LinearScaleViewportSettings {
   /// Updates the viewport's internal translate given the current domainInfo and
   /// main scalingFactor from LinearScaleFunction (not internal scalingFactor).
   void updateViewportTranslatePx(
-      LinearScaleDomainInfo domainInfo, double scaleScalingFactor) {
+    LinearScaleDomainInfo domainInfo,
+    double scaleScalingFactor,
+  ) {
     // If we are loading from the viewport, then update the translate now that
     // the scaleFactor has been setup.
     if (_manualDomainExtent) {
@@ -124,15 +126,19 @@ class LinearScaleViewportSettings {
   /// Calculates and stores the viewport's domainExtent if we did not load from
   /// them in the first place.
   void updateViewportDomainExtent(
-      LinearScaleDomainInfo domainInfo, double scaleScalingFactor) {
+    LinearScaleDomainInfo domainInfo,
+    double scaleScalingFactor,
+  ) {
     // If we didn't load from the viewport extent, then update them given the
     // current scale configuration.
     if (!_manualDomainExtent) {
       final viewportDomainDiff = domainInfo.domainDiff / scalingFactor;
       final viewportStart =
           (-translatePx / scaleScalingFactor) + domainInfo.extent.min;
-      _domainExtent =
-          NumericExtents(viewportStart, viewportStart + viewportDomainDiff);
+      _domainExtent = NumericExtents(
+        viewportStart,
+        viewportStart + viewportDomainDiff,
+      );
     }
   }
 }

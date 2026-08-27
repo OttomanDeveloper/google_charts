@@ -16,6 +16,8 @@
 /// Example of a time series chart with an end points domain axis.
 ///
 /// An end points axis generates two ticks, one at each end of the axis range.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -27,7 +29,8 @@ class EndPointsAxisTimeSeriesChart extends StatelessWidget {
   final List<charts.Series<dynamic, DateTime>> seriesList;
   final bool animate;
 
-  EndPointsAxisTimeSeriesChart(this.seriesList, {this.animate = false});
+  const EndPointsAxisTimeSeriesChart(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [TimeSeriesChart] with sample data and no transition.
   factory EndPointsAxisTimeSeriesChart.withSampleData() {

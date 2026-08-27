@@ -18,6 +18,8 @@
 /// By default, the area skirt for a chart will be drawn with the same color as
 /// the line, but with a 10% opacity assigned to it. An area color function can
 /// be provided to override this with any custom color.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -29,7 +31,8 @@ class StackedAreaCustomColorLineChart extends StatelessWidget {
   final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  StackedAreaCustomColorLineChart(this.seriesList, {this.animate = false});
+  const StackedAreaCustomColorLineChart(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [LineChart] with sample data and no transition.
   factory StackedAreaCustomColorLineChart.withSampleData() {

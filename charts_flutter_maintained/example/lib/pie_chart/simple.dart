@@ -14,6 +14,8 @@
 // limitations under the License.
 
 /// Simple pie chart example.
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -25,7 +27,7 @@ class SimplePieChart extends StatelessWidget {
   final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  SimplePieChart(this.seriesList, {this.animate = false});
+  const SimplePieChart(this.seriesList, {super.key, this.animate = false});
 
   /// Creates a [PieChart] with sample data and no transition.
   factory SimplePieChart.withSampleData() {

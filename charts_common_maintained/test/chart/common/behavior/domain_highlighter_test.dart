@@ -23,7 +23,17 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 class MockChart extends Mock implements BaseChart {
-  LifecycleListener lastListener;
+  MockChart(this.selectionModel);
+
+  final MutableSelectionModel selectionModel;
+  final requestedSelectionModelTypes = <SelectionModelType>[];
+  LifecycleListener? lastListener;
+
+  @override
+  MutableSelectionModel getSelectionModel(SelectionModelType type) {
+    requestedSelectionModelTypes.add(type);
+    return selectionModel;
+  }
 
   @override
   LifecycleListener addLifecycleListener(LifecycleListener listener) =>
@@ -38,7 +48,12 @@ class MockChart extends Mock implements BaseChart {
 }
 
 class MockSelectionModel extends Mock implements MutableSelectionModel {
-  SelectionModelListener lastListener;
+  final selectedData = <Object?>{};
+  SelectionModelListener? lastListener;
+
+  @override
+  bool isDatumSelected(ImmutableSeries series, int? index) =>
+      index != null && selectedData.contains(series.data[index]);
 
   @override
   void addSelectionChangedListener(SelectionModelListener listener) =>
@@ -52,52 +67,48 @@ class MockSelectionModel extends Mock implements MutableSelectionModel {
 }
 
 void main() {
-  MockChart _chart;
-  MockSelectionModel _selectionModel;
+  late MockChart _chart;
+  late MockSelectionModel _selectionModel;
 
-  MutableSeries<String> _series1;
+  late MutableSeries<String> _series1;
   final _s1D1 = MyRow('s1d1', 11);
   final _s1D2 = MyRow('s1d2', 12);
   final _s1D3 = MyRow('s1d3', 13);
 
-  MutableSeries<String> _series2;
+  late MutableSeries<String> _series2;
   final _s2D1 = MyRow('s2d1', 21);
   final _s2D2 = MyRow('s2d2', 22);
   final _s2D3 = MyRow('s2d3', 23);
 
   void _setupSelection(List<MyRow> selected) {
-    for (var i = 0; i < _series1.data.length; i++) {
-      when(_selectionModel.isDatumSelected(_series1, i))
-          .thenReturn(selected.contains(_series1.data[i]));
-    }
-    for (var i = 0; i < _series2.data.length; i++) {
-      when(_selectionModel.isDatumSelected(_series2, i))
-          .thenReturn(selected.contains(_series2.data[i]));
-    }
+    _selectionModel.selectedData
+      ..clear()
+      ..addAll(selected);
   }
 
   setUp(() {
-    _chart = MockChart();
-
     _selectionModel = MockSelectionModel();
-    when(_chart.getSelectionModel(SelectionModelType.info))
-        .thenReturn(_selectionModel);
+    _chart = MockChart(_selectionModel);
 
-    _series1 = MutableSeries(Series<MyRow, String>(
+    _series1 = MutableSeries(
+      Series<MyRow, String>(
         id: 's1',
         data: [_s1D1, _s1D2, _s1D3],
         domainFn: (MyRow row, _) => row.campaign,
         measureFn: (MyRow row, _) => row.count,
-        colorFn: (_, __) => MaterialPalette.blue.shadeDefault))
-      ..measureFn = (_) => 0.0;
+        colorFn: (_, _) => MaterialPalette.blue.shadeDefault,
+      ),
+    )..measureFn = (_) => 0.0;
 
-    _series2 = MutableSeries(Series<MyRow, String>(
+    _series2 = MutableSeries(
+      Series<MyRow, String>(
         id: 's2',
         data: [_s2D1, _s2D2, _s2D3],
         domainFn: (MyRow row, _) => row.campaign,
         measureFn: (MyRow row, _) => row.count,
-        colorFn: (_, __) => MaterialPalette.red.shadeDefault))
-      ..measureFn = (_) => 0.0;
+        colorFn: (_, _) => MaterialPalette.red.shadeDefault,
+      ),
+    )..measureFn = (_) => 0.0;
   });
 
   group('DomainHighligher', () {
@@ -109,17 +120,17 @@ void main() {
       final seriesList = [_series1, _series2];
 
       // Act
-      _selectionModel.lastListener(_selectionModel);
+      _selectionModel.lastListener!(_selectionModel);
       verify(_chart.redraw(skipAnimation: true, skipLayout: true));
-      _chart.lastListener.onPostprocess(seriesList);
+      _chart.lastListener!.onPostprocess!(seriesList);
 
       // Verify
-      final s1ColorFn = _series1.colorFn;
+      final s1ColorFn = _series1.colorFn!;
       expect(s1ColorFn(0), equals(MaterialPalette.blue.shadeDefault));
       expect(s1ColorFn(1), equals(MaterialPalette.blue.shadeDefault.darker));
       expect(s1ColorFn(2), equals(MaterialPalette.blue.shadeDefault));
 
-      final s2ColorFn = _series2.colorFn;
+      final s2ColorFn = _series2.colorFn!;
       expect(s2ColorFn(0), equals(MaterialPalette.red.shadeDefault));
       expect(s2ColorFn(1), equals(MaterialPalette.red.shadeDefault.darker));
       expect(s2ColorFn(2), equals(MaterialPalette.red.shadeDefault));
@@ -128,15 +139,18 @@ void main() {
     test('listens to other selection models', () {
       // Setup
       final behavior = DomainHighlighter(SelectionModelType.action);
-      when(_chart.getSelectionModel(SelectionModelType.action))
-          .thenReturn(_selectionModel);
-
       // Act
       behavior.attachTo(_chart);
 
       // Verify
-      verify(_chart.getSelectionModel(SelectionModelType.action));
-      verifyNever(_chart.getSelectionModel(SelectionModelType.info));
+      expect(
+        _chart.requestedSelectionModelTypes,
+        contains(SelectionModelType.action),
+      );
+      expect(
+        _chart.requestedSelectionModelTypes,
+        isNot(contains(SelectionModelType.info)),
+      );
     });
 
     test('leaves everything alone with no selection', () {
@@ -147,17 +161,17 @@ void main() {
       final seriesList = [_series1, _series2];
 
       // Act
-      _selectionModel.lastListener(_selectionModel);
+      _selectionModel.lastListener!(_selectionModel);
       verify(_chart.redraw(skipAnimation: true, skipLayout: true));
-      _chart.lastListener.onPostprocess(seriesList);
+      _chart.lastListener!.onPostprocess!(seriesList);
 
       // Verify
-      final s1ColorFn = _series1.colorFn;
+      final s1ColorFn = _series1.colorFn!;
       expect(s1ColorFn(0), equals(MaterialPalette.blue.shadeDefault));
       expect(s1ColorFn(1), equals(MaterialPalette.blue.shadeDefault));
       expect(s1ColorFn(2), equals(MaterialPalette.blue.shadeDefault));
 
-      final s2ColorFn = _series2.colorFn;
+      final s2ColorFn = _series2.colorFn!;
       expect(s2ColorFn(0), equals(MaterialPalette.red.shadeDefault));
       expect(s2ColorFn(1), equals(MaterialPalette.red.shadeDefault));
       expect(s2ColorFn(2), equals(MaterialPalette.red.shadeDefault));

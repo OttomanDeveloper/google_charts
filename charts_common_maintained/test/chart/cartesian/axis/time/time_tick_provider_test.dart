@@ -17,7 +17,7 @@ import 'package:charts_common_maintained/src/chart/cartesian/axis/time/auto_adju
 import 'package:test/test.dart';
 import 'simple_date_time_factory.dart' show SimpleDateTimeFactory;
 
-const EPSILON = 0.001;
+const epsilon = 0.001;
 
 void main() {
   const dateTimeFactory = SimpleDateTimeFactory();
@@ -25,41 +25,54 @@ void main() {
   group('Find closest step size from stepper', () {
     test('from exactly matching step size', () {
       final stepper = AutoAdjustingDateTimeTickProvider.createHourTickProvider(
-          dateTimeFactory);
+        dateTimeFactory,
+      );
       final oneHourMs = (Duration(hours: 1)).inMilliseconds;
       final closestStepSize = stepper.getClosestStepSize(oneHourMs);
 
       expect(closestStepSize, equals(oneHourMs));
     });
 
-    test('choose smallest increment if step is smaller than smallest increment',
-        () {
-      final stepper = AutoAdjustingDateTimeTickProvider.createHourTickProvider(
-          dateTimeFactory);
-      final oneHourMs = (Duration(hours: 1)).inMilliseconds;
-      final closestStepSize =
-          stepper.getClosestStepSize((Duration(minutes: 56)).inMilliseconds);
+    test(
+      'choose smallest increment if step is smaller than smallest increment',
+      () {
+        final stepper =
+            AutoAdjustingDateTimeTickProvider.createHourTickProvider(
+              dateTimeFactory,
+            );
+        final oneHourMs = (Duration(hours: 1)).inMilliseconds;
+        final closestStepSize = stepper.getClosestStepSize(
+          (Duration(minutes: 56)).inMilliseconds,
+        );
 
-      expect(closestStepSize, equals(oneHourMs));
-    });
+        expect(closestStepSize, equals(oneHourMs));
+      },
+    );
 
-    test('choose largest increment if step is larger than largest increment',
-        () {
-      final stepper = AutoAdjustingDateTimeTickProvider.createHourTickProvider(
-          dateTimeFactory);
-      final oneDayMs = (Duration(hours: 24)).inMilliseconds;
-      final closestStepSize =
-          stepper.getClosestStepSize((Duration(hours: 25)).inMilliseconds);
+    test(
+      'choose largest increment if step is larger than largest increment',
+      () {
+        final stepper =
+            AutoAdjustingDateTimeTickProvider.createHourTickProvider(
+              dateTimeFactory,
+            );
+        final oneDayMs = (Duration(hours: 24)).inMilliseconds;
+        final closestStepSize = stepper.getClosestStepSize(
+          (Duration(hours: 25)).inMilliseconds,
+        );
 
-      expect(closestStepSize, equals(oneDayMs));
-    });
+        expect(closestStepSize, equals(oneDayMs));
+      },
+    );
 
     test('choose closest increment if exact not found', () {
       final stepper = AutoAdjustingDateTimeTickProvider.createHourTickProvider(
-          dateTimeFactory);
+        dateTimeFactory,
+      );
       final threeHoursMs = (Duration(hours: 3)).inMilliseconds;
-      final closestStepSize = stepper
-          .getClosestStepSize((Duration(hours: 3, minutes: 28)).inMilliseconds);
+      final closestStepSize = stepper.getClosestStepSize(
+        (Duration(hours: 3, minutes: 28)).inMilliseconds,
+      );
 
       expect(closestStepSize, equals(threeHoursMs));
     });

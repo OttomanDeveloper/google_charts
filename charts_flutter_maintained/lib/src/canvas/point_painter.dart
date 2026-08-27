@@ -16,7 +16,8 @@
 import 'dart:math' show Point;
 import 'package:flutter/material.dart';
 import 'package:charts_common_maintained/charts_common_maintained.dart'
-    as common show Color;
+    as common
+    show Color;
 
 /// Draws a simple point.
 ///
@@ -40,7 +41,10 @@ class PointPainter {
       paint.style = PaintingStyle.fill;
 
       canvas.drawCircle(
-          Offset(point.x.toDouble(), point.y.toDouble()), radius, paint);
+        Offset(point.x.toDouble(), point.y.toDouble()),
+        radius,
+        paint,
+      );
     }
 
     // [Canvas.drawCircle] does not support drawing a circle with both a fill
@@ -52,7 +56,10 @@ class PointPainter {
       paint.style = PaintingStyle.stroke;
 
       canvas.drawCircle(
-          Offset(point.x.toDouble(), point.y.toDouble()), radius, paint);
+        Offset(point.x.toDouble(), point.y.toDouble()),
+        radius,
+        paint,
+      );
     }
   }
 }

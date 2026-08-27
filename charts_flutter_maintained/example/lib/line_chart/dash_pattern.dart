@@ -14,6 +14,8 @@
 // limitations under the License.
 
 /// Dash pattern line chart example
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -26,7 +28,8 @@ class DashPatternLineChart extends StatelessWidget {
   final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  DashPatternLineChart(this.seriesList, {this.animate = false});
+  const DashPatternLineChart(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a [LineChart] with sample data and no transition.
   factory DashPatternLineChart.withSampleData() {

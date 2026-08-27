@@ -33,23 +33,20 @@ class RangeTick<D> extends Tick<D> {
   /// Position of the range tick ending point.
   double rangeEndLocationPx;
 
-  RangeTick(
-      {required D value,
-      required TextElement textElement,
-      double? locationPx,
-      double? labelOffsetPx,
-      required this.rangeStartValue,
-      required this.rangeStartLocationPx,
-      required this.rangeEndValue,
-      required this.rangeEndLocationPx})
-      : super(
-            value: value,
-            locationPx: locationPx,
-            textElement: textElement,
-            labelOffsetPx: labelOffsetPx);
+  RangeTick({
+    required super.value,
+    required TextElement super.textElement,
+    super.locationPx,
+    super.labelOffsetPx,
+    required this.rangeStartValue,
+    required this.rangeStartLocationPx,
+    required this.rangeEndValue,
+    required this.rangeEndLocationPx,
+  });
 
   @override
-  String toString() => 'RangeTick(value: $value, locationPx: $locationPx, '
+  String toString() =>
+      'RangeTick(value: $value, locationPx: $locationPx, '
       'labelOffsetPx: $labelOffsetPx, rangeStartValue: $rangeStartValue, '
       'rangeStartLocationPx: $rangeStartLocationPx, '
       'rangeEndValue: $rangeEndValue,  rangeEndLocationPx: $rangeEndLocationPx)';

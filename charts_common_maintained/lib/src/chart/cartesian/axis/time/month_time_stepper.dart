@@ -22,13 +22,13 @@ class MonthTimeStepper extends BaseTimeStepper {
 
   final List<int> _allowedTickIncrements;
 
-  MonthTimeStepper._internal(
-      DateTimeFactory dateTimeFactory, List<int> increments)
-      : _allowedTickIncrements = increments,
-        super(dateTimeFactory);
+  MonthTimeStepper._internal(super.dateTimeFactory, List<int> increments)
+    : _allowedTickIncrements = increments;
 
-  factory MonthTimeStepper(DateTimeFactory dateTimeFactory,
-      {List<int>? allowedTickIncrements}) {
+  factory MonthTimeStepper(
+    DateTimeFactory dateTimeFactory, {
+    List<int>? allowedTickIncrements,
+  }) {
     // Set the default increments if null.
     allowedTickIncrements ??= _defaultIncrements;
 

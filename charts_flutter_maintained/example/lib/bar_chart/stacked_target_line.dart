@@ -14,6 +14,8 @@
 // limitations under the License.
 
 /// Bar chart example
+library;
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -25,7 +27,8 @@ class StackedBarTargetLineChart extends StatelessWidget {
   final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  StackedBarTargetLineChart(this.seriesList, {this.animate = false});
+  const StackedBarTargetLineChart(this.seriesList,
+      {super.key, this.animate = false});
 
   /// Creates a stacked [BarChart] with sample data and no transition.
   factory StackedBarTargetLineChart.withSampleData() {

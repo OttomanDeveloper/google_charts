@@ -46,7 +46,8 @@ class SeriesLegend<D> extends ChartBehavior<D> {
       common.OutsideJustification.startDrawArea;
   static const defaultInsideJustification = common.InsideJustification.topStart;
 
-  final desiredGestures = Set<GestureType>();
+  @override
+  final desiredGestures = <GestureType>{};
 
   final common.SelectionModelType? selectionModelType;
 
@@ -87,7 +88,7 @@ class SeriesLegend<D> extends ChartBehavior<D> {
   /// Styles for legend entry label text.
   final common.TextStyleSpec? entryTextStyle;
 
-  static const defaultCellPadding = const EdgeInsets.all(8.0);
+  static const defaultCellPadding = EdgeInsets.all(8.0);
 
   final List<String>? defaultHiddenSeries;
 
@@ -154,29 +155,34 @@ class SeriesLegend<D> extends ChartBehavior<D> {
 
     // Set the tabular layout settings to match the position if it is not
     // specified.
-    horizontalFirst ??= (position == common.BehaviorPosition.top ||
+    horizontalFirst ??=
+        (position == common.BehaviorPosition.top ||
         position == common.BehaviorPosition.bottom ||
         position == common.BehaviorPosition.inside);
     final layoutBuilder = horizontalFirst
         ? TabularLegendLayout.horizontalFirst(
-            desiredMaxColumns: desiredMaxColumns, cellPadding: cellPadding)
+            desiredMaxColumns: desiredMaxColumns,
+            cellPadding: cellPadding,
+          )
         : TabularLegendLayout.verticalFirst(
-            desiredMaxRows: desiredMaxRows, cellPadding: cellPadding);
+            desiredMaxRows: desiredMaxRows,
+            cellPadding: cellPadding,
+          );
 
     return SeriesLegend._internal(
-        contentBuilder:
-            TabularLegendContentBuilder(legendLayout: layoutBuilder),
-        selectionModelType: common.SelectionModelType.info,
-        position: position,
-        outsideJustification: outsideJustification,
-        insideJustification: insideJustification,
-        defaultHiddenSeries: defaultHiddenSeries,
-        showMeasures: showMeasures ?? false,
-        legendDefaultMeasure:
-            legendDefaultMeasure ?? common.LegendDefaultMeasure.none,
-        measureFormatter: measureFormatter,
-        secondaryMeasureFormatter: secondaryMeasureFormatter,
-        entryTextStyle: entryTextStyle);
+      contentBuilder: TabularLegendContentBuilder(legendLayout: layoutBuilder),
+      selectionModelType: common.SelectionModelType.info,
+      position: position,
+      outsideJustification: outsideJustification,
+      insideJustification: insideJustification,
+      defaultHiddenSeries: defaultHiddenSeries,
+      showMeasures: showMeasures ?? false,
+      legendDefaultMeasure:
+          legendDefaultMeasure ?? common.LegendDefaultMeasure.none,
+      measureFormatter: measureFormatter,
+      secondaryMeasureFormatter: secondaryMeasureFormatter,
+      entryTextStyle: entryTextStyle,
+    );
   }
 
   /// Create a legend with custom layout.
@@ -258,7 +264,7 @@ class SeriesLegend<D> extends ChartBehavior<D> {
 
   @override
   common.SeriesLegend<D> createCommonBehavior() =>
-      new _FlutterSeriesLegend<D>(this);
+      _FlutterSeriesLegend<D>(this);
 
   @override
   void updateCommonBehavior(common.ChartBehavior commonBehavior) {
@@ -289,17 +295,18 @@ class SeriesLegend<D> extends ChartBehavior<D> {
   @override
   int get hashCode {
     return Object.hash(
-        selectionModelType,
-        contentBuilder,
-        position,
-        outsideJustification,
-        insideJustification,
-        defaultHiddenSeries,
-        showMeasures,
-        legendDefaultMeasure,
-        measureFormatter,
-        secondaryMeasureFormatter,
-        entryTextStyle);
+      selectionModelType,
+      contentBuilder,
+      position,
+      outsideJustification,
+      insideJustification,
+      defaultHiddenSeries,
+      showMeasures,
+      legendDefaultMeasure,
+      measureFormatter,
+      secondaryMeasureFormatter,
+      entryTextStyle,
+    );
   }
 }
 
@@ -309,12 +316,12 @@ class _FlutterSeriesLegend<D> extends common.SeriesLegend<D>
   SeriesLegend config;
 
   _FlutterSeriesLegend(this.config)
-      : super(
-          selectionModelType: config.selectionModelType,
-          measureFormatter: config.measureFormatter,
-          secondaryMeasureFormatter: config.secondaryMeasureFormatter,
-          legendDefaultMeasure: config.legendDefaultMeasure,
-        ) {
+    : super(
+        selectionModelType: config.selectionModelType,
+        measureFormatter: config.measureFormatter,
+        secondaryMeasureFormatter: config.secondaryMeasureFormatter,
+        legendDefaultMeasure: config.legendDefaultMeasure,
+      ) {
     super.defaultHiddenSeries = config.defaultHiddenSeries;
     super.entryTextStyle = config.entryTextStyle;
   }
@@ -337,28 +344,33 @@ class _FlutterSeriesLegend<D> extends common.SeriesLegend<D>
 
   @override
   Widget build(BuildContext context) {
-    final hasSelection = legendState.legendEntries != null &&
-        legendState.legendEntries.any((entry) => entry.isSelected);
+    final hasSelection = legendState.legendEntries.any(
+      (entry) => entry.isSelected,
+    );
 
     // Show measures if [showMeasures] is true and there is a selection or if
     // showing measures when there is no selection.
-    final showMeasures = config.showMeasures &&
+    final showMeasures =
+        config.showMeasures &&
         (hasSelection ||
             legendDefaultMeasure != common.LegendDefaultMeasure.none);
 
-    return config.contentBuilder
-        .build(context, legendState, this, showMeasures: showMeasures);
+    return config.contentBuilder.build(
+      context,
+      legendState,
+      this,
+      showMeasures: showMeasures,
+    );
   }
 
   @override
-  onLegendEntryTapUp(common.LegendEntry detail) {
+  void onLegendEntryTapUp(common.LegendEntry detail) {
     switch (legendTapHandling) {
       case common.LegendTapHandling.hide:
         _hideSeries(detail);
         break;
 
       case common.LegendTapHandling.none:
-      default:
         break;
     }
   }

@@ -31,20 +31,22 @@ import 'numeric_axis_spec.dart'
 class PercentAxisSpec extends NumericAxisSpec {
   /// Creates a [NumericAxisSpec] that is specialized for percentage data.
   PercentAxisSpec({
-    RenderSpec<num>? renderSpec,
+    super.renderSpec,
     NumericTickProviderSpec? tickProviderSpec,
     NumericTickFormatterSpec? tickFormatterSpec,
-    bool? showAxisLine,
+    super.showAxisLine,
     NumericExtents? viewport,
   }) : super(
-            renderSpec: renderSpec,
-            tickProviderSpec: tickProviderSpec ??
-                const BasicNumericTickProviderSpec(dataIsInWholeNumbers: false),
-            tickFormatterSpec: tickFormatterSpec ??
-                BasicNumericTickFormatterSpec.fromNumberFormat(
-                    NumberFormat.percentPattern()),
-            showAxisLine: showAxisLine,
-            viewport: viewport ?? const NumericExtents(0.0, 1.0));
+         tickProviderSpec:
+             tickProviderSpec ??
+             const BasicNumericTickProviderSpec(dataIsInWholeNumbers: false),
+         tickFormatterSpec:
+             tickFormatterSpec ??
+             BasicNumericTickFormatterSpec.fromNumberFormat(
+               NumberFormat.percentPattern(),
+             ),
+         viewport: viewport ?? const NumericExtents(0.0, 1.0),
+       );
 
   @override
   bool operator ==(Object other) => other is PercentAxisSpec && super == other;

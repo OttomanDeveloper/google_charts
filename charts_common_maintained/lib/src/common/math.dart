@@ -26,8 +26,12 @@ const _defaultEpsilon = 2e-10;
 /// [upperBound] The upper bound.
 /// [epsilon] Maximum valid difference between [value] and the bounds. Defaults
 /// to 2e-10.
-bool withinBounds(num value, num lowerBound, num upperBound,
-    {double epsilon = _defaultEpsilon}) {
+bool withinBounds(
+  num value,
+  num lowerBound,
+  num upperBound, {
+  double epsilon = _defaultEpsilon,
+}) {
   return value + epsilon >= lowerBound && value - epsilon <= upperBound;
 }
 
@@ -59,7 +63,10 @@ double distanceBetweenPointAndLineSegment(Vector2 p, Vector2 v, Vector2 w) {
 /// [v] Start point for the line segment.
 /// [w] End point for the line segment.
 double distanceBetweenPointAndLineSegmentSquared(
-    Vector2 p, Vector2 v, Vector2 w) {
+  Vector2 p,
+  Vector2 v,
+  Vector2 w,
+) {
   final lineLength = v.distanceToSquared(w);
 
   if (lineLength == 0) {

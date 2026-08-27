@@ -108,8 +108,11 @@ class BaseChartState<D> extends State<BaseChart<D>>
     final desiredGestures = widget.getDesiredGestures(this);
     if (desiredGestures.isNotEmpty) {
       _chartGestureDetector ??= ChartGestureDetector();
-      return _chartGestureDetector!
-          .makeWidget(context, chartContainer, desiredGestures);
+      return _chartGestureDetector!.makeWidget(
+        context,
+        chartContainer,
+        desiredGestures,
+      );
     } else {
       return chartContainer;
     }
@@ -121,8 +124,9 @@ class BaseChartState<D> extends State<BaseChart<D>>
     final idAndBehaviorMap = <String, BuildableBehavior>{};
 
     // Add the common chart canvas widget.
-    chartWidgets.add(LayoutId(
-        id: chartContainerLayoutID, child: _buildChartContainer()));
+    chartWidgets.add(
+      LayoutId(id: chartContainerLayoutID, child: _buildChartContainer()),
+    );
 
     // Add widget for each behavior that can build widgets
     addedCommonBehaviorsByRole.forEach((id, behavior) {
@@ -140,16 +144,21 @@ class BaseChartState<D> extends State<BaseChart<D>>
     final isRTL = Directionality.of(context) == TextDirection.rtl;
 
     return CustomMultiChildLayout(
-        delegate: WidgetLayoutDelegate(
-            chartContainerLayoutID, idAndBehaviorMap, isRTL),
-        children: chartWidgets);
+      delegate: WidgetLayoutDelegate(
+        chartContainerLayoutID,
+        idAndBehaviorMap,
+        isRTL,
+      ),
+      children: chartWidgets,
+    );
   }
 
   @override
   void dispose() {
     _animationController.dispose();
-    _behaviorAnimationControllers
-        .forEach((_, controller) => controller.dispose());
+    _behaviorAnimationControllers.forEach(
+      (_, controller) => controller.dispose(),
+    );
     _behaviorAnimationControllers.clear();
     super.dispose();
   }
@@ -173,8 +182,9 @@ class BaseChartState<D> extends State<BaseChart<D>>
 
   /// Get animation controller to be used by [behavior].
   AnimationController getAnimationController(ChartStateBehavior behavior) {
-    _behaviorAnimationControllers[behavior] ??=
-        AnimationController(vsync: this);
+    _behaviorAnimationControllers[behavior] ??= AnimationController(
+      vsync: this,
+    );
 
     return _behaviorAnimationControllers[behavior]!;
   }
